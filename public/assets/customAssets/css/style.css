@@ -1,0 +1,154 @@
+/* Estilos Tablas */ 
+th, td{
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+th p, td p{
+    max-width: 150px;
+    margin: auto;
+    word-wrap: break-word; /* Permite que las palabras largas se rompan */
+    white-space: normal; /* Permite múltiples líneas */
+    font-size: 12px;
+}
+
+td p.fecha{
+    max-width: 100px;
+}
+
+/* Estilos del contenedor del chat */
+#chatContainer {
+    background-image: url('/assets/customAssets/img/bg-whatsapp.png'); /* Fondo color beige claro */
+    padding: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos generales para los mensajes */
+.chat-message {
+    background-color: #f8f9fa; /* Fondo claro para los mensajes */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 70%; /* Limitar el ancho de los mensajes */
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Aplicar 90% de ancho en pantallas menores a 768px */
+@media (max-width: 768px) {
+    .chat-message {
+        width: 95%;
+    }
+}
+
+/* Mensaje del usuario actual */
+.chat-my-message {
+    background-color: #D9FDD2; /* Fondo verde de WhatsApp */
+    align-self: flex-end; /* Alinear a la derecha */
+}
+
+/* Mensaje de otros usuarios */
+.chat-other-message {
+    background-color: #fff; /* Fondo gris claro para los mensajes de otros usuarios */
+    color: #4c4c4c; /* Texto oscuro para los mensajes de otros usuarios */
+    align-self: flex-start; /* Alinear a la izquierda */
+}
+
+/* Estilos del contenido del mensaje */
+.chat-content {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+/* Estilo para los encabezados de los mensajes (nombre + fecha) */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #075e54; /* Color verde oscuro de WhatsApp */
+}
+
+/* Estilo para el texto del mensaje */
+.chat-text {
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
+
+/* Estilos para la foto de perfil */
+.chat-avatar img {
+    border: 2px solid #ddd; /* Borde sutil de la foto de perfil */
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+
+/* Estilo para los mensajes recibidos */
+.chat-other-message .chat-text {
+    color: #4c4c4c; /* Color gris para los mensajes de otros usuarios */
+}
+
+
+
+/* Estilos del contenedor de la caja de mensaje */
+.chat-input {
+    background-color: #F0F2F5;
+    padding: 15px;
+    padding-top: 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Estilo para el área de texto del mensaje */
+#newMessage {
+    border: 1px solid #ddd;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    font-size: 1rem;
+    background-color: #f7f7f7;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Efecto de enfoque en el área de texto */
+#newMessage:focus {
+    border-color: #25d366; /* Fondo verde de WhatsApp */
+    background-color: #fff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(37, 211, 102, 0.5); /* Sombra verde cuando está enfocado */
+}
+
+/* Estilo para el botón de enviar */
+#sendMessage {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #25d366; /* Verde similar a WhatsApp */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Efecto hover para el botón */
+#sendMessage:hover {
+    background-color: #128c7e; /* Verde más oscuro para hover */
+}
+
+/* Icono dentro del botón */
+#sendMessage i {
+    margin-right: 8px; /* Espacio entre el icono y el texto */
+}
+
+/* Estilo para el botón cuando está deshabilitado */
+#sendMessage:disabled {
+    background-color: #b3d9cc;
+    cursor: not-allowed;
+}

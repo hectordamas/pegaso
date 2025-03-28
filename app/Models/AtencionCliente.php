@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\{Saclie, Consultor, EstatusAt};
+use Carbon\Carbon;
+
+class AtencionCliente extends Model
+{
+    use HasFactory;
+
+    protected $table = 'atencioncliente';
+
+    public function estatusAt(){
+        return $this->belongsTo(EstatusAt::class, 'codestatus', 'codestatus');
+    }
+
+    public function saclie(){
+        return $this->belongsTo(Saclie::class, 'codclie', 'codclie');
+    }
+
+    public function consultor(){
+        return $this->belongsTo(Consultor::class, 'codconsultor', 'codconsultor');
+    }
+
+    public function scopeByConsultor($query, $codconsultor){
+        if($codconsultor)
+            return $query->where('codconsultor', $codconsultor);
+    }
+
+    public function scopeBySaclie($query, $codclie){
+        if($codclie)
+            return $query->where('codclie', $codclie);
+        
+    }
+
+    public function scopeByStatus($query, $codeStatus){
+        if($codeStatus)
+            return $query->where('codestatus', $codeStatus);
+    }
+
+    public function scopeByDateRange($query, $from, $until){
+        if ($from && $until) {
+            return $query->whereBetween('fecha', [Carbon::parse($from)->startOfDay(), Carbon::parse($until)->endOfDay()]);
+        } elseif ($from) {
+            return $query->whereDate('fecha', '>=', Carbon::parse($from)->startOfDay());
+        } elseif ($until) {
+            return $query->whereDate('fecha', '<=', Carbon::parse($until)->endOfDay());
+        }
+    }
+}
