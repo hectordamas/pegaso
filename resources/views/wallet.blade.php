@@ -198,6 +198,7 @@ $(document).ready(function(){
                     fnCallback(json)
                     $('#saldoPorMoneda').html(json.html)
                     $('#cmbmoneda').html(json.selectMoneda)
+                    $('#cmbtipomoneda').html("");
                     $("[data-toggle='tooltip']").tooltip();
                     $("#loadingSpinner").css("display", "none"); 
                 });

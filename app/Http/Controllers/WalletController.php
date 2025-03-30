@@ -7,7 +7,7 @@ use App\Models\{Wallet, Wallet_Registro, Wallet_Det, Moneda, TipoMoneda};
 use Illuminate\Support\Facades\DB;
 use Mail;
 use Auth;
-
+use Log;
 
 class WalletController extends Controller
 {
@@ -48,11 +48,11 @@ class WalletController extends Controller
 		$w->save();
 
         $regEmail = DB::table('wallet_registro')
-        ->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,usuario.nombre as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
+        ->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,users.name as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
         ->join('moneda','moneda.codmoneda','=','wallet_registro.codmoneda')
         ->join('tipomoneda','tipomoneda.codtipomoneda','=','wallet_registro.codtipomoneda')
         ->join('wallet','wallet.codwallet','=','wallet_registro.codwallet')
-        ->join('usuario','usuario.codusuario','=','wallet_registro.codusuario')
+        ->join('users','users.codusuario','=','wallet_registro.codusuario')
         ->where('wallet_registro.id','=',$w->id)
         ->orderby('id','desc')
         ->get();
@@ -64,7 +64,7 @@ class WalletController extends Controller
                 $datos[$i]=$reg;
                 $i++;
             }
-            $email = $this->enviaremail('REGISTRO WALLET    Fecha: '.date("d/m/Y H:i:s a"),'info@saintnet.net', $datos);			
+            $email = $this->enviaremail('Registro Wallet Fecha: ' . date("d/m/Y H:i:s a"),'info@saintnet.net', $datos);			
         }
 
         $detSql = Wallet_Det::where('codwallet','=',$codwallet)
@@ -80,6 +80,62 @@ class WalletController extends Controller
             'message' => "Registro creado con exito"
         ]);
     }
+
+    public function destroy(Request $request){
+		$id = $request->get('id');
+		$pgSql= Wallet_Registro::where('id', $id)->first();
+		
+		$codwallet = $pgSql->codwallet;
+		$codmoneda = $pgSql->codmoneda;
+		$codoperacion = $pgSql->codoperacion;
+		$monto = $pgSql->monto;
+						
+		if($codoperacion == 2){
+			$monto = ($monto * -1);
+		}
+		
+		$regEmail = DB::table('wallet_registro')
+				->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,usuario.nombre as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
+                ->join('moneda','moneda.codmoneda','=','wallet_registro.codmoneda')
+                ->join('tipomoneda','tipomoneda.codtipomoneda','=','wallet_registro.codtipomoneda')
+                ->join('wallet','wallet.codwallet','=','wallet_registro.codwallet')
+                ->join('users','users.codusuario','=','wallet_registro.codusuario')
+                ->where('wallet_registro.id','=',$id )
+				->orderby('id','desc')
+				->get();
+			
+			if(count($regEmail)>0){
+				$i=0;
+				foreach($regEmail as $reg){
+					
+					$datos[$i]=$reg;
+					$i++;
+				}
+				$email = $this->enviaremail('Se eliminó registro Wallet Fecha: '.date("d/m/Y H:i:s a"), 'info@saintnet.net', $datos);			
+			}
+	
+		$deleteSql = Wallet_Registro::where('id', $id)->delete();
+			
+				
+		$consultaSql = Wallet_Det::where('codwallet','=',$codwallet)
+				->where('codmoneda','=',$codmoneda)
+				->first();
+				
+		if(!empty($consultaSql)){
+			$consultaSql->saldo = ($consultaSql->saldo + $monto);
+			$consultaSql->save();
+		}
+		
+		if(!empty($consultaSql)){		
+			$response = ["success" => true, "data" => $consultaSql,"id" => $id];
+				 
+		}else{
+			$response = ["success" => true, "data" => ''];
+			
+		}
+		return response()->json($response);
+		
+	}
 
     public function getWalletData(Request $request){
         $codusuario = Auth::user()->codusuario;
@@ -122,7 +178,7 @@ class WalletController extends Controller
 				->select(DB::raw('wallet_registro.id,wallet_registro.codwallet,wallet_registro.codmoneda,SUM((wallet_registro.monto*wallet_registro.signo)) as monto,tipomoneda.nombre as tipomoneda,wallet_registro.codtipomoneda'))
 				->join('moneda','wallet_registro.codmoneda','=','moneda.codmoneda')
 				->join('tipomoneda','wallet_registro.codtipomoneda','=','tipomoneda.codtipomoneda')
-				->join('usuario','wallet_registro.codusuario','=','usuario.codusuario')
+				->join('users','wallet_registro.codusuario','=','users.codusuario')
 				->where('wallet_registro.codwallet','=',$codwallet)
 				->where('wallet_registro.codmoneda','=',$wm->codmoneda)
 				->orderby('wallet_registro.id','desc')
@@ -184,15 +240,13 @@ class WalletController extends Controller
 
     protected function enviaremail($asunto, $emaildestino, $datos){
         try {
-            Mail::send('mails.addWallet', ['datos' => $datos], function ($message) use ($asunto, $emaildestino) {
+            return Mail::send('mails.addWallet', ['datos' => $datos], function ($message) use ($asunto, $emaildestino) {
                 $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
                 ->subject($asunto)
                 ->to([$emaildestino, 'jfarfan@saintnet.net', 'hectorgabrieldm@hotmail.com']);
             });
-
-            return 1; // Si el email se envía correctamente, retornamos 1
         } catch (\Exception $e) {
-            return 0; // En caso de error, retornamos 0
+            return Log::error("Error al enviar correo: " . $e->getMessage()); // Registrar error
         }
     }
 
