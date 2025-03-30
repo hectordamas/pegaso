@@ -44,6 +44,10 @@ function initializeDataTable() {
 }
 
 $(document).ready(function(){
+
+	$('label, .modal-title').addClass('fw-bold');
+	$('label').addClass('mb-1');
+
 	//--------------------------Atencion al Cliente------------------------------------------------------------
 
     $("#direccionconex, #telefonoComunicaciones").inputmask(); // Aplica el formato IP automáticamente

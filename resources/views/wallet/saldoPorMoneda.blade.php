@@ -2,6 +2,7 @@
     @php
         $temas = ['bg-c-pink', 'bg-c-green', 'bg-c-yellow']; 
         $textos = ['text-c-pink', 'text-c-green', 'text-c-yellow'];   
+        $background = ['#fe5d70', '#0ac282', '#fe9365'];
         $iconos = ['', 'fas fa-dollar-sign', 'fas fa-euro-sign'];
     @endphp
 
@@ -29,7 +30,7 @@
                         <i class="far fa-check-square"></i> {{ $arreglo->tipomoneda }}
                     </div>
                     <div class="col fw-bold text-right">
-                        <i class="far fa-check-square"></i> {{$arreglo->monto}}
+                        <i class="fas fa-coins"></i> {{$arreglo->monto}}
                     </div>
                 </div>
                 @endforeach

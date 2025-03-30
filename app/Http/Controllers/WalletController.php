@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Wallet, Wallet_Registro, Wallet_Det, Moneda};
+use App\Models\{Wallet, Wallet_Registro, Wallet_Det, Moneda, TipoMoneda};
 use Illuminate\Support\Facades\DB;
 use Mail;
 use Auth;
@@ -17,6 +17,68 @@ class WalletController extends Controller
         ->get();
         
         return view('wallet', compact('wallet'));
+    }
+
+    public function store(Request $request){
+        $codusuario = Auth::user()->codusuario;
+		$codwallet = $request->get('codwallet');
+		$codmoneda = $request->get('codmoneda');
+		$codtipomoneda = $request->get('codtipomoneda');
+		$codoperacion = $request->get('codoperacion');
+		$descripcion = $request->get('descripcion');
+		$nfecha = new \DateTime(date(str_replace('/','-',$request['fecha'])));
+		$fecha = $nfecha->format('Y-m-d');
+		$monto = str_replace(',','.',str_replace('.','',$request->get('monto')));
+		$signo = 1;
+		if($codoperacion == 1){
+			$signo = '-1';
+		}
+
+        $w = new Wallet_Registro();
+		$w->codwallet = $codwallet;			
+		$w->fecha = date('Y-m-d');			
+		$w->fechapag = $fecha;			
+		$w->codmoneda = $codmoneda;			
+		$w->codtipomoneda = $codtipomoneda;			
+		$w->codoperacion = $codoperacion;			
+		$w->codusuario = $codusuario;			
+		$w->descripcion	= $descripcion;			
+		$w->monto = $monto;
+		$w->signo = $signo;
+		$w->save();
+
+        $regEmail = DB::table('wallet_registro')
+        ->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,usuario.nombre as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
+        ->join('moneda','moneda.codmoneda','=','wallet_registro.codmoneda')
+        ->join('tipomoneda','tipomoneda.codtipomoneda','=','wallet_registro.codtipomoneda')
+        ->join('wallet','wallet.codwallet','=','wallet_registro.codwallet')
+        ->join('usuario','usuario.codusuario','=','wallet_registro.codusuario')
+        ->where('wallet_registro.id','=',$w->id)
+        ->orderby('id','desc')
+        ->get();
+    
+        if(count($regEmail)>0){
+            $i=0;
+            foreach($regEmail as $reg){
+
+                $datos[$i]=$reg;
+                $i++;
+            }
+            $email = $this->enviaremail('REGISTRO WALLET    Fecha: '.date("d/m/Y H:i:s a"),'info@saintnet.net', $datos);			
+        }
+
+        $detSql = Wallet_Det::where('codwallet','=',$codwallet)
+                ->where('codmoneda','=',$codmoneda)
+                ->first();
+
+        if(!empty($detSql)){
+            $detSql->saldo = ($detSql->saldo + $monto);
+            $detSql->save();
+        }
+
+        return response()->json([
+            'message' => "Registro creado con exito"
+        ]);
     }
 
     public function getWalletData(Request $request){
@@ -109,4 +171,29 @@ class WalletController extends Controller
             'selectMoneda' => $selectMoneda
         ]);
     }
+
+    public function getTipoMonedas(Request $request){
+        $codmoneda = $request->codmoneda;
+        $tipomonedas = TipoMoneda::where('codmoneda', $codmoneda)->get();
+        $selectTipoMoneda = view('wallet.selectTipoMoneda', ['tipomonedas' => $tipomonedas])->render();
+
+        return response()->json([
+            'selectTipoMoneda' => $selectTipoMoneda
+        ]);
+    }
+
+    protected function enviaremail($asunto, $emaildestino, $datos){
+        try {
+            Mail::send('mails.addWallet', ['datos' => $datos], function ($message) use ($asunto, $emaildestino) {
+                $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
+                ->subject($asunto)
+                ->to([$emaildestino, 'jfarfan@saintnet.net', 'hectorgabrieldm@hotmail.com']);
+            });
+
+            return 1; // Si el email se envía correctamente, retornamos 1
+        } catch (\Exception $e) {
+            return 0; // En caso de error, retornamos 0
+        }
+    }
+
 }

@@ -133,12 +133,12 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-md-6">
                       <div class="form-group">
                         <label class="control-label fw-bold mb-2">Monto</label>
                         <div class="input-group">
                             <span class="input-group-text bg-inverse text-light"><i class="fas fa-money-bill-alt"></i></span>
-                          <input name="monto" id="monto" type="text" class="form-control" onkeyup="convertirmonto(this.form)" required>
+                          <input name="monto" id="monto" type="text" class="form-control montopcd" onkeyup="convertirmonto(this.form)" required>
                         </div>
                       </div>
                     </div>
@@ -159,6 +159,21 @@
 
 @section('scripts')
 <script>
+function convertirmonto(input){
+	$(".montopcd").on({
+		"focus": function (event) {
+			$(event.target).select();
+		},
+		"keyup": function (event) {
+			$(event.target).val(function (index, value ) {
+				return value.replace(/\D/g, "")
+					.replace(/([0-9])([0-9]{2})$/, '$1,$2')
+					.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+			});	   
+		}
+	});
+}
+
 $(document).ready(function(){
     $(function(){
         getWalletData();
@@ -222,6 +237,54 @@ $(document).ready(function(){
     $('#cmbcodwallet').on('input', function(){
         getWalletData()
     });
+
+    $('#cmbmoneda').on('input', function(){
+        $.ajax({
+			url: "{{ url('getTipoMonedas') }}",
+            data:{
+                'codmoneda': $('#cmbmoneda').val()
+            },
+			method: 'GET',
+			success: function(response) {
+				$('#cmbtipomoneda').html(response.selectTipoMoneda);
+			},
+			error: function(err) {
+                console.log(err)
+				alert('Hubo un error al cargar el chat.');
+			}
+		});
+    })
+
+    $('#registrarOperacion').on('submit', function(e){
+        e.preventDefault();
+        $("#loadingSpinner").css("display", "flex"); 
+
+        $.ajax({
+            url: "{{ url('wallet/store') }}",
+            method: 'POST',
+            data: {
+				_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
+                codwallet: $('#cmbcodwallet').val(),
+                codmoneda: $('#cmbmoneda').val(),
+                codtipomoneda: $('#cmbtipomoneda').val(),
+                codoperacion: $('#cmboperacion').val(),
+                descripcion: $('#descripcion').val(),
+                fecha: $('#fecha').val(),
+                monto: $('#monto').val(),
+            },
+            success: function(response) {
+                getWalletData()		
+                $('#WalletRegistroModalCreate').modal('hide');
+                $('#descripcion').val('')
+                $('#monto').val('')
+            },
+			error: function(err) {
+                console.log(err)
+                $('#WalletRegistroModalCreate').modal('hide');
+				alert(`Hubo un error en el servidor: ${err}.`);
+			}
+        })
+    })
 })
 </script>
 @endsection

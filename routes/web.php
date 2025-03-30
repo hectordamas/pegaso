@@ -159,7 +159,9 @@ Route::group(['middleware' => 'auth'], function () {
     //Wallet
     Route::controller(WalletController::class)->group(function(){
         Route::get('wallet', 'index');
+        Route::post('wallet/store', 'store');
         Route::get('getWalletData', 'getWalletData')->name('getWalletData');
+        Route::get('getTipoMonedas', 'getTipoMonedas')->name('getTipoMonedas');
     });
 
     //Usuarios
