@@ -1,7 +1,7 @@
 <div class="row">
     @php
-        $temas = ['bg-c-pink', 'bg-c-green', 'bg-c-yellow']; 
-        $textos = ['text-c-pink', 'text-c-green', 'text-c-yellow'];   
+        $temas = ['bg-c-pink', 'bg-c-blue', 'bg-c-yellow']; 
+        $textos = ['text-c-pink', 'text-c-blue', 'text-c-yellow'];   
         $background = ['#fe5d70', '#0ac282', '#fe9365'];
         $iconos = ['', 'fas fa-dollar-sign', 'fas fa-euro-sign'];
     @endphp

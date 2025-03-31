@@ -160,6 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(WalletController::class)->group(function(){
         Route::get('wallet', 'index');
         Route::post('wallet/store', 'store');
+        Route::post('wallet/destroy', 'destroy');
         Route::get('getWalletData', 'getWalletData')->name('getWalletData');
         Route::get('getTipoMonedas', 'getTipoMonedas')->name('getTipoMonedas');
     });

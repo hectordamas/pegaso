@@ -95,7 +95,7 @@ class WalletController extends Controller
 		}
 		
 		$regEmail = DB::table('wallet_registro')
-				->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,usuario.nombre as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
+				->select(DB::raw('wallet_registro.id,wallet_registro.fecha,wallet_registro.fechapag,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,wallet_registro.codoperacion,users.name as usuario,wallet_registro.descripcion,(wallet_registro.monto*wallet_registro.signo) as monto,wallet.nombre as wallet'))
                 ->join('moneda','moneda.codmoneda','=','wallet_registro.codmoneda')
                 ->join('tipomoneda','tipomoneda.codtipomoneda','=','wallet_registro.codtipomoneda')
                 ->join('wallet','wallet.codwallet','=','wallet_registro.codwallet')

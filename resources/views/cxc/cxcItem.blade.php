@@ -17,7 +17,7 @@
                         </span>
                     </div>
                     <div class="f-right">
-                        <input onchange="updateColor({{ $item->codcxc }});" list="rainbow" name="codcxc_{{ $item->codcxc }}" id="codcxc_{{ $item->codcxc }}" type="color" value="{{ $item->color }}" class="">
+                        <input onchange="updateColor('{{ $item->codcxc }}');" list="rainbow" name="codcxc_{{ $item->codcxc }}" id="codcxc_{{ $item->codcxc }}" type="color" value="{{ $item->color }}" {{ !Auth::user()->master ? 'disabled' : '' }}>
                         <datalist id="rainbow"> 
                             <option value="#00FF00">Lime</option>
                             <option value="#FFA500">Orange</option>

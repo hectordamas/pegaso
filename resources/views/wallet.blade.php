@@ -179,7 +179,7 @@ $(document).ready(function(){
         getWalletData();
     });
 
-    function getWalletData() {
+    function getWalletData(eliminado) {
         $("#loadingSpinner").css("display", "flex"); 
 
         if ($.fn.DataTable.isDataTable('#wallet-table')) {
@@ -200,6 +200,14 @@ $(document).ready(function(){
                     $('#cmbmoneda').html(json.selectMoneda)
                     $('#cmbtipomoneda').html("");
                     $("[data-toggle='tooltip']").tooltip();
+                    if(eliminado){
+                        Swal.fire(
+                            "Eliminado",
+                            "El registro ha sido eliminado correctamente.",
+                            "success"
+                        );
+                    }
+
                     $("#loadingSpinner").css("display", "none"); 
                 });
             },
@@ -286,6 +294,68 @@ $(document).ready(function(){
 			}
         })
     })
+
+    window.destroyWalletRegistros = function(id) {
+        Swal.fire({
+            title: "¿Está que seguro que desea eliminar este registro?",
+            text: "Esta acción no se puede deshacer. Al eliminar este registro se ajustará el saldo de la Wallet, Para confirmar ingresa la contraseña de administrador",
+            icon: "warning",
+            input: "password",
+            inputPlaceholder: "Password Administrador",
+            inputAttributes: {
+                autocomplete: "new-password",  // Evita autocompletado con contraseñas guardadas
+                autocorrect: "off",   // Evita corrección automática
+                spellcheck: false,    // Evita revisión ortográfica
+                required: true
+            },
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            preConfirm: (password) => {
+                if (!password) {
+                    Swal.showValidationMessage("La contraseña es obligatoria");
+                }
+                return password;
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if(result.value !== '123'){
+                    return Swal.fire(
+                        "Error",
+                        "Contraseña inválida.",
+                        "error"
+                    );
+                }
+
+                $("#loadingSpinner").css("display", "flex"); 
+
+                $.ajax({
+                    url: "{{ url('wallet/destroy') }}",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id,
+                    },
+                    method: "POST",
+                    success: function(response) {
+                        getWalletData(true);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        $("#loadingSpinner").css("display", "none"); 
+                        Swal.fire(
+                            "Error",
+                            "Hubo un problema al eliminar el registro.",
+                            "error"
+                        );
+                    }
+                });
+            }
+        });
+    }
+
+
 })
 </script>
 @endsection

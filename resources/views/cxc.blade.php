@@ -458,7 +458,7 @@
     $(document).ready(function(){
         //$('#createCxcModal').modal('show');
 
-        function consultaDeCxc() {
+        function consultaDeCxc(eliminado) {
             var codwallet = $('#cmbcodwallet').val();
             $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
 
@@ -478,6 +478,13 @@
                     $('#cxcContainer').html(response.cxcHtml)
                     initializeCxcTable()
                     $("[data-toggle='tooltip']").tooltip();
+                    if(eliminado){
+                        Swal.fire(
+                            "Eliminado",
+                            "El registro ha sido eliminado correctamente.",
+                            "success"
+                        );
+                    }
 				},
 				error: function(mensaje) {
                     $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
@@ -661,42 +668,69 @@
 			});
         }
 
-    })
-
-    function aceptarEliminar(codcxc) {
-        Swal.fire({
-            title: "¿Estás seguro?",
-            text: "¡No podrás revertir esta acción!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ url('cxc/eliminar') }}/" + codcxc,
-                    type: "POST",
-                    data: {
-                        "_token": "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire("¡Eliminado!", "La cuenta por cobrar ha sido eliminada.", "success");
-                            // Refrescar la tabla o eliminar la fila del DOM
-                            location.reload(); 
-                        } else {
-                            Swal.fire("Error", "No se pudo eliminar la cuenta por cobrar.", "error");
-                        }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr.responseText);
-                        Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+        window.aceptarEliminar = function(codcxc) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "Para confirmar, introduce tu clave de seguridad.",
+                icon: "warning",
+                input: "password",
+                inputPlaceholder: "Introduce tu clave de seguridad",
+                inputAttributes: {
+                    autocomplete: "new-password", // Evita que el navegador lo llene automáticamente
+                    autocorrect: "off",
+                    spellcheck: false,
+                    required: true
+                },
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Sí, eliminar",
+                cancelButtonText: "Cancelar",
+                preConfirm: (password) => {
+                    if (!password) {
+                        Swal.showValidationMessage("La clave de seguridad es obligatoria");
                     }
-                });
-            }
-        });
-    }
+                    return password;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                    if(result.value !== 'dase995**--'){
+                        return Swal.fire(
+                            "Error",
+                            "Contraseña inválida.",
+                            "error"
+                        );
+                    }
+
+                    $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+                    $.ajax({
+                        url: "{{ url('cxc/eliminar') }}/" + codcxc,
+                        type: "POST",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                consultaDeCxc(true)
+                            } else {
+                                Swal.fire("Error", response.message || "No se pudo eliminar la cuenta por cobrar.", "error");
+                            }
+                        },
+                        error: function(err) {
+                            console.log(err);
+                            Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                        }
+                    });
+                }
+            });
+        }
+
+        window.updateColor = function(codcxc){
+
+        }
+
+    })
 </script>
 @endsection
