@@ -175,6 +175,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('subir-foto', 'subirFoto');
 
         Route::get('users', 'index')->middleware('menu.permission:9');
+        Route::get('users/create', 'create');
+        Route::post('users/store', 'store');
         Route::get('users/{id}/edit', 'edit');
 
         Route::post('setMenu', 'setMenu');

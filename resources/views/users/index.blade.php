@@ -7,8 +7,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
-                <h5>Lista de Usuarios</h5>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h5>Lista de Usuarios</h5>
+                    <span>Gestión de Usuarios y Asignación de Permisos</span>
+                </div>
+
+                <a href="{{ url('users/create') }}" class="btn btn-success rounded shadow">
+                    <i class="fas fa-user"></i> Registrar Usuario
+                </a>
             </div>
             <div class="card-block">
                 <div class="row">

@@ -119,6 +119,20 @@
                                             >
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="text-left">
+                                            <i class="fas fa-chalkboard-teacher"></i> Master
+                                        </td>
+                                        <td>
+                                            <input 
+                                                type="checkbox" 
+                                                class="checkbox-config" 
+                                                data-codusuario="{{ $user->codusuario }}" 
+                                                data-field="master"
+                                                {{ $user->master ? 'checked' : '' }}
+                                            >
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
 

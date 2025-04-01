@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{User, Menu, Consultor};
+use App\Models\{User, Menu, Consultor, MenuPermiso};
 use Illuminate\Support\Facades\DB;
 use Auth;
 
@@ -13,17 +13,76 @@ class UsersController extends Controller
         $users = User::all();
 
         return view('users.index', [
-            'users' => $users
+            'users' => $users,
         ]);
     }
 
     public function create(){
-        return view('users.create');
+        $menus = Menu::where('inactivo', false)->orderBy('position', 'asc')->get();
+
+        return view('users.create', [
+            'menus' => $menus
+        ]);
     }
 
-    public function store(Request $request){
-
+    public function store(Request $request)
+    {
+        // Validar los datos
+        $validatedData = $request->validate([
+            'codtipodoc' => 'required|in:1,2',
+            'documento'  => 'required|min:6|max:9|unique:users,documento',
+            'nombre'     => 'required|string|max:255',
+            'telefono'   => 'nullable|string|max:20',
+            'email'      => 'required|email|unique:users,email',
+            'role'       => 'required|string|in:Directiva,Gerencia,Analista',
+        ]);
+    
+        // Crear el usuario
+        $user = new User();
+        $user->codtipodoc = $validatedData['codtipodoc'];
+        $user->documento = $validatedData['documento'];
+        $user->name = $validatedData['nombre'];
+        $user->telefonocel = $validatedData['telefono'];
+        $user->email = $validatedData['email'];
+        $user->role = $validatedData['role'];
+        $user->fecha = now();
+        $user->master = $request->has('master'); // Verifica si el checkbox está marcado
+        $user->inactivo = false;
+        $user->password = bcrypt('12345678');
+        $user->save();
+    
+        // Actualizar `codusuario` con el ID generado
+        $user->codusuario = $user->id;
+        $user->save();
+    
+        // Guardar si el usuario es consultor
+        if ($request->has('consultor')) {
+            $consultor = new Consultor();
+            $consultor->codconsultor = $user->id;
+            $consultor->codusuario = $user->id;
+            $consultor->nombre = $user->name;
+            $consultor->inactivo = false;
+            $consultor->save();
+        }
+    
+        // Guardar permisos seleccionados
+        if ($request->has('codmenu')) {
+            foreach ($request->codmenu as $codmenu) {
+                $registra = $request->registra[$codmenu] ?? 0; 
+                $vertodo   = $request->vertodo[$codmenu] ?? 0;
+            
+                $menupermiso = new MenuPermiso();
+                $menupermiso->codusuario = $user->id;
+                $menupermiso->codmenu = $codmenu;
+                $menupermiso->registra = $registra;
+                $menupermiso->vertodo = $vertodo;
+                $menupermiso->save();
+            }
+        }
+    
+        return redirect('users')->with('message', 'Usuario creado con éxito!');
     }
+    
 
     public function edit($id){
         $user = User::find($id);
@@ -163,8 +222,14 @@ class UsersController extends Controller
                 return response()->json(['error' => 'Consultor no encontrado'], 404);
             }
         } else {
-            $user->inactivo = !$request->value;
-            $user->save();
+            if($request->field == 'master'){
+                $user->master = $request->value;
+                $user->save();
+            }else{
+                $user->inactivo = !$request->value;
+                $user->save();
+            }
+
         }
 
         return response()->json(['success' => 'Configuración actualizada']);
