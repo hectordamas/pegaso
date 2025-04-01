@@ -42,7 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Modulo de Atencion al Cliente
     Route::controller(AtencionClienteController::class)->group(function() {
-        Route::get('atencionclientes',  'index');
+        Route::get('atencionclientes',  'index')->middleware('menu.permission:13');
         Route::post('atencionclientes/store',  'store')->name('atencionclientes.store');
         Route::post('atencionclientes/update',  'update')->name('atencionclientes.update');
     });
@@ -50,7 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Calendario de Eventos
     Route::controller(CalendarioController::class)->group(function(){
-        Route::get('calendario',  'index');
+        Route::get('calendario',  'index')->middleware('menu.permission:15');
         Route::post('eventos/update/{id}', 'update');
         Route::post('eventos/delete/{id}', 'destroy');
         Route::post('eventos/store', 'store')->name('eventos.store');
@@ -60,7 +60,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Entrada de Equipos
     Route::controller(EntradaEquiposController::class)->group(function(){
-        Route::get('entradaequipos',  'index');
+        Route::get('entradaequipos',  'index')->middleware('menu.permission:2');
         Route::post('entradaequipos/update', 'update')->name('entradaequipos.update');
         Route::post('entradaequipos/store', 'store')->name('entradaequipos.store');
         Route::get('entradaequipos/print/{id}', 'print');
@@ -73,7 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Presupuestos
     Route::controller(PresupuestosController::class)->group(function() {
-        Route::get('presupuestos',  'index')->name('presupuestos.index');
+        Route::get('presupuestos',  'index')->name('presupuestos.index')->middleware('menu.permission:134');
         Route::get('presupuestosData', 'data')->name('presupuestos.data');
         Route::post('presupuestos/update', 'update')->name('presupuestos.update');
         Route::post('presupuestos/ver-detalles/{id}', 'verDetalles');
@@ -81,7 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Proyectos
     Route::controller(ProyectosController::class)->group(function() {
-        Route::get('proyectos',  'index')->name('proyectos.index');
+        Route::get('proyectos',  'index')->name('proyectos.index')->middleware('menu.permission:135');
         Route::get('proyectosData', 'data')->name('proyectos.data');
         Route::post('proyectos/update', 'update')->name('proyectos.update');
         Route::post('proyectos/ver-detalles/{id}', 'verDetalles');
@@ -97,7 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Comunicaciones
     Route::controller(LlamadasController::class)->group(function(){
-        Route::get('comunicaciones', 'index')->name('comunicaciones');
+        Route::get('comunicaciones', 'index')->name('comunicaciones')->middleware('menu.permission:1');
         Route::post('comunicaciones/store', 'store')->name('comunicaciones.store');
         Route::post('comunicaciones/update', 'update')->name('comunicaciones.update');
     });
@@ -109,9 +109,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Visitas
     Route::controller(VisitasController::class)->group(function(){
-        Route::get('visitas', 'index')->name('visitas');
+        Route::get('visitas', 'index')->name('visitas')->middleware('menu.permission:7');
         Route::post('visitas/store', 'store')->name('visitas.store');
         Route::get('visitas/pdf/{codvisita}', 'pdf')->name('visitas.pdf');
+        Route::post('visitas/subir-archivo', 'fileUpload');
     });
     Route::controller(ChatVisitaController::class)->group(function() {
         Route::get('chatvisita/cargar/{codllamada}',  'cargarChats');
@@ -120,23 +121,24 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Cuentas por cobrar
     Route::controller(CxCController::class)->group(function(){
-        Route::get('cuentas-por-cobrar', 'index')->name('cxc');
+        Route::get('cuentas-por-cobrar', 'index')->name('cxc')->middleware('menu.permission:3');
         Route::post('cxc/store', 'store')->name('registrarCxcWallet');
         Route::get('cxc/balance', 'balance')->name('cxc.balance');
         Route::get('cxc/getDetailsByClient', 'getDetailsByClient')->name('cxc.getDetailsByClient');
 
         Route::post('registrarCxcAbono', 'registrarCxcAbono')->name('registrarCxcAbono');
         Route::get('getAbonosDetails', 'getAbonosDetails')->name('cxc.getAbonosDetails');
+        Route::post('cxc/updateColor', 'updateColor')->name('cxc.updateColor');
 
         Route::post('cxc/eliminar/{codcxc}', 'destroy');
         
         //Cxc Reportes
-        Route::get('cuentas-por-cobrar/reportes', 'reportes');
+        Route::get('cuentas-por-cobrar/reportes', 'reportes')->middleware('menu.permission:14');
     });
 
     //Entregas y Suministros
     Route::controller(EntregasController::class)->group(function(){
-        Route::get('entregas-y-suministros', 'index')->name('entregas');
+        Route::get('entregas-y-suministros', 'index')->name('entregas')->middleware('menu.permission:136');
         Route::get('entregasData', 'data')->name('entregas.data');
         Route::post('entregas/update', 'update')->name('entregas.update');
         Route::post('entregas/ver-detalles/{id}', 'verDetalles');
@@ -152,13 +154,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Comisiones
     Route::controller(ComisionesController::class)->group(function(){
-        Route::get('comisiones', 'index')->name('comisiones.index');
+        Route::get('comisiones', 'index')->name('comisiones.index')->middleware('menu.permission:137');
         Route::get('comisiones/balance', 'balance')->name('comisiones.balance');
     });
 
     //Wallet
     Route::controller(WalletController::class)->group(function(){
-        Route::get('wallet', 'index');
+        Route::get('wallet', 'index')->middleware('menu.permission:5');
         Route::post('wallet/store', 'store');
         Route::post('wallet/destroy', 'destroy');
         Route::get('getWalletData', 'getWalletData')->name('getWalletData');
@@ -170,5 +172,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('editar-perfil/{id}', 'editarPerfil')->name('editar-perfil');
         Route::post('update-profile/{id}', 'updateProfile')->name('update-profile');
         Route::post('update-password/{id}', 'updatePassword')->name('update-password');
+        Route::post('subir-foto', 'subirFoto');
+
+        Route::get('users', 'index')->middleware('menu.permission:9');
+        Route::get('users/{id}/edit', 'edit');
+
+        Route::post('setMenu', 'setMenu');
+        Route::post('setUserConfig', 'setUserConfig');
+        Route::post('setRole', 'setRole');
     });
 });

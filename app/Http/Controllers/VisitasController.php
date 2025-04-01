@@ -161,4 +161,26 @@ class VisitasController extends Controller
         return $pdf->stream($namefile);
 
     }
+
+    public function fileUpload(Request $request){
+        // Guardar archivo sin usar Storage
+        if ($request->hasFile('file')) {
+            $visita = Visita::where('codvisita', $request->visitaId)->first();
+
+            $ruta = 'uploads/visitas'; 
+            $archivo = $request->file('file');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+
+            $visita->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+            $visita->save();
+
+            return redirect()->back()->with('message', 'Archivo subido con éxito!');
+        }
+
+        return redirect()->back()->with('error', 'No se ha cargado un archivo válido');
+
+    }
 }

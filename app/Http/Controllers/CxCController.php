@@ -98,6 +98,17 @@ class CxCController extends Controller
         ]);
     }
 
+    public function updateColor(Request $request){
+        $cxc = CxC::where('codcxc', $request->codcxc)->first();
+        $cxc->color = $request->color;
+        $cxc->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'color cambiado con exito'
+        ]);
+    }
+
     public function getDetailsByClient(Request $request){
         $codclie = $request->codclie;
 

@@ -16,7 +16,7 @@
                 <div class="row">
 
                     <!-- Selección de Empresa -->
-                    <div class="col-lg-6 col-md-6">
+                    <div class="col-lg-6 col-md-6 form-group">
                         <label for="cmbcodwallet" class="font-weight-bold mb-2 fw-bold">Empresa</label>
                         <select name="cmbcodwallet" class="form-control" id="cmbcodwallet" required>
                             <option selected>Seleccione una empresa</option>
@@ -728,7 +728,26 @@
         }
 
         window.updateColor = function(codcxc){
-
+            $.ajax({
+                url: "{{ url('cxc/updateColor') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    codcxc: codcxc,
+                    color: $('#codcxc_' + codcxc).val(),
+                },
+                success: function(response) {
+                    if (response.success) {
+                        consultaDeCxc()
+                    } else {
+                        Swal.fire("Error", response.message || "No se pudo eliminar la cuenta por cobrar.", "error");
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                    Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                }
+            });
         }
 
     })

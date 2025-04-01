@@ -62,7 +62,7 @@
                             <th>Fecha</th>
                             <th>Cliente</th>
                             <th>Consultor</th>
-                            <th>PDF</th>
+                            <th>Acciones</th>
                             <th>
                                 <i class="far fa-comments fa-2xl"></i>                                
                             </th>
@@ -80,9 +80,22 @@
                                     {{ $visita->consultor->nombre ?? 'N/A' }}
                                 </td>
                                 <td>
-                                    <a href="{{ route('visitas.pdf', ['codvisita' => $visita->codvisita]) }}" target="_blank" class="btn btn-danger">
-                                        <i class="far fa-file-pdf"></i>
-                                    </a>
+                                    <div class="btn-group">
+
+                                        <a href="{{ route('visitas.pdf', ['codvisita' => $visita->codvisita]) }}" target="_blank" class="btn btn-danger" data-toggle="tooltip" title="Abrir Orden de Servicio">
+                                            <i class="far fa-file-pdf"></i>
+                                        </a>
+
+                                        @if($visita->adjunto)
+                                        <a href="{{ asset($visita->adjunto) }}" target="_blank" class="btn btn-success" data-toggle="tooltip" title="Abrir Adjunto">
+                                            <i class="fas fa-external-link-square-alt"></i>
+                                        </a>
+                                        @else
+                                        <a href="javascript:void(0);" class="btn btn-info" data-toggle="tooltip" title="Adjuntar Archivo" onclick="fileUpload('{{$visita->codvisita}}')">
+                                            <i class="fas fa-cloud-upload-alt"></i>                                    
+                                        </a>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td>
                                     <a href="javascript:void(0);"
@@ -247,6 +260,43 @@
         </div>
     </div>
 </div>
+
+
+{{-- Adjuntar Archivo --}}
+<div class="modal fade VisitaFile" tabindex="-1" id="VisitaFile" aria-labelledby="VisitaFileLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="VisitaFileLabel">Adjuntar Archivo Visitas #<span class="visitaId"></span></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('visitas/subir-archivo') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+
+                    <input type="hidden" name="visitaId" id="visitaId">
+
+                    <div class="row">
+                        <div class="col-md-12 form-group">
+                            <label for="file" class="fw-bold mb-2">Archivo</label>
+                            <input type="file" class="form-control" name="file" id="file" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="far fa-times-circle"></i> Cerrar
+                        </button>
+                        <button id="btn-registrar" type="submit" class="btn btn-success float-center">
+                            <i class="fas fa-file-upload"></i> Subir Archivo
+                        </button>
+                    </div>
+                </form> <!-- Cierre del formulario -->
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -327,6 +377,13 @@
             sendMessage(); // Llamar la función de enviar mensaje
         }
     });
+
+
+    window.fileUpload = function(codvisita){
+        $('#VisitaFile').modal('show')
+        $('.visitaId').html(codvisita)
+        $('#visitaId').val(codvisita)
+    }
     
 </script>
 @endsection

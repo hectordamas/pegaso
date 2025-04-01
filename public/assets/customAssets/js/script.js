@@ -1,8 +1,8 @@
 var tableApp;
 
 function initializeDataTable() {
-	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length){
-		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table').DataTable({
+	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length){
+		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table').DataTable({
 			deferRender: true, // Solo renderiza lo visible
 			order: [[0, 'desc']],
 			responsive: true,
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 	//--------------------------Atencion al Cliente------------------------------------------------------------
 
-    $("#direccionconex, #telefonoComunicaciones").inputmask(); // Aplica el formato IP automáticamente
+    $("#direccionconex, #telefonoComunicaciones, #telefonocel").inputmask(); // Aplica el formato IP automáticamente
 
     $(function () {
         $("[data-toggle='tooltip']").tooltip(); //Tooltip

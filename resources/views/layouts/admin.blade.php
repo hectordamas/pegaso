@@ -139,120 +139,68 @@
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="pcoded-navigatio-lavel">Menú Principal</div>
                             <ul class="pcoded-item pcoded-left-item">
-                                <li class="{{ Request::is('home') ? 'active' : '' }}">
-                                    <a href="{{ url('/') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="feather icon-home"></i>
-                                        </span>
-                                        <span class="pcoded-mtext">Inicio</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('atencionclientes*') ? 'active' : '' }}">
-                                    <a href="{{ url('atencionclientes') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-headset"></i>
-                                        </span>
-                                        <span class="pcoded-mtext">Atención Cliente</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('calendario*') ? 'active' : '' }}">
-                                    <a href="{{ url('calendario') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-calendar"></i>
-                                        </span>
-                                        <span class="pcoded-mtext">Calendario</span>
-                                    </a>
-                                </li>
-
-                                <ul class="pcoded-item pcoded-left-item">
-                                    <li class="pcoded-hasmenu {{ Request::is('cuentas-por-cobrar*') ? 'active' : '' }}">
-                                        <a href="javascript:void(0)">
+                            <!-- Renderizar el menú normal -->
+                            <li class="{{ Request::is('home*') ? 'active' : '' }}">
+                                <a href="{{ url('home') }}">
+                                    <span class="pcoded-micon">
+                                        <i class="fas fa-home"></i>                                    
+                                    </span>
+                                    <span class="pcoded-mtext">Inicio</span>
+                                </a>
+                            </li>
+                            @php
+                                $submenuCXC = [];
+                                $submenuConfig = [];
+                            @endphp
+                        
+                            @foreach($globalMenus as $menu)
+                                @if(in_array($menu->codmenu, [3, 14]))
+                                    @php
+                                        $submenuCXC[] = $menu;
+                                    @endphp
+                                @elseif(in_array($menu->codmenu, [9, 10, 11]))
+                                    @php
+                                        $submenuConfig[] = $menu;
+                                    @endphp
+                                @else
+                                    <!-- Si ya acumulamos elementos de "Cuentas por Cobrar", renderizamos el dropdown -->
+                                    @if(count($submenuCXC) > 0)
+                                        <li class="pcoded-hasmenu {{ Request::is('cuentas-por-cobrar*') ? 'active' : '' }}">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-micon">
+                                                    <i class="fas fa-comments-dollar"></i>
+                                                </span>
+                                                <span class="pcoded-mtext">Cuentas por Cobrar</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                @foreach($submenuCXC as $submenu)
+                                                    <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
+                                                        <a href="{{ url($submenu->ruta) }}">
+                                                            <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
+                                        @php
+                                            $submenuCXC = []; // Limpiar la lista después de renderizar
+                                        @endphp
+                                    @endif
+                        
+                                    <!-- Renderizar el menú normal -->
+                                    <li class="{{ Request::is($menu->ruta . '*') ? 'active' : '' }}">
+                                        <a href="{{ url($menu->ruta) }}">
                                             <span class="pcoded-micon">
-                                                <i class="fas fa-comments-dollar"></i>
+                                                <i class="{{ $menu->logo_boostrap }}"></i>
                                             </span>
-                                            <span class="pcoded-mtext">Cuentas por Cobrar</span>
+                                            <span class="pcoded-mtext">{{ $menu->nombre }}</span>
                                         </a>
-                                        <ul class="pcoded-submenu">
-                                            <li class="{{ Request::is('cuentas-por-cobrar') ? 'active' : '' }}">
-                                                <a href="{{ url('cuentas-por-cobrar') }}">
-                                                    <span class="pcoded-mtext">CxC Divisas</span>
-                                                </a>
-                                            </li>
-                                            <li class="{{ Request::is('cuentas-por-cobrar/reportes') ? 'active' : '' }}">
-                                                <a href="{{ url('cuentas-por-cobrar/reportes') }}">
-                                                    <span class="pcoded-mtext">CxC Reportes</span>
-                                                </a>
-                                            </li>
-                                        </ul>
                                     </li>
-                                </ul>
-                                
-                                <li class="{{ Request::is('entradaequipos*') ? 'active' : '' }}">
-                                    <a href="{{ url('entradaequipos') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-desktop"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Entrada de Equipos</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('presupuestos*') ? 'active' : '' }}">
-                                    <a href="{{ url('presupuestos') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-file-invoice-dollar"></i>
-                                        </span>
-                                        <span class="pcoded-mtext">Presupuestos</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('proyectos*') ? 'active' : '' }}">
-                                    <a href="{{ url('proyectos') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-project-diagram"></i>
-                                        </span>
-                                        <span class="pcoded-mtext">Proyectos</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('entregas-y-suministros*') ? 'active' : '' }}">
-                                    <a href="{{ url('entregas-y-suministros') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-truck-moving"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Entregas y Suministros</span>
-                                    </a>
-                                </li>
-
-                                <li class="{{ Request::is('comunicaciones*') ? 'active' : '' }}">
-                                    <a href="{{ url('comunicaciones') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-phone-volume"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Comunicaciones</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('visitas*') ? 'active' : '' }}">
-                                    <a href="{{ url('visitas') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-id-card"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Registro de Visitas</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('comisiones*') ? 'active' : '' }}">
-                                    <a href="{{ url('comisiones') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-coins"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Comisiones</span>
-                                    </a>
-                                </li>
-                                <li class="{{ Request::is('wallet*') ? 'active' : '' }}">
-                                    <a href="{{ url('wallet') }}">
-                                        <span class="pcoded-micon">
-                                            <i class="fas fa-wallet"></i>                                        
-                                        </span>
-                                        <span class="pcoded-mtext">Wallet</span>
-                                    </a>
-                                </li>
+                                @endif
+                            @endforeach
                             </ul>
+
+                            @if(Auth::user()->master)
                             <div class="pcoded-navigatio-lavel">Administrador</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-hasmenu">
@@ -261,24 +209,17 @@
                                         <span class="pcoded-mtext">Configuración</span>
                                     </a>
                                     <ul class="pcoded-submenu">
-                                        <li>
-                                            <a href="{{ url('users') }}">
-                                                <span class="pcoded-mtext">
-                                                    <i class="fas fa-users"></i> Usuarios
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ url('consultores') }}">
-                                                <span class="pcoded-mtext">
-                                                    <i class="fas fa-user-tie"></i> Consultores
-                                                </span>
-                                            </a>
-                                        </li>
+                                        @foreach($submenuConfig as $submenu)
+                                            <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
+                                                <a href="{{ url($submenu->ruta) }}">
+                                                    <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
                                     </ul>
                                 </li>
-
                             </ul>
+                            @endif
                         </div>
                     </nav>
                     <div class="pcoded-content">
@@ -395,6 +336,7 @@
         });
     </script>
     @endforeach
+
 
     <!-- Spinner de carga para Ajax -->
     <div id="loadingSpinner" style="
