@@ -35,7 +35,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/jquery.mCustomScrollbar.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=1') }}">
 
 </head>
 <!-- Menu sidebar static layout -->
@@ -305,7 +305,7 @@
 
     @yield('scripts')
 
-    <script src="{{ asset('assets/customAssets/js/script.js') }}"></script>
+    <script src="{{ asset('assets/customAssets/js/script.js?v=1') }}"></script>
 
 
     @if(session()->has('message'))
