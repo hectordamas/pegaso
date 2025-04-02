@@ -59,7 +59,7 @@ $(document).ready(function(){
     initializeDataTable();
 	
 	$('.js-select2').select2({
-		theme: 'classic', // Mantiene el estilo Classic
+		//theme: 'classic', // Mantiene el estilo Classic
 		width: '100%', // Ocupar todo el ancho disponible
 	});
 
@@ -67,13 +67,13 @@ $(document).ready(function(){
 	//Modal Crear Soporte
 	$('#SoporteModalCreate').on('shown.bs.modal', function () {
 		$('#codclie').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#SoporteModalCreate')
 		});
 
 		$('#codconsultor').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#SoporteModalCreate')
 		});
@@ -110,13 +110,13 @@ $(document).ready(function(){
 	$('#createEventModal').on('shown.bs.modal', function () {
 		$('#codclie').select2({
 			tags: true, //Crear clientes que aun no existen a modo de leads
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#createEventModal')
 		});
 
 		$('#codconsultor').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#createEventModal')
 		});
@@ -126,13 +126,13 @@ $(document).ready(function(){
 	//Modal Crear Soporte
 	$('#EntradaModalCreate').on('shown.bs.modal', function () {
 		$('#codclie').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#EntradaModalCreate')
 		});
 
 		$('#codconsultor').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#EntradaModalCreate')
 		});
@@ -166,19 +166,19 @@ $(document).ready(function(){
 	//Modal Crear Soporte
 	$('#VisitaModalCreate').on('shown.bs.modal', function () {
 		$('#codclie').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#VisitaModalCreate')
 		});
 
 		$('#codconsultor').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#VisitaModalCreate')
 		});
 
 		$('#acompanantes').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#VisitaModalCreate')
 		});
@@ -200,7 +200,7 @@ $(document).ready(function(){
 	//Modal Crear Soporte
 	$('#createCxcModal').on('shown.bs.modal', function () {
 		$('#clienteSaint').select2({
-			theme: 'classic', // Mantiene el estilo Classic
+			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#createCxcModal')
 		});

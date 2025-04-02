@@ -71,8 +71,7 @@ class HomeController extends Controller
         $atencionClientesCantidad =  $atencionClientes->pluck('cantidad');
 
         //Eventos
-        $eventos =  Calendario::whereBetween('entry_date', [now()->startOfWeek(), now()->endOfWeek()])
-        ->get()
+        $eventos =  Calendario::all()
         ->map(function ($item) {
             return [
                 'id'    => $item->id,

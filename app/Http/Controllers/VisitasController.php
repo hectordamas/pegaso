@@ -10,19 +10,34 @@ use Carbon\Carbon;
 use Validator;
 use Mail;
 use Auth;
+use App\Traits\VerifyPermissions;
 
 class VisitasController extends Controller
 {
-    public function index(Request $request){
+    use VerifyPermissions; // Importamos el trait
+
+    public function index(Request $request)
+    {
+        // Verificar si el usuario tiene permiso "vertodo"
+        $puedeVerTodo = $this->hasPermissions('vertodo');
+
+        // Obtener listas de datos auxiliares
         $consultores = Consultor::where('inactivo', false)->get();
         $users = User::where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip','asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->get();
 
-        $visitas = Visita::byDateRange($request->from, $request->until)
-        ->byConsultor($request->codconsultor)
-        ->orderBy('codvisita', 'desc')
-        ->get();
+        // Construcción de la consulta de visitas
+        $visitasQuery = Visita::byDateRange($request->from, $request->until)
+            ->byConsultor($request->codconsultor);
 
+        // Si el usuario no tiene permiso "vertodo", solo puede ver sus visitas
+        if (!$puedeVerTodo) {
+            $visitasQuery->where('codconsultor', Auth::id());
+        }
+
+        $visitas = $visitasQuery->orderBy('codvisita', 'desc')->get();
+
+        // Obtener cliente y consultor si se han enviado en la solicitud
         $cliente = Saclie::where('codclie', $request->requestCliente)->first();
         $consultor = Consultor::where('codconsultor', $request->requestConsultor)->first();
 
@@ -31,7 +46,7 @@ class VisitasController extends Controller
             'consultores' => $consultores,
             'saclie' => $saclie,
             'users' => $users,
-                
+
             'requestAccion' => $request->requestAccion,
             'requestFecha' => $request->requestFecha,
             'requestFechaFinal' => $request->requestFechaFinal,
@@ -39,8 +54,9 @@ class VisitasController extends Controller
             'requestConsultor' => $request->requestConsultor,
             'requestDescripcion' => $request->requestDescripcion,
 
-            'ccliente' => $cliente, 
-            'cconsultor' =>  $consultor
+            'ccliente' => $cliente,
+            'cconsultor' => $consultor,
+            'registra' => $this->hasPermissions('registra')
         ]);
     }
 

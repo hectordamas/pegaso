@@ -50,7 +50,8 @@ class AtencionClienteController extends Controller
 			'atencionClientes' => $atencionClientes,
 			'saclie' => $saclie,
 			'consultors' => $consultors,
-			'estatusAt' => $estatusAt
+			'estatusAt' => $estatusAt,
+			'registra' => $this->hasPermissions('registra')
 		]);
 	}
 

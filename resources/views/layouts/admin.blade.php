@@ -293,9 +293,7 @@
     <script src="{{ asset('assets/adminty/bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}"></script>
     <script src="{{ asset('assets/adminty/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/js/jquery.quicksearch.js') }}"></script>
-    <!-- Custom js -->
     <script src="{{ asset('assets/adminty/assets/pages/advance-elements/select2-custom.js') }}"></script>
-
     <script type="text/javascript" src="{{ asset('assets/adminty/assets/js/script.js') }}"></script>
 
     <!--Input mask -->

@@ -50,9 +50,11 @@
                     <h5>Historial de Visitas</h5>
                     <span>📋 Resultado de consulta de las visitas recibidas</span>
                 </div>
+                @if($registra)
                 <button type="button" class="btn btn-success shadow rounded" data-bs-toggle="modal" data-bs-target="#VisitaModalCreate">
                     <i class="fas fa-id-card"></i> Registrar Visita
                 </button>
+                @endif
             </div>
             <div class="card-block">
                 <table class="table table-striped" id="visita-table">
@@ -140,8 +142,8 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Cliente</label>
-                                <select name="codclie" class="form-control"  id="codclie" required>
-                                    <option></option>
+                                <select name="codclie" class="form-control js-example-basic-single"  id="codclie" required>
+                                    <option value="" selected="">Elige una Opción</option>
                                     @foreach($saclie as $saclie)
                                         <option value="{{ $saclie->codclie }}"
                                             @if($ccliente)
@@ -158,8 +160,9 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Consultor</label>
-                                <select name="codconsultor" class="form-control" id="codconsultor" required="">
-                                    <option></option>
+                                <select name="codconsultor" class="form-control js-example-basic-single" id="codconsultor" required="">
+                                    <option value="" selected="">Elige una Opción</option>
+
                                     @foreach($consultores as $consultor)
                                         <option value="{{ $consultor->codconsultor }}"
                                         @if($cconsultor)

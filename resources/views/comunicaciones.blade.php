@@ -62,9 +62,11 @@
                     <span>📋 Control de Mensajeria, Llamadas Entrantes y Salientes</span>
                 </div>
 
+                @if($registra)
                 <button type="button" class="btn btn-success shadow rounded" data-bs-toggle="modal" data-bs-target="#ComunicacionesModalCreate">
                     <i class="fas fa-phone-volume"></i> Registrar Comunicaciones
                 </button>
+                @endif
             </div>
             <div class="card-block">
                 <table id="comunicaciones-table" class="table">
@@ -155,7 +157,7 @@
                         <div class="col-md-6 form-group">
                             <label for="">Tipo de comunicación</label>
                             <div class="input-group">
-                                <span class="input-group-text">
+                                <span class="input-group-text bg-inverse text-light">
                                     <i class="fas fa-comment-alt"></i>
                                 </span>
 
@@ -170,7 +172,7 @@
                             <div class="form-group">
                                 <label class="control-label">Tipo de Envío</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-phone-volume"></i>
                                     </span>
 
@@ -188,7 +190,7 @@
                             <div class="form-group">
                                 <label class="control-label">Persona de Contacto</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-user"></i>
                                     </span>
                                     <input name="contacto" class="form-control"  id="contacto" value="{{ $ccliente->descrip ?? '' }}" required/>
@@ -199,7 +201,7 @@
                             <div class="form-group">
                                 <label class="control-label">Teléfono</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-phone"></i>
                                     </span>
 
@@ -211,7 +213,7 @@
                             <div class="form-group">
                                 <label class="control-label">E-Mail</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-at"></i>                                    
                                     </span>
 
@@ -224,7 +226,7 @@
                             <div class="form-group">
                                 <label class="control-label">Motivo</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-question-circle"></i>                                    
                                     </span>
                                     <select name="codmotivo" class="form-control" id="codmotivo" required>
@@ -242,7 +244,7 @@
                             <div class="form-group">
                                 <label class="control-label">Consultor</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">
+                                    <span class="input-group-text bg-inverse text-light">
                                         <i class="fas fa-user-tie"></i>                                    
                                     </span>
                                     <select name="codconsultor" class="form-control" id="codconsultor" required>

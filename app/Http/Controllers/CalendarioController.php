@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Traits\VerifyPermissions;
 use App\Models\{Calendario, Saclie, Consultor};
 use Carbon\Carbon;
 use Mail;
@@ -11,12 +12,24 @@ use Log;
 
 class CalendarioController extends Controller
 {
-    public function index(Request $request)
-	{
-		$consultors = Consultor::where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+    use VerifyPermissions;
 
-        $eventos =  Calendario::all()->map(function ($item) {
+    public function index(Request $request)
+    {
+        $consultors = Consultor::where('inactivo', false)->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->get();
+
+        // Verificar si el usuario tiene permiso "vertodo" usando el trait
+        $puedeVerTodo = $this->hasPermissions('vertodo');
+
+        $eventosQuery = Calendario::query();
+
+        if (!$puedeVerTodo) {
+            // Si no tiene "vertodo", solo puede ver sus propios eventos
+            $eventosQuery->where('codconsultor', Auth::id());
+        }
+
+        $eventos = $eventosQuery->get()->map(function ($item) {
             return [
                 'id'    => $item->id,
                 'title' => $item->title,
@@ -25,20 +38,20 @@ class CalendarioController extends Controller
                 'eventType' => $item->evenType,
                 'interactionType' => $item->interactionType,
                 'cliente' => $item->saclie->descrip ?? $item->lead,
-                'start' => $item->entry_date, // Fecha de inicio del evento
-                'entry_date' => $item->entry_date, // Fecha de inicio del evento
-                'end'   => $item->departure_date, // Fecha de fin del evento
-                'borderColor' => $item->color ? $item->color : '#404E67', 
+                'start' => $item->entry_date,
+                'entry_date' => $item->entry_date,
+                'end'   => $item->departure_date,
+                'borderColor' => $item->color ? $item->color : '#404E67',
                 'textColor' => '#000',
                 'itemDotColor' => $item->color ? $item->color : '#01A9AC',
-                //'backgroundColor' => $item->color, // Color personalizado
             ];
         });
 
-		return view('calendario', [
+        return view('calendario', [
             'saclie' => $saclie,
             'consultors' => $consultors, 
-            'eventos' => $eventos
+            'eventos' => $eventos,
+            'registra' => $this->hasPermissions('registra')
         ]);
     }
 

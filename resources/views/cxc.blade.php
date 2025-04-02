@@ -145,8 +145,8 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="clienteSaint" class="fw-bold">Cliente Saint</label>
-                        <select name="codclie" required id="clienteSaint" class="form-control">
-                            <option value="">Elija una Opción</option>
+                        <select name="codclie" required id="clienteSaint" class="form-control js-example-basic-single">
+                            <option value="">Elige una Opción</option>
                             @foreach($saclie as $item)
                                 <option value="{{ $item->codclie }}">{{ $item->descrip }}</option>
                             @endforeach
@@ -316,21 +316,33 @@
     var printJson;
 
     function imprimir() {
-        // Formatear los valores de saldo
-        let formattedPrintJson = printJson.map(item => ({
-            ...item,
-            saldo: new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(item.saldo)
-        }));
-    
+        let formattedHtml = `
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align: left; border-bottom: 1px solid black; padding: 5px;">Cliente</th>
+                        <th style="text-align: right; border-bottom: 1px solid black; padding: 5px;">Saldo</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        printJson.forEach(item => {
+            let formattedSaldo = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(item.saldo);
+            formattedHtml += `
+                <tr>
+                    <td style="text-align: left; padding: 5px;">${item.cliente}</td>
+                    <td style="text-align: right; padding: 5px;">${formattedSaldo}</td>
+                </tr>`;
+        });
+
+        formattedHtml += `</tbody></table>`;
+
         printJS({
-            printable: formattedPrintJson,
-            properties: [
-                { field: 'cliente', displayName: 'Cliente' },
-                { field: 'saldo', displayName: 'Saldo' },
-            ],
-            type: 'json'
+            printable: formattedHtml,
+            type: 'raw-html'
         });
     }
+
 
 
     var cxcTable;

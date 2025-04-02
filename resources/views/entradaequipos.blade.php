@@ -74,9 +74,11 @@
                         <h5>Equipos Recibidos</h5>
                         <span>📋 Historial detallado de los equipos ingresados.</span>
                     </div>
+                    @if($registra)
                     <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#EntradaModalCreate">
                         <i class="fas fa-laptop"></i> Registrar Entrada de Equipos
                     </button>
+                    @endif
                 </div>
             </div>
             <div class="card-block">
@@ -188,8 +190,8 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Cliente</label>
-                                <select name="codclie" class="form-control"  id="codclie" required>
-                                    <option value="" selected></option>
+                                <select name="codclie" class="form-control js-example-basic-single"  id="codclie" required>
+                                    <option value="" selected="">Elige una Opción</option>
                                     @foreach($saclie as $saclie)
                                         <option value="{{ $saclie->codclie }}"> {{ $saclie->rif }} | {{ $saclie->descrip }}</option>  
                                     @endforeach                                                 
@@ -208,8 +210,8 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Consultor</label>
-                                <select name="codconsultor" class="form-control" id="codconsultor" required="">
-                                    <option value="" selected=""></option>
+                                <select name="codconsultor" class="form-control js-example-basic-single" id="codconsultor" required="">
+                                    <option value="" selected="">Elige una Opción</option>
                                     @foreach($consultors as $consultor)
                                         <option value="{{ $consultor->codconsultor }}">{{ $consultor->nombre }}</option>
                                     @endforeach

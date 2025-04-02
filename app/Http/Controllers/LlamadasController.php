@@ -6,22 +6,35 @@ use Illuminate\Http\Request;
 use App\Models\{Llamadas, TipoLlamada, Motivo, Consultor, ChatLlamada, Menciones, Saclie, User};
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Traits\VerifyPermissions;
 use Auth;
 use Mail;
 use Log;
 
 class LlamadasController extends Controller
 {
-    public function index(Request $request){
-        $llamadas = Llamadas::byDateRange($request->from, $request->until)
-        ->byTipoLlamada($request->codtipollamada)
-        ->byMotivo($request->codmotivo)
-        ->orderBy('codllamada', 'desc')
-        ->get();
+    use VerifyPermissions;
+
+    public function index(Request $request)
+    {
+        // Verificar si el usuario tiene permiso "vertodo"
+        $puedeVerTodo = $this->hasPermissions('vertodo');
+
+        $llamadasQuery = Llamadas::byDateRange($request->from, $request->until)
+            ->byTipoLlamada($request->codtipollamada)
+            ->byMotivo($request->codmotivo)
+            ->orderBy('codllamada', 'desc');
+
+        if (!$puedeVerTodo) {
+            // Si no tiene "vertodo", solo ve sus propias llamadas
+            $llamadasQuery->where('codconsultor', Auth::id());
+        }
+
+        $llamadas = $llamadasQuery->get();
 
         $tipoLlamadas = TipoLlamada::where('inactivo', false)->get();
-		$motivos = Motivo::where('inactivo', false)->get();
-		$consultores = Consultor::where('inactivo', false)->get();
+        $motivos = Motivo::where('inactivo', false)->get();
+        $consultores = Consultor::where('inactivo', false)->get();
 
         $cliente = Saclie::where('codclie', $request->requestCliente)->first();
         $consultor = Consultor::where('codconsultor', $request->requestConsultor)->first();
@@ -29,18 +42,19 @@ class LlamadasController extends Controller
 
         return view('comunicaciones', [
             'llamadas' => $llamadas,
-            'tipoLlamadas' => $tipoLlamadas, 
+            'tipoLlamadas' => $tipoLlamadas,
             'motivos' => $motivos,
             'consultores' => $consultores,
-            
+
             'requestAccion' => $request->requestAccion,
             'requestFecha' => $request->requestFecha,
             'requestCliente' => $request->requestCliente,
             'requestConsultor' => $request->requestConsultor,
             'requestDescripcion' => $request->requestDescripcion,
 
-            'ccliente' => $cliente, 
-            'cconsultor' =>  $consultor
+            'ccliente' => $cliente,
+            'cconsultor' => $consultor,
+            'registra' => $this->hasPermissions('registra')
         ]);
     }
 

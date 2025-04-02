@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{EntradaEquipos, Consultor, Saclie, Estatus, ChatEntrada};
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Traits\VerifyPermissions;
+
 use Validator;
 use Mail;
 use Auth;
@@ -12,36 +14,51 @@ use Log;
 
 class EntradaEquiposController extends Controller
 {
-    public function index(Request $request){
-		// Recoge los filtros desde el request
-		$codconsultor = $request->input('consultor');
-		$codclie = $request->input('client');
-		$codestatus = $request->input('estatus');
-		$from = $request->input('from');
-		$until = $request->input('until');
+    use VerifyPermissions;
 
-        $entradaequipos = EntradaEquipos::query()->byConsultor($codconsultor)
-        ->bySaclie($codclie)
-        ->byDateRange($from, $until);
+    public function index(Request $request)
+    {
+        // Verificar si el usuario tiene permiso "vertodo"
+        $puedeVerTodo = $this->hasPermissions('vertodo');
 
-        // Si no se filtra por estatus, aplicar el filtro por defecto
-		if (!$codestatus) {
-			$entradaequipos->whereNotIn('codestatus', [5]);
-		} else {
-			$entradaequipos->byStatus($codestatus);
-		}
+        // Recoge los filtros desde el request
+        $codconsultor = $request->input('consultor');
+        $codclie = $request->input('client');
+        $codestatus = $request->input('estatus');
+        $from = $request->input('from');
+        $until = $request->input('until');
 
-        $entradaequipos = $entradaequipos->orderBy('codentrada', 'desc')->get();
+        // Construcción de la consulta
+        $entradaequiposQuery = EntradaEquipos::query()
+            ->byConsultor($codconsultor)
+            ->bySaclie($codclie)
+            ->byDateRange($from, $until);
+
+        // Si el usuario no tiene "vertodo", solo ve sus propios registros
+        if (!$puedeVerTodo) {
+            $entradaequiposQuery->where('codconsultor', Auth::id());
+        }
+
+        // Aplicar filtro de estatus
+        if (!$codestatus) {
+            $entradaequiposQuery->whereNotIn('codestatus', [5]);
+        } else {
+            $entradaequiposQuery->byStatus($codestatus);
+        }
+
+        // Obtener los resultados
+        $entradaequipos = $entradaequiposQuery->orderBy('codentrada', 'desc')->get();
 
         $consultors = Consultor::where('inactivo', false)->get();
-		$estatus = Estatus::where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip','asc')->get();
+        $estatus = Estatus::where('inactivo', false)->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->get();
 
         return view('entradaequipos', [
             'entradaequipos' => $entradaequipos,
             'consultors' => $consultors,
             'saclie' => $saclie,
-            'estatus' => $estatus
+            'estatus' => $estatus,
+            'registra' => $this->hasPermissions('registra')
         ]);
     }
 

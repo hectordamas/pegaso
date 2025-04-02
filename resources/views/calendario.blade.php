@@ -25,8 +25,8 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Cliente o Prospecto</label>
-                                <select name="codclie" class="form-control"  id="codclie" required>
-                                    <option value="" selected></option>
+                                <select name="codclie" class="form-control js-example-basic-single" id="codclie" required>
+                                    <option value="" selected>Elige una Opción</option>
                                     @foreach($saclie as $saclie)
                                         <option value="{{ $saclie->codclie }}"> {{ $saclie->rif }} | {{ $saclie->descrip }}</option>  
                                     @endforeach                                                 
@@ -37,8 +37,8 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Consultor</label>
-                                <select name="codconsultor" class="form-control" id="codconsultor" required>
-                                    <option value="" selected=""></option>
+                                <select name="codconsultor" class="form-control js-example-basic-single" id="codconsultor" required>
+                                    <option value="" selected>Elige una Opción</option>
                                     @foreach($consultors as $consultor)
                                         <option value="{{ $consultor->codconsultor }}">{{ $consultor->nombre }}</option>
                                     @endforeach
@@ -145,9 +145,11 @@
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="eventIdInput">
+                @if($registra)
                 <button type="button" class="btn btn-danger" id="destroyEvent" data-bs-dismiss="modal">
                     <i class="fas fa-trash"></i> Eliminar Evento
                 </button>
+                @endif
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times"></i> Cerrar
                 </button>
@@ -166,10 +168,13 @@
                         <h5>Calendario de Eventos</h5>
                         <span>📅 Gestión y Organización de Eventos.</span>
                     </div>
+                    <input type="hidden" id="registra" value ="{{ $registra }}">
 
+                    @if($registra)
                     <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#createEventModal">
                         <i class="far fa-calendar-alt"></i> Registra un Evento
                     </button>
+                    @endif
                 </div>
             </div>
             <div class="card-block">
@@ -207,26 +212,29 @@
 	            editable: true,
 	            droppable: true, // this allows things to be dropped onto the calendar
                 dayClick: function(date, jsEvent, view) {
-                    var today = moment().startOf('day'); // Obtiene la fecha actual sin horas
+                    if($('#registra').val() > 0){
+                        var today = moment().startOf('day'); // Obtiene la fecha actual sin horas
 
-                    if (date.isBefore(today, 'day')) {
-                        // Si la fecha seleccionada es menor a hoy, muestra el modal de error
-                        Swal.fire({
-                            title: "Fecha no Válida!",
-                            text: "No es posible crear un evento en una fecha anterior a la actual.",
-                            icon: "error",
-                            confirmButtonText: "Entendido!", 
-                            confirmButtonColor: '#dc3545'
-                        });
-                    } else {
-                        var dateWithTime = moment(date).set({'hour': 8, 'minute': 0, 'second': 0, 'millisecond': 0});
+                        if (date.isBefore(today, 'day')) {
+                            // Si la fecha seleccionada es menor a hoy, muestra el modal de error
+                            Swal.fire({
+                                title: "Fecha no Válida!",
+                                text: "No es posible crear un evento en una fecha anterior a la actual.",
+                                icon: "error",
+                                confirmButtonText: "Entendido!", 
+                                confirmButtonColor: '#dc3545'
+                            });
+                        } else {
+                            var dateWithTime = moment(date).set({'hour': 8, 'minute': 0, 'second': 0, 'millisecond': 0});
 
-                        // Si la fecha es válida, abre el modal de creación
-                        var formattedDate = dateWithTime.format('YYYY-MM-DD[T]HH:mm'); // Formato para datetime-local
-                        console.log(formattedDate)
-                        $('#desde').val(formattedDate);                        
-                        $('#createEventModal').modal('show');
+                            // Si la fecha es válida, abre el modal de creación
+                            var formattedDate = dateWithTime.format('YYYY-MM-DD[T]HH:mm'); // Formato para datetime-local
+                            console.log(formattedDate)
+                            $('#desde').val(formattedDate);                        
+                            $('#createEventModal').modal('show');
+                        }
                     }
+
                 },
 	            drop: function() {
 
@@ -249,7 +257,6 @@
                     $('#modalEventType').text(event.eventType ?? 'No Registrado');
                     $('#modalInteractionType').text(event.interationType ?? 'No Registrado');
 
-
                     // Mostrar el modal
                     $('#showEventModal').modal('show');
                 },
@@ -262,12 +269,14 @@
                     }
                 },
                 eventDrop: function(event, delta, revertFunc) {
-                    let today = moment().startOf('day'); // Fecha de hoy sin horas
-                    let newDate = event.start; // Nueva fecha del evento después de moverlo
-                    let eventEntryDate = moment(event.entry_date); // Fecha de inicio original del evento (entry_date)
+                    if($('#registra').val() > 0){
 
-                        // Verificar si el evento ya ocurrió
-                        if (eventEntryDate.isBefore(today)) {
+                        let today = moment().startOf('day'); // Fecha de hoy sin horas
+                        let newDate = event.start; // Nueva fecha del evento después de moverlo
+                        let eventEntryDate = moment(event.entry_date); // Fecha de inicio original del evento (entry_date)
+
+                            // Verificar si el evento ya ocurrió
+                            if (eventEntryDate.isBefore(today)) {
                             // Si el evento ya ocurrió, no permitir que se mueva a una fecha futura
                             let newDate = moment(event.start).add(delta); // Nueva fecha a la que se intenta mover el evento
                         
@@ -283,9 +292,9 @@
                             
                                 return revertFunc(); // Revertir el movimiento
                             }
-                        }
+                            }
 
-                    if (newDate.isBefore(today)) {
+                        if (newDate.isBefore(today, 'day')) {
                         // Si la fecha es anterior a hoy, revertir el movimiento y mostrar alerta
                         Swal.fire({
                             title: "Fecha no Válida!",
@@ -296,7 +305,7 @@
                         });
                     
                         revertFunc(); // Vuelve a la posición original
-                    } else {
+                        } else {
                         $("#loadingSpinner").css("display", "flex");
 
                         $.ajax({
@@ -329,78 +338,82 @@
                             }
                         })
 
+                        }
                     }
                 }
 	        });
 
             $('#destroyEvent').click(function () {
-                var eventId = $('#eventIdInput').val(); // Obtener el ID del evento
+                if($('#registra').val() > 0){
+                    var eventId = $('#eventIdInput').val(); // Obtener el ID del evento
 
-                if (!eventId) {
+                    if (!eventId) {
+                        Swal.fire({
+                            title: "Error",
+                            text: "No se pudo obtener el ID del evento.",
+                            icon: "error",
+                            confirmButtonText: "Entendido",
+                            confirmButtonColor: '#dc3545'
+                        });
+                        return;
+                    }
+
                     Swal.fire({
-                        title: "Error",
-                        text: "No se pudo obtener el ID del evento.",
-                        icon: "error",
-                        confirmButtonText: "Entendido",
-                        confirmButtonColor: '#dc3545'
-                    });
-                    return;
-                }
-            
-                Swal.fire({
-                    title: "¿Estás seguro?",
-                    text: "Esta acción eliminará el evento permanentemente.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Sí, eliminar",
-                    cancelButtonText: "Cancelar"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $("#loadingSpinner").css("display", "flex");
-
-                        $.ajax({
-                            url: "{{ url('eventos/delete/') }}/" + eventId, // Ruta para eliminar
-                            type: "POST",
-                            data: {
-                                _token: "{{ csrf_token() }}" // Token de seguridad CSRF
-                            },
-                            success: function (response) {
-                                $("#loadingSpinner").css("display", "none");
-
-                                if (response.success) {
-                                    $('#showEventModal').modal('hide'); // Cerrar modal
-                                    $('#calendar').fullCalendar('removeEvents', eventId); // Eliminar del calendario
-
-                                    Swal.fire({
-                                        title: "Eliminado",
-                                        text: "El evento ha sido eliminado correctamente.",
-                                        icon: "success",
-                                        confirmButtonText: "OK"
-                                    });
-                                } else {
+                        title: "¿Estás seguro?",
+                        text: "Esta acción eliminará el evento permanentemente.",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d33",
+                        cancelButtonColor: "#3085d6",
+                        confirmButtonText: "Sí, eliminar",
+                        cancelButtonText: "Cancelar"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $("#loadingSpinner").css("display", "flex");
+                        
+                            $.ajax({
+                                url: "{{ url('eventos/delete/') }}/" + eventId, // Ruta para eliminar
+                                type: "POST",
+                                data: {
+                                    _token: "{{ csrf_token() }}" // Token de seguridad CSRF
+                                },
+                                success: function (response) {
+                                    $("#loadingSpinner").css("display", "none");
+                                
+                                    if (response.success) {
+                                        $('#showEventModal').modal('hide'); // Cerrar modal
+                                        $('#calendar').fullCalendar('removeEvents', eventId); // Eliminar del calendario
+                                    
+                                        Swal.fire({
+                                            title: "Eliminado",
+                                            text: "El evento ha sido eliminado correctamente.",
+                                            icon: "success",
+                                            confirmButtonText: "OK"
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: "Error",
+                                            text: response.message || "No se pudo eliminar el evento.",
+                                            icon: "error",
+                                            confirmButtonText: "Entendido"
+                                        });
+                                    }
+                                },
+                                error: function () {
+                                    $("#loadingSpinner").css("display", "none");
+                                
                                     Swal.fire({
                                         title: "Error",
-                                        text: response.message || "No se pudo eliminar el evento.",
+                                        text: "Ocurrió un problema al intentar eliminar el evento.",
                                         icon: "error",
                                         confirmButtonText: "Entendido"
                                     });
                                 }
-                            },
-                            error: function () {
-                                $("#loadingSpinner").css("display", "none");
+                            });
+                        }
+                    });
+                }
 
-                                Swal.fire({
-                                    title: "Error",
-                                    text: "Ocurrió un problema al intentar eliminar el evento.",
-                                    icon: "error",
-                                    confirmButtonText: "Entendido"
-                                });
-                            }
-                        });
-                    }
-                });
             });
 
 	    });
