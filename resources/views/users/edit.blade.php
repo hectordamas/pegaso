@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 dt-responsive table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead class="bg-dark">
                                         <tr>
@@ -89,7 +89,7 @@
                             <div class="col-md-12 mb-3">
                                 <h5>Configuración</h5>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 dt-responsive table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <tr>
                                         <td class="text-left">

@@ -19,7 +19,7 @@
             </div>
             <div class="card-block">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 dt-responsive table-responsive">
                         <table class="table table-striped table-bordered" id="users-table">
                             <thead class="table-dark">
                                 <tr>

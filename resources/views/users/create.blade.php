@@ -113,7 +113,7 @@
             </div>
             <div class="card-block">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 dt-responsive table-responsive">
                         <table class="table table-bordered table-striped">
                             <thead class="bg-dark">
                                 <tr>
