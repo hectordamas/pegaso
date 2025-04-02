@@ -99,6 +99,11 @@
                     <div class="col-md-6 form-group">
                         <input type="text" class="form-control" id="searchCxc" placeholder="Buscar por Código / RIF / Razón Social">
                     </div>
+                    <div class="col-md-6 form-group">
+                        <a  href="javascript:void(0)" onclick="imprimir()" class="btn btn-success rounded shadow">
+                            <i class="fas fa-print"></i> Imprimir Todo
+                        </a>
+                    </div>
                 </div>
 
                 <div id="saldosPorClienteContainer">
@@ -275,6 +280,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script>
     function openBase64Image(base64) {
         let newWindow = window.open('about:blank');
@@ -305,9 +311,28 @@
         `);
     }
 </script>
-    
 
 <script>
+    var printJson;
+
+    function imprimir() {
+        // Formatear los valores de saldo
+        let formattedPrintJson = printJson.map(item => ({
+            ...item,
+            saldo: new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(item.saldo)
+        }));
+    
+        printJS({
+            printable: formattedPrintJson,
+            properties: [
+                { field: 'cliente', displayName: 'Cliente' },
+                { field: 'saldo', displayName: 'Saldo' },
+            ],
+            type: 'json'
+        });
+    }
+
+
     var cxcTable;
     var cxcDetailsTable;
 
@@ -325,7 +350,6 @@
 			}
 		});
 	}
-
 
     function initializeCxcTable(){
         if ($.fn.DataTable.isDataTable('#cxc-table')) {
@@ -345,7 +369,11 @@
 		    		[10, 50, 100, 150, 'Todos']
 		    	],
 		    	dom: 'Bfrtip',
-		    	buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+		    	buttons: ['copy', 'csv', 'excel', {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                }, 'print'],
 		    	language: {
 		    		sProcessing: "Procesando...",
 		    		sLengthMenu: "Mostrar _MENU_ registros",
@@ -374,7 +402,6 @@
 		    });
 	    }
     }
-
 
     function initializeCxcDetailsTable(){
         if ($.fn.DataTable.isDataTable('#cxcDetails-table')) {
@@ -471,7 +498,8 @@
 				dataType: 'json',
 				success: function (response) {
                     $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-
+                    printJson = response.saldosPorCliente
+                    console.log(response.saldosPorCliente)
 					$('#saldocxc').html('$ 0,00');
 					$('#saldocxc').html('$ '+ response.saldo);
                     $('#saldosPorClienteContainer').html(response.saldosPorClienteHtml)

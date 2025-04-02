@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos};
+use Auth;
 
 class HomeController extends Controller
 {

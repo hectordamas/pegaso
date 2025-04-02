@@ -92,6 +92,7 @@ class CxCController extends Controller
         $cxcHtml = view('cxc.table', compact('cxcs'))->render();
     
         return response()->json([
+            'saldosPorCliente' => $saldosPorCliente,
             'saldosPorClienteHtml' => $saldosPorClienteHtml,
             'cxcHtml' => $cxcHtml,
             'saldo' => number_format($saldo, 2, ',', '.'),

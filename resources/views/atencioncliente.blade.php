@@ -74,8 +74,8 @@
                         <h5>Operaciones Diarias</h5>
                         <span>📋 Historial de Solicitudes de atención al cliente.</span>
                     </div>
-                    <button type="button" class="btn btn-dark rounded" data-bs-toggle="modal" data-bs-target="#SoporteModalCreate">
-                        <i class="fas fa-headset"></i> Registrar Actividad
+                    <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#SoporteModalCreate">
+                        <i class="fas fa-headset"></i> Registrar Solicitud
                     </button>
                 </div>
             </div>
@@ -211,7 +211,9 @@
                             <div class="form-group ">
                                 <label class="control-label">ID / IP</label>
                                 <div class="input-group">
-                                    <span class="input-group-text "><i class="fas fa-laptop "></i></span>
+                                    <span class="input-group-text text-light bg-inverse">
+                                        <i class="fas fa-laptop "></i>
+                                    </span>
                                     <input name="direccionconex" id="direccionconex" type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask required>
                                 </div>
                             </div>

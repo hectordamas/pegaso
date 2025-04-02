@@ -12,7 +12,7 @@ class Menu extends Model
 
     protected $table = 'menus';
 
-    public function menupermiso()
+    public function menupermisos()
     {
         return $this->hasMany(MenuPermiso::class, 'codmenu', 'codmenu');
     }

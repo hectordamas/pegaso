@@ -62,7 +62,7 @@
                     <span>📋 Control de Mensajeria, Llamadas Entrantes y Salientes</span>
                 </div>
 
-                <button type="button" class="btn btn-dark rounded" data-bs-toggle="modal" data-bs-target="#ComunicacionesModalCreate">
+                <button type="button" class="btn btn-success shadow rounded" data-bs-toggle="modal" data-bs-target="#ComunicacionesModalCreate">
                     <i class="fas fa-phone-volume"></i> Registrar Comunicaciones
                 </button>
             </div>

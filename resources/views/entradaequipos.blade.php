@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="col-md-3 form-group d-flex align-items-center">
-                        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-search"></i> Consultar</button>
+                        <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-search"></i> Consultar</button>
                     </div>
                 </form>
             </div>
@@ -74,7 +74,7 @@
                         <h5>Equipos Recibidos</h5>
                         <span>📋 Historial detallado de los equipos ingresados.</span>
                     </div>
-                    <button type="button" class="btn btn-dark rounded" data-bs-toggle="modal" data-bs-target="#EntradaModalCreate">
+                    <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#EntradaModalCreate">
                         <i class="fas fa-laptop"></i> Registrar Entrada de Equipos
                     </button>
                 </div>

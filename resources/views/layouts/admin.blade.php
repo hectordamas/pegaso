@@ -176,6 +176,9 @@
                                                 @foreach($submenuCXC as $submenu)
                                                     <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
                                                         <a href="{{ url($submenu->ruta) }}">
+                                                            <span class="pcoded-micon">
+                                                                <i class="{{ $submenu->logo_boostrap }}"></i>
+                                                            </span>
                                                             <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
                                                         </a>
                                                     </li>
@@ -212,6 +215,9 @@
                                         @foreach($submenuConfig as $submenu)
                                             <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
                                                 <a href="{{ url($submenu->ruta) }}">
+                                                    <span class="pcoded-micon">
+                                                        <i class="{{ $submenu->logo_boostrap }}"></i>
+                                                    </span>
                                                     <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
                                                 </a>
                                             </li>

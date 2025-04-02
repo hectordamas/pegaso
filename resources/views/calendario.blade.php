@@ -167,8 +167,8 @@
                         <span>📅 Gestión y Organización de Eventos.</span>
                     </div>
 
-                    <button type="button" class="btn btn-primary rounded" data-bs-toggle="modal" data-bs-target="#createEventModal">
-                        <i class="fas fa-calendar"></i> Registra un Evento
+                    <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                        <i class="far fa-calendar-alt"></i> Registra un Evento
                     </button>
                 </div>
             </div>
@@ -209,7 +209,7 @@
                 dayClick: function(date, jsEvent, view) {
                     var today = moment().startOf('day'); // Obtiene la fecha actual sin horas
 
-                    if (date.isBefore(today)) {
+                    if (date.isBefore(today, 'day')) {
                         // Si la fecha seleccionada es menor a hoy, muestra el modal de error
                         Swal.fire({
                             title: "Fecha no Válida!",

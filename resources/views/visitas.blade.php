@@ -50,7 +50,7 @@
                     <h5>Historial de Visitas</h5>
                     <span>📋 Resultado de consulta de las visitas recibidas</span>
                 </div>
-                <button type="button" class="btn btn-dark rounded" data-bs-toggle="modal" data-bs-target="#VisitaModalCreate">
+                <button type="button" class="btn btn-success shadow rounded" data-bs-toggle="modal" data-bs-target="#VisitaModalCreate">
                     <i class="fas fa-id-card"></i> Registrar Visita
                 </button>
             </div>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\{Consultor, Menu};
+use App\Models\{Consultor, MenuPermiso};
 use App\Notifications\MyResetPassword;
 
 
@@ -39,9 +39,8 @@ class User extends Authenticatable
         return $this->belongsTo(Consultor::class, 'codusuario', 'codusuario');
     }
 
-    public function menus(){
-        return $this->belongsToMany(Menu::class, 'menupermiso', 'codusuario', 'codmenu')
-                    ->where('menupermiso.inactivo', 0);
+    public function menupermisos(){
+        return $this->hasMany(MenuPermiso::class, 'codusuario', 'codusuario');
     }
 
 

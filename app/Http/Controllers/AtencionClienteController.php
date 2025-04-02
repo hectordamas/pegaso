@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Traits\VerifyPermissions;
 use App\Models\{AtencionCliente, Saclie, Consultor, EstatusAt};
 use Auth;
 use Validator;
 
 class AtencionClienteController extends Controller
 {
+	use VerifyPermissions;
+
 	public function index(Request $request){
 		// Recoge los filtros desde el request
 		$codconsultor = $request->input('consultor');
@@ -29,9 +32,14 @@ class AtencionClienteController extends Controller
 		} else {
 			$atencionClientes->byStatus($codestatus);
 		}
+
 	
 		// Ejecutar la consulta y obtener los resultados
 		$atencionClientes = $atencionClientes->orderBy('id', 'desc')->get();
+
+		if(!$this->hasPermissions('vertodo')){
+			$atencionClientes = $atencionClientes->where('codusuario', Auth::id());
+		}
 	
 		// Obtener datos auxiliares para los selects
 		$saclie = Saclie::orderby('descrip', 'asc')->get();
