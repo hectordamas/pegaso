@@ -317,7 +317,7 @@
 
     function imprimir() {
         let formattedHtml = `
-            <table style="width:100%; border-collapse: collapse;">
+            <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif;">
                 <thead>
                     <tr>
                         <th style="text-align: left; border-bottom: 1px solid black; padding: 5px;">Cliente</th>
