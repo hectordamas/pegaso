@@ -174,7 +174,7 @@
                             <div class="form-group">
                                 <label class="control-label">Estatus</label>
                                 <select name="codestatus" class="form-control" id="estatusPresupuestoId" required>
-                                    @foreach($estatus->whereNotIn('id', [1, 12, 13]) as $e)
+                                    @foreach($estatus as $e)
                                         <option value="{{ $e->id }}">{{ $e->nombre }}</option>
                                     @endforeach
                                 </select>

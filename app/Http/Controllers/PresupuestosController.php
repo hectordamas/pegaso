@@ -10,6 +10,7 @@ class PresupuestosController extends Controller
 {
     public function index(){
         $estatus = EstatusPre::where('inactivo', false)
+        ->whereIn('id', [2, 3, 5, 6])
         ->get();
 
         $vendedores = Savend::where('activo', true)
