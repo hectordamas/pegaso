@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Updaters\{SavendController, SaclieController, SafactController};
 use App\Http\Controllers\{
     HomeController, 
     AtencionClienteController,
@@ -184,3 +185,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('setRole', 'setRole');
     });
 });
+
+
+/* --------------------------------------------- Actualizadores ------------------------------------------------------------------------ */
+Route::match(['get', 'post'], 'SavendWs', [SavendController::class, 'SavendWs']);
+
+Route::match(['get', 'post'], 'SaclieWs', [SaclieController::class, 'SaclieWs']);
+Route::match(['get', 'post'], 'SaclieDsWs', [SaclieController::class, 'SaclieDsWs']);
+
+Route::match(['get', 'post'], 'SafactWs', [SafactController::class, 'SafactWs']);
+Route::match(['get', 'post'], 'SaitemfacWs', [SafactController::class, 'SaitemfacWs']);
