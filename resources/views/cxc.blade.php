@@ -330,8 +330,8 @@
             let formattedSaldo = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(item.saldo);
             formattedHtml += `
                 <tr>
-                    <td style="text-align: left; padding: 5px;">${item.cliente}</td>
-                    <td style="text-align: right; padding: 5px;">${formattedSaldo}</td>
+                    <td style="text-align: left; padding: 5px; border-bottom: 1px solid #ccc;">${item.cliente}</td>
+                    <td style="text-align: right; padding: 5px; border-bottom: 1px solid #ccc;">${formattedSaldo}</td>
                 </tr>`;
         });
 
