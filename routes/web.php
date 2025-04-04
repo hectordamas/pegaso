@@ -190,6 +190,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(LicenciasAActivarController::class)->group(function(){
         Route::get('licencias-a-activar', 'index')->middleware('menu.permission:138');
         Route::post('licencias/store', 'store')->middleware('menu.permission:138');
+        Route::post('licencias-a-activar/update-status/{id}', 'updateStatus')->middleware('menu.permission:138');
     });
 });
 

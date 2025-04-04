@@ -89,18 +89,22 @@
                                 <td>{{ $item->saclie->descrip }}</td>
                                 <td>{{ $item->descripcion }}</td>
                                 <td>{{ $item->licencias }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('Y-m-d') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
                                 <td>{{ $item->monto }}</td>
                                 <td>
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
-                                        <input class="form-check-input" type="checkbox" role="switch" name="pagada" id="pagada" value="1" {{ $item->pagada ? 'checked' : '' }}> 
+                                        <input class="form-check-input toggle-status" type="checkbox" role="switch" 
+                                               name="pagada" data-id="{{ $item->id }}" value="1" 
+                                               {{ $item->pagada ? 'checked' : '' }}>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
-                                        <input class="form-check-input" type="checkbox" role="switch" name="activada" id="activada" value="1" {{ $item->activada ? 'checked' : '' }}> 
+                                        <input class="form-check-input toggle-status" type="checkbox" role="switch" 
+                                               name="activada" data-id="{{ $item->id }}" value="1" 
+                                               {{ $item->activada ? 'checked' : '' }}>
                                     </div>
-                                </td>
+                                </td>                                
                                 <td>{{ $item->notas }}</td>
                             </tr>
                         @endforeach
@@ -198,19 +202,56 @@
 
 @section('scripts')
 <script>
-function convertirmonto(input){
-	$(".montopcd").on({
-		"focus": function (event) {
-			$(event.target).select();
-		},
-		"keyup": function (event) {
-			$(event.target).val(function (index, value ) {
-				return value.replace(/\D/g, "")
-					.replace(/([0-9])([0-9]{2})$/, '$1,$2')
-					.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-			});	   
-		}
-	});
-}
+    function convertirmonto(input){
+    	$(".montopcd").on({
+    		"focus": function (event) {
+    			$(event.target).select();
+    		},
+    		"keyup": function (event) {
+    			$(event.target).val(function (index, value ) {
+    				return value.replace(/\D/g, "")
+    					.replace(/([0-9])([0-9]{2})$/, '$1,$2')
+    					.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+    			});	   
+    		}
+    	});
+    }
+
+    $(document).ready(function() {
+        $(document).on('change', '.toggle-status', function() {
+            let licenciaId = $(this).data("id");
+            let field = $(this).attr("name");
+            let value = $(this).is(":checked") ? 1 : 0;
+            
+            $.ajax({
+                url: `licencias-a-activar/update-status/${licenciaId}`,
+                type: "POST",
+                data: {
+                    field: field,
+                    value: value,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (!response.success) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo actualizar el estado'
+                        });
+                        checkbox.prop("checked", !value); // Revertir checkbox si hay error
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema con la actualización'
+                    });
+                    checkbox.prop("checked", !value); // Revertir checkbox si hay error
+                }
+            });
+        });
+    });
 </script>
+
 @endsection
