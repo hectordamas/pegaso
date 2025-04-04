@@ -47,6 +47,7 @@ class LicenciasAActivarController extends Controller
         $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
         $licencia->monto       = $request->monto;
+        $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada') ? true : false;
         $licencia->pagada      = $request->has('pagada') ? true : false;
         $licencia->save();

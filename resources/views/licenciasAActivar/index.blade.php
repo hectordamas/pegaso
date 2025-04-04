@@ -171,6 +171,11 @@
                             </div>
     
                         </div>
+
+                        <div class="col-md-6 form-group">
+                            <label class="control-label">Notas</label>
+                            <textarea class="form-control" id="notas" name="notas"></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
