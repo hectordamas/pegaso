@@ -52,11 +52,13 @@ return new class extends Migration
             ['position' => 15, 'codmenu' => 10, 'nombre' => 'Permiso Usuarios', 'id' => 'permiuser', 'ruta' => 'getInfoPermisoUsuario', 'logo' => 'vpn_key', 'logo_boostrap' => 'fas fa-user-shield', 'collapse' => 0, 'master' => 8, 'registra' => 0, 'vertodo' => 0, 'inactivo' => 1],
             ['position' => 16, 'codmenu' => 11, 'nombre' => 'Consultores', 'id' => 'confconsultores', 'ruta' => 'getInfoConsultores', 'logo' => 'account_circle', 'logo_boostrap' => 'fas fa-user-tie', 'collapse' => 0, 'master' => 8, 'registra' => 0, 'vertodo' => 0, 'inactivo' => 1],
 
-            ['position' => 17, 'codmenu' => 6, 'nombre' => 'Licencias', 'id' => 'mnulicencia', 'ruta' => 'licencias', 'logo' => 'list_alt', 'logo_boostrap' => "fas fa-certificate", 'collapse' => 0, 'master' => 0, 'registra' => 1, 'vertodo' => 1, 'inactivo' => 0],
-
             ['position' => 1, 'codmenu' => 4, 'nombre' => 'CXP en Divisas', 'id' => 'mnucxp', 'ruta' => 'getInfoCxP', 'logo' => 'trending_down', 'logo_boostrap' => 'fas fa-user-friends', 'collapse' => 0, 'master' => 0, 'registra' => 1, 'vertodo' => 0, 'inactivo' => 1],
+            ['position' => 1, 'codmenu' => 6, 'nombre' => 'Licencias', 'id' => 'mnulicencia', 'ruta' => 'getInfoControlLic', 'logo' => 'list_alt', 'logo_boostrap' => 'fas fa-window-restore', 'collapse' => 0, 'master' => 0, 'registra' => 1, 'vertodo' => 1, 'inactivo' => 1],
             ['position' => 1, 'codmenu' => 12, 'nombre' => 'Otras Licencias', 'id' => 'mnulicenciaotras', 'ruta' => 'getInfoControlLicOtras', 'logo' => 'list_alt', 'logo_boostrap' => 'far fa-window-restore', 'collapse' => 0, 'master' => 0, 'registra' => 1, 'vertodo' => 1, 'inactivo' => 1],
-        ];            
+
+            ['position' => 17, 'codmenu' => 138, 'nombre' => 'Licencias a Activar', 'id' => 'mnulicenciasactivar', 'ruta' => 'licencias-a-activar', 'logo' => 'account_circle', 'logo_boostrap' => "fas fa-certificate", 'collapse' => 0, 'master' => 0, 'registra' => 0, 'vertodo' => 0, 'inactivo' => 0],
+
+        ];
         DB::table('menus')->insert($menus);
     }
 

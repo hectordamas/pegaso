@@ -29,7 +29,8 @@ use App\Http\Controllers\{
 
     WalletController,
 
-    UsersController
+    UsersController,
+    LicenciasAActivarController
 };
 
 Route::get('/', function () {
@@ -183,6 +184,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('setMenu', 'setMenu');
         Route::post('setUserConfig', 'setUserConfig');
         Route::post('setRole', 'setRole');
+    });
+
+    //Licencias a Activar
+    Route::controller(LicenciasAActivarController::class)->group(function(){
+        Route::get('licencias-a-activar', 'index')->middleware('menu.permission:138');
+        Route::post('licencias/store', 'store')->middleware('menu.permission:138');
     });
 });
 
