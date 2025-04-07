@@ -164,3 +164,52 @@ td p.fecha{
     background-color: #b3d9cc;
     cursor: not-allowed;
 }
+
+
+/** Calendar **/
+/* EVENTO BASE */
+.fc-event {
+    font-family: 'Poppins', sans-serif; /* o 'Poppins' */
+    background-color: #f5f5f5 !important; /* gris claro suave */
+    color: #333 !important;
+    border: 1px solid #ddd;
+    border-left: 4px solid transparent; /* para que no se confunda con el color del consultor */
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* HOVER EFECTO SUAVE */
+.fc-event:hover {
+    background-color: #e9e9e9 !important;
+    transform: scale(1.015);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+/* BOLITA DE COLOR DEL CONSULTOR */
+.fc-event .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* TEXTO TRUNCADO LINDO */
+.fc-event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* EVENTOS EN EL POPOVER (vista móvil u overlay) */
+.fc-popover .fc-event {
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
+}

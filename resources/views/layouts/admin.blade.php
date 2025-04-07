@@ -11,6 +11,8 @@
     <link rel="icon" href="{{ asset('assets/adminty/assets/images/logo.png') }}" type="image/x-icon">
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,800" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
     <!-- Required Fremwork -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <!-- radial chart.css -->
@@ -35,7 +37,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/jquery.mCustomScrollbar.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=1') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=2') }}">
 
 </head>
 <!-- Menu sidebar static layout -->
@@ -305,7 +307,7 @@
 
     @yield('scripts')
 
-    <script src="{{ asset('assets/customAssets/js/script.js?v=1') }}"></script>
+    <script src="{{ asset('assets/customAssets/js/script.js?v=2') }}"></script>
 
 
     @if(session()->has('message'))
