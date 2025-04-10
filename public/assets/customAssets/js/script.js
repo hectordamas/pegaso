@@ -1,8 +1,8 @@
 var tableApp;
 
 function initializeDataTable() {
-	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#licencias-table').length){
-		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #licencias-table').DataTable({
+	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#licencias-table').length || $('#cuadre-table').length){
+		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #licencias-table, #cuadre-table').DataTable({
 			deferRender: true, // Solo renderiza lo visible
 			order: [[0, 'desc']],
 			responsive: true,

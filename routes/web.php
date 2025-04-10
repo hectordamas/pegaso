@@ -198,9 +198,13 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Cuadre de caja
     Route::controller(CuadreDeCajaController::class)->group(function(){
-        Route::get('cuadre-de-caja', 'index')->middleware('menu.permission:139');
-        Route::post('cuadre-de-caja/store', 'store')->middleware('menu.permission:139');
-        Route::post('cuadre-de-caja/update/{id}', 'update')->middleware('menu.permission:139');
+        Route::get('cuadre-de-caja', 'index')->name('cuadre-de-caja.index')->middleware('menu.permission:139');
+        Route::get('cuadre-de-caja/edit/{id}', 'edit')->middleware('menu.permission:139')->name('cuadre-de-caja.edit');
+        Route::get('cuadre-de-caja/create', 'create')->middleware('menu.permission:139')->name('cuadre-de-caja.create');
+        Route::get('cuadre-de-caja/show/{id}', 'show')->middleware('menu.permission:139')->name('cuadre-de-caja.show');
+
+        Route::post('cuadre-de-caja/store', 'store')->name('cuadre-de-caja.store')->middleware('menu.permission:139');
+        Route::post('cuadre-de-caja/update/{id}', 'update')->name('cuadre-de-caja.update')->middleware('menu.permission:139');
     });
 });
 
