@@ -141,7 +141,7 @@
                 <input type="hidden" name="captured_photo" id="captured_photo">
     
                 <div class="col-md-12 mt-3">
-                    <button type="submit" class="btn btn-success shadow w-100">
+                    <button type="submit" class="btn btn-success shadow">
                         <i class="fas fa-file-image"></i> Actualizar Imagen de Perfil
                     </button>
                 </div>

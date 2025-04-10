@@ -57,6 +57,7 @@ return new class extends Migration
             ['position' => 1, 'codmenu' => 12, 'nombre' => 'Otras Licencias', 'id' => 'mnulicenciaotras', 'ruta' => 'getInfoControlLicOtras', 'logo' => 'list_alt', 'logo_boostrap' => 'far fa-window-restore', 'collapse' => 0, 'master' => 0, 'registra' => 1, 'vertodo' => 1, 'inactivo' => 1],
 
             ['position' => 17, 'codmenu' => 138, 'nombre' => 'Licencias a Activar', 'id' => 'mnulicenciasactivar', 'ruta' => 'licencias-a-activar', 'logo' => 'account_circle', 'logo_boostrap' => "fas fa-certificate", 'collapse' => 0, 'master' => 0, 'registra' => 0, 'vertodo' => 0, 'inactivo' => 0],
+            ['position' => 18, 'codmenu' => 139, 'nombre' => 'Cuadre de Caja', 'id' => 'mnucuadredecaja', 'ruta' => 'cuadre-de-caja', 'logo' => 'account_circle', 'logo_boostrap' => "fas fa-cash-register", 'collapse' => 0, 'master' => 0, 'registra' => 0, 'vertodo' => 0, 'inactivo' => 0],
 
         ];
         DB::table('menus')->insert($menus);

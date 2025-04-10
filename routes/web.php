@@ -30,7 +30,9 @@ use App\Http\Controllers\{
     WalletController,
 
     UsersController,
-    LicenciasAActivarController
+    LicenciasAActivarController,
+
+    CuadreDeCajaController
 };
 
 Route::get('/', function () {
@@ -191,6 +193,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('licencias-a-activar', 'index')->middleware('menu.permission:138');
         Route::post('licencias/store', 'store')->middleware('menu.permission:138');
         Route::post('licencias-a-activar/update-status/{id}', 'updateStatus')->middleware('menu.permission:138');
+    });
+
+
+    //Cuadre de caja
+    Route::controller(CuadreDeCajaController::class)->group(function(){
+        Route::get('cuadre-de-caja', 'index')->middleware('menu.permission:139');
+        Route::post('cuadre-de-caja/store', 'store')->middleware('menu.permission:139');
+        Route::post('cuadre-de-caja/update/{id}', 'update')->middleware('menu.permission:139');
     });
 });
 

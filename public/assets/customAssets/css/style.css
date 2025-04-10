@@ -213,3 +213,74 @@ td p.fecha{
     background-color: #f0f0f0 !important;
     color: #333 !important;
 }
+
+
+
+/****--------------------------------------------List Week ------------------------------------------------------
+/* Contenedor general de la tabla de lista */
+.fc .fc-list-table {
+    width: 100% !important;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    border: none;
+}
+
+/* Encabezado de cada día (Lunes, Martes...) */
+.fc-list-day-cushion {
+    background: #f2f2f2;
+    color: #333;
+    font-weight: 700;
+    padding: 16px;
+    border: none;
+    letter-spacing: 0.5px;
+}
+
+/* Eventos individuales */
+.fc-list-item {
+    background-color: #fafafa;
+    margin-bottom: 2px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.fc-list-item:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.01);
+}
+
+/* Celdas de cada evento */
+.fc-list-item td {
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+}
+
+
+/* Título del evento */
+.fc-list-item-title a{
+    font-weight: 600;
+    color: #222;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Bolita de color (consultor) */
+.fc-item-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+}
+
+/* Eventos pasados */
+.fc-item-past {
+    opacity: 0.5;
+}
+
+
+.fc td {
+    line-height: 2;
+}

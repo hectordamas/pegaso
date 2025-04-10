@@ -59,12 +59,10 @@
                 <span class="text-muted">Eventos y actividades de la semana</span>
             </div>
             <div class="card-block pb-3">
-                <div id="agendaSemanal"></div>
+                <div id="agendaSemanal" style="width: 100%;"></div>
             </div>
         </div>
     </div>
-
-
 </div>
 
 <!-- Mostrar Evento Modal -->
