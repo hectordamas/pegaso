@@ -78,7 +78,7 @@
                             <th>Monto</th>
                             <th>Pagada</th>
                             <th>Activada</th>
-                            <th>Notas</th>
+                            <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,7 +105,51 @@
                                                {{ $item->activada ? 'checked' : '' }}>
                                     </div>
                                 </td>                                
-                                <td>{{ $item->notas }}</td>
+                                <td>
+
+                                    <a 
+                                        class="btn btn-outline-warning" 
+                                        href="javascript:void(0)"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Ver Notas"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#LicenciasModalDetails"
+                                        data-notas="{{ $item->notas }}"
+                                        onclick="mostrarDetalles(this)"
+                                    >
+                                        <i class="fas fa-list-ul"></i>
+                                    </a>
+
+                                    @if($item->adjunto)
+                                     <a 
+                                        target="_blank"
+                                        class="btn btn-outline-info" 
+                                        href="{{ asset($item->adjunto) }}"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Ver Comprobante"
+                                     >
+                                        <i class="fas fa-file-invoice"></i>                                     
+                                    </a>
+                                    @else
+                                    <a 
+                                        class="btn btn-outline-success" 
+                                        href="javascript:void(0)"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Subir Comprobante"
+
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#LicenciasModalUpload"
+                                        data-id="{{ $item->id }}"
+                                        onclick="setLicenciaId(this)"
+                                        >
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </a>
+                                    @endif
+
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -125,7 +169,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url('licencias/store') }}" method="POST">
+                <form action="{{ url('licencias/store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-sm-6">
@@ -170,7 +214,7 @@
     
     
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" name="pagada" id="pagada" value="1"> 
+                                <input class="form-check-input" type="checkbox" role="switch" name="pagada" id="pagadaModal" value="1"> 
                                 <label for="pagada" class="fw-bold mb-2">Pagada</label>
                             </div>
     
@@ -180,6 +224,11 @@
                             <label class="control-label">Notas</label>
                             <textarea class="form-control" id="notas" name="notas"></textarea>
                         </div>
+
+                        <div class="col-md-6 form-group d-none" id="fileInputLicencias">
+                            <label for="control-label">Subir Comprobante</label>
+                            <input type="file" class="form-control" name="file" accept="*" />
+                        </div> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -198,6 +247,55 @@
     </div>
 </div>
 
+<!-- Subir Comprobante Licencias -->
+<div class="modal fade LicenciasModalUpload" tabindex="-1" id="LicenciasModalUpload" aria-labelledby="LicenciasModalUploadLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="LicenciasModalUploadLabel">Carga un Comprobante de Pago</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('licencias/upload') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-8 form-group">
+                            <label for="control-label">Subir Comprobante</label>
+                            <input type="hidden" id="licenciaId" name="licenciaId">
+                            <input type="file" class="form-control" name="file" accept="*" />
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="far fa-times-circle"></i> Cerrar
+                        </button>
+                        <button id="btn-registrar" type="submit" class="btn btn-success float-center">
+                            <i class="fas fa-sign-in-alt"></i> Registrar
+                        </button>
+                        <button id="btn-limpiar" type="reset" class="btn btn-warning float-center">
+                            <i class="fas fa-trash-alt"></i> Limpiar
+                        </button>
+                    </div>
+                </form> <!-- Cierre del formulario -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ver Detalles -->
+<div class="modal fade LicenciasModalDetails" tabindex="-1" id="LicenciasModalDetails" aria-labelledby="LicenciasModalDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="LicenciasModalDetailsLabel">Ver Notas</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalNotasTexto"></p>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -215,6 +313,16 @@
     			});	   
     		}
     	});
+    }
+
+    function setLicenciaId(button) {
+        const id = $(button).data('id');
+        $('#licenciaId').val(id);
+    }
+
+    function mostrarDetalles(button) {
+        const notas = $(button).data('notas') || 'Sin notas';
+        $('#modalNotasTexto').text(notas);
     }
 
     $(document).ready(function() {
@@ -251,6 +359,15 @@
                 }
             });
         });
+
+        $('#pagadaModal').on('change', function(){
+            console.log($(this).is(":checked"))
+            if($(this).is(":checked")){
+                $('#fileInputLicencias').removeClass('d-none')
+            }else{
+                $('#fileInputLicencias').addClass('d-none')
+            }
+        })
     });
 </script>
 

@@ -50,9 +50,43 @@ class LicenciasAActivarController extends Controller
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada') ? true : false;
         $licencia->pagada      = $request->has('pagada') ? true : false;
+
+        // Guardar archivo sin usar Storage
+        if ($request->hasFile('file')) {
+            $ruta = 'uploads/licenciasComprobantes'; 
+            $archivo = $request->file('file');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
+        
         $licencia->save();
     
         return redirect()->back()->with('success', 'Licencia registrada exitosamente.');
+    }
+
+    public function upload(Request $request){
+        $licencia = LicenciasAActivar::find($request->licenciaId);
+
+        // Guardar archivo sin usar Storage
+        if ($request->hasFile('file')) {
+            $ruta = 'uploads/licenciasComprobantes'; 
+            $archivo = $request->file('file');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
+        
+        $licencia->save();
+
+        return redirect()->back()->with('message', 'Archivo subido con éxito!.');
+
     }
 
     public function updateStatus(Request $request, $id)

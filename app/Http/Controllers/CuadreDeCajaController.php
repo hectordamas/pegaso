@@ -112,7 +112,7 @@ class CuadreDeCajaController extends Controller
         return view('cuadreDeCaja.edit', compact('cuadre'));
     }
 
-    public function update($id){
+    public function update($id, Request $request){
         // Validar los datos del formulario
         $request->validate([
             'fecha' => 'required|date',
