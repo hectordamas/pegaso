@@ -73,6 +73,15 @@
 		});
 	}
 
+    function initializeSelect2(element) {
+        if (!element.hasClass("select2-hidden-accessible")) {
+            element.select2({
+                width: '100%',
+                dropdownParent: element.closest('.movimiento-item')
+            });
+        }
+    }
+
     let movimientoIndex = 1;
 
     function agregarMovimiento() {
@@ -80,6 +89,11 @@
         plantilla = plantilla.replace(/__INDEX__/g, movimientoIndex);
         $('#movimientos-container').append(plantilla);
         movimientoIndex++;
+
+        let nuevoSelect = $('#movimientos-container .select-cliente').last();
+        initializeSelect2(nuevoSelect);        
+        
+        convertirmonto();
     }
 
     // Agregar un movimiento al cargar la vista

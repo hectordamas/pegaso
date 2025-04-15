@@ -1,7 +1,7 @@
 <div class="movimiento-item card shadow-sm mb-3">
     <div class="card-block">
         <div class="row">
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Responsable</label>
                 <select name="responsable[]" class="form-control" required>
                     <option value="">Seleccione</option>
@@ -10,7 +10,7 @@
                 </select>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Tipo de Pago</label>
                 <select name="tipo_pago[]" class="form-control" required>
                     <option value="">Seleccione</option>
@@ -22,7 +22,7 @@
                 </select>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Tipo de Movimiento</label>
                 <select name="tipo_movimiento[]" class="form-control" required>
                     <option value="">Seleccione</option>
@@ -31,22 +31,29 @@
                 </select>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Cliente</label>
-                <input type="text" name="cliente[]" class="form-control" value="{{ $movimiento->cliente ?? '' }}" >
+                <select name="codclie[]" class="form-control select-cliente">
+                    <option value="">Seleccione un cliente</option>
+                    @foreach ($saclie as $cliente)
+                        <option value="{{ $cliente->codclie }}" {{  isset($movimiento) ? ($movimiento->codclie ==  $cliente->codclie ? 'selected' : '') : '' }}>
+                            {{ $cliente->descrip }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Presupuesto</label>
                 <input type="text" name="presupuesto[]" class="form-control" value="{{ $movimiento->presupuesto ?? '' }}" >
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Descripción</label>
                 <input type="text" name="descripcion[]" class="form-control" value="{{ $movimiento->descripcion ?? '' }}" >
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label>Valor</label>
                 <input type="text" step="any" name="valor[]" class="form-control montopcd" value="{{ $movimiento->valor ?? '' }}"  onkeyup="convertirmonto(this.form)" required>
             </div>

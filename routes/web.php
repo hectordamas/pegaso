@@ -203,6 +203,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cuadre-de-caja/edit/{id}', 'edit')->middleware('menu.permission:139')->name('cuadre-de-caja.edit');
         Route::get('cuadre-de-caja/create', 'create')->middleware('menu.permission:139')->name('cuadre-de-caja.create');
         Route::get('cuadre-de-caja/show/{id}', 'show')->middleware('menu.permission:139')->name('cuadre-de-caja.show');
+        Route::get('cuadre-de-caja/pdf/{id}', 'pdf')->name('cuadre-de-caja.pdf')->middleware('menu.permission:139');
 
         Route::post('cuadre-de-caja/store', 'store')->name('cuadre-de-caja.store')->middleware('menu.permission:139');
         Route::post('cuadre-de-caja/update/{id}', 'update')->name('cuadre-de-caja.update')->middleware('menu.permission:139');

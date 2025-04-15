@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{CuadreDeCaja, MovimientosCuadre};
+use App\Models\{CuadreDeCaja, MovimientosCuadre, Saclie};
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CuadreDeCajaController extends Controller
 {
@@ -12,12 +13,16 @@ class CuadreDeCajaController extends Controller
         $cuadresDeCaja = CuadreDeCaja::orderBy('id', 'desc')->get();
 
         return view('cuadreDeCaja', [
-            'cuadresDeCaja' => $cuadresDeCaja
+            'cuadresDeCaja' => $cuadresDeCaja,
         ]);
     }
 
     public function create(){
-        return view('cuadreDeCaja.create');
+        $saclie = Saclie::orderby('descrip', 'asc')->get();
+
+        return view('cuadreDeCaja.create', [
+            'saclie' => $saclie
+        ]);
     }
 
     public function store(Request $request){
@@ -34,8 +39,8 @@ class CuadreDeCajaController extends Controller
             'tipo_movimiento' => 'required|array',
             'tipo_movimiento.*' => 'required|string',
             'valor' => 'required|array',
-            'cliente' => 'nullable|array',
-            'cliente.*' => 'nullable|string',
+            'codclie' => 'nullable|array',
+            'codclie.*' => 'nullable|string',
             'presupuesto' => 'nullable|array',
             'presupuesto.*' => 'nullable|string',
             'descripcion' => 'nullable|array',
@@ -51,12 +56,15 @@ class CuadreDeCajaController extends Controller
 
         // Crear los movimientos manualmente y asignar valores
         foreach ($request->responsable as $key => $responsable) {
+            $saclie = Saclie::find($request->codclie[$key]);
+
             $movimiento = new MovimientosCuadre();
             $movimiento->cuadre_id = $cuadre->id;  // Relacionar el movimiento con el cuadre de caja
             $movimiento->responsable = $responsable;
             $movimiento->tipo_pago = $request->tipo_pago[$key];
             $movimiento->tipo_movimiento = $request->tipo_movimiento[$key];
-            $movimiento->cliente = $request->cliente[$key] ?? null;
+            $movimiento->codclie = $request->codclie[$key] ?? null;
+            $movimiento->cliente = $saclie->descrip ?? null;
             $movimiento->presupuesto = $request->presupuesto[$key] ?? null;
             $movimiento->descripcion = $request->descripcion[$key] ?? null;
             $movimiento->valor = $request->valor[$key];
@@ -105,11 +113,23 @@ class CuadreDeCajaController extends Controller
     
         return view('cuadreDeCaja.show', compact('cuadre', 'detalle', 'saldo_general'));
     }
+
+    public function pdf(Request $request, $id){
+        $cuadre = CuadreDeCaja::findOrFail($id);
+        $detalle = $this->getDetalle($cuadre); // Usa un helper si lo tienes
+        $saldo_general = $detalle->sum('saldo');
+    
+        $pdf = Pdf::loadView('pdf.cuadre_de_caja', compact('cuadre', 'detalle', 'saldo_general'))
+                  ->setPaper('letter', 'portrait'); // Carta vertical
+    
+        return $pdf->stream("arqueo-caja-{$cuadre->numero_orden}.pdf");
+    }
     
     public function edit($id){
         $cuadre = CuadreDeCaja::findOrFail($id);
+        $saclie = Saclie::orderby('descrip', 'asc')->get();
 
-        return view('cuadreDeCaja.edit', compact('cuadre'));
+        return view('cuadreDeCaja.edit', compact('cuadre', 'saclie'));
     }
 
     public function update($id, Request $request){
@@ -125,8 +145,8 @@ class CuadreDeCajaController extends Controller
             'tipo_movimiento' => 'required|array',
             'tipo_movimiento.*' => 'required|string',
             'valor' => 'required|array',
-            'cliente' => 'nullable|array',
-            'cliente.*' => 'nullable|string',
+            'codclie' => 'nullable|array',
+            'codclie.*' => 'nullable|string',
             'presupuesto' => 'nullable|array',
             'presupuesto.*' => 'nullable|string',
             'descripcion' => 'nullable|array',
@@ -143,18 +163,60 @@ class CuadreDeCajaController extends Controller
 
         // Crear los movimientos manualmente y asignar valores
         foreach ($request->responsable as $key => $responsable) {
+            $saclie = Saclie::find($request->codclie[$key]);
+
             $movimiento = new MovimientosCuadre();
             $movimiento->cuadre_id = $cuadre->id;  // Relacionar el movimiento con el cuadre de caja
             $movimiento->responsable = $responsable;
             $movimiento->tipo_pago = $request->tipo_pago[$key];
             $movimiento->tipo_movimiento = $request->tipo_movimiento[$key];
-            $movimiento->cliente = $request->cliente[$key] ?? null;
+            $movimiento->codclie = $request->codclie[$key] ?? null;
+            $movimiento->cliente = $saclie->descrip ?? null;
             $movimiento->presupuesto = $request->presupuesto[$key] ?? null;
             $movimiento->descripcion = $request->descripcion[$key] ?? null;
             $movimiento->valor = $request->valor[$key];
             $movimiento->save();  // Guardar cada movimiento
         }
 
+
         return redirect()->route('cuadre-de-caja.index')->with('message', 'Cuadre de Caja modificado correctamente.');
+    }
+
+    private function getDetalle($cuadre)
+    {
+        // Aquí deberías replicar cómo agrupas ingresos, egresos, saldos, etc.
+        // Esto es un ejemplo genérico, ajusta a tu estructura real
+
+        $cuadre = CuadreDeCaja::with('movimientos')->findOrFail($cuadre->id);
+    
+        // Agrupamos por responsable + tipo_pago
+        $agrupados = $cuadre->movimientos->groupBy(function ($item) {
+            return $item->responsable . '|' . $item->tipo_pago;
+        });
+    
+        $detalle = [];
+    
+        foreach ($agrupados as $clave => $movimientos) {
+            list($responsable, $tipo_pago) = explode('|', $clave);
+    
+            $ingresos = $movimientos->where('tipo_movimiento', 'Ingreso');
+            $egresos = $movimientos->where('tipo_movimiento', 'Egreso');
+    
+            $total_ingreso = $ingresos->sum('valor');
+            $total_egreso = $egresos->sum('valor');
+            $saldo = $total_ingreso - $total_egreso;
+    
+            $detalle[] = [
+                'responsable' => $responsable,
+                'tipo_pago' => $tipo_pago,
+                'ingresos' => $ingresos,
+                'egresos' => $egresos,
+                'total_ingreso' => $total_ingreso,
+                'total_egreso' => $total_egreso,
+                'saldo' => $saldo,
+            ];
+        }
+    
+        return collect($detalle);
     }
 }

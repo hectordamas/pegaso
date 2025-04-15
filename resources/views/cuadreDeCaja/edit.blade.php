@@ -77,11 +77,29 @@
 		});
 	}
 
+    function initializeSelect2(element) {
+        if (!element.hasClass("select2-hidden-accessible")) {
+            element.select2({
+                width: '100%',
+                dropdownParent: element.closest('.movimiento-item') // 👈 cambia esto según tu estructura
+            });
+        }
+    }
 
     function agregarMovimiento() {
         let plantilla = $('#plantilla-movimiento').html();
         $('#movimientos-container').append(plantilla);
+
+        let nuevoSelect = $('#movimientos-container .select-cliente').last();
+        initializeSelect2(nuevoSelect);     
+        
+        convertirmonto();
     }
+
+    // Agregar un movimiento al cargar la vista
+    document.addEventListener("DOMContentLoaded", function () {
+        agregarMovimiento();
+    });
 </script>
 @endsection
 
