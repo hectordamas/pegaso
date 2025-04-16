@@ -23,6 +23,7 @@
         @endphp
 
         <div class="row">
+
             @foreach($entregas as $index => $en)
             <div class="col-xl-4 col-md-6">
                 <div class="card {{ $themesEntregas[$en->codestatus] }} text-white shadow-sm">
@@ -50,7 +51,7 @@
 <div class="row">
 
     <div class="col-lg-3">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                     <h5>💳 Saldo Por Cobrar (Clientes)</h5>
                     <span>Clientes con mayor saldo por cobrar</span>
@@ -73,7 +74,7 @@
 
     
     <div class="col-lg-6">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>📌 Proyectos</h5>
                 <span>Cantidad de Proyectos en proceso, ejecutados, completados y en Control de Calidad</span>
@@ -85,7 +86,7 @@
     </div>
 
     <div class="col-lg-3">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>🤝 Atención a Clientes</h5>
                 <span>Cantidad de solicitudes atendidas por estatus</span>
@@ -104,7 +105,7 @@
 <div class="row">
 
     <div class="col-lg-6">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>📅 Programación de Eventos</h5>
                 <span class="text-muted">Eventos y actividades de la semana</span>
@@ -116,7 +117,7 @@
     </div>
 
     <div class="col-lg-6">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>💻 Entrada Equipos</h5>
                 <span class="text-muted">Cantidad de equipos ingresados por estatus</span>

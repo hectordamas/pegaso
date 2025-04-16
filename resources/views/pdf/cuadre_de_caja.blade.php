@@ -14,7 +14,7 @@
         h4 {
             margin-bottom: 8px;
             font-size: 16px;
-            color: #002259;
+            color: #002160; /* Azul oscuro */
         }
 
         .header {
@@ -24,13 +24,14 @@
 
         .card {
             border: 1px solid #ddd;
-            margin-bottom: 18px;
             border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .card-header {
-            background-color: #002259;
-            color: white;
+            /*background-color: #002160; Azul oscuro */
+            color: #000;
             padding: 8px 12px;
             font-weight: bold;
             display: flex;
@@ -42,7 +43,7 @@
 
         .section-title {
             font-weight: bold;
-            color: #444;
+            color: #002160; /* Azul oscuro */
             font-size: 12px;
             margin: 8px 0 4px;
             border-bottom: 1px solid #ccc;
@@ -52,17 +53,17 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 4px;
+            margin-top: 10px;
         }
 
         th, td {
-            border: 1px solid #bbb;
+            border: 1px solid #000;
             padding: 5px;
             font-size: 10.5px;
         }
 
         th {
-            background-color: #f0f0f0;
+            background-color: #fff;
             font-weight: bold;
         }
 
@@ -70,18 +71,24 @@
             text-align: right;
         }
 
-        .bg-warning {
-            background-color: #ffe082;
+        .bg-light-blue {
+            background-color: #C0D4EC; /* Azul claro para totales */
+        }
+
+        .bg-rosa-suave {
+            background-color: #FCE4D7; /* Rosa suave para egresos */
         }
 
         .bg-primary {
-            background-color: #002259;
+            background-color: #002160 !important; /* Azul oscuro */
             color: white;
         }
 
         .observaciones {
             padding: 10px;
             font-size: 11px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
         }
 
         .totales {
@@ -90,11 +97,19 @@
         }
 
         .resumen-titulo {
-            background-color: #004080;
+            background-color: #002160; /* Azul oscuro */
             color: white;
             padding: 6px 12px;
             font-weight: bold;
             font-size: 12px;
+        }
+
+        .table-light {
+            background-color: #F9F9F9;
+        }
+
+        .bg-light-gray{
+            background: #EDEDED;
         }
 
     </style>
@@ -111,13 +126,17 @@
     @foreach($detalle as $index => $item)
         <div class="card">
             <div class="card-header">
-                <div>{{ $index + 1 }}.- {{ strtoupper($item['responsable']) }} - {{ strtoupper($item['tipo_pago']) }}</div>
+                <div>{{ strtoupper($item['responsable']) }} - {{ strtoupper($item['tipo_pago']) }}</div>
                 <div>SALDO: $ {{ number_format($item['saldo'], 2, ',', '.') }}</div>
             </div>
 
-            <div class="section-title">Ingresos</div>
             <table>
                 <thead>
+                    <tr>
+                        <th colspan="4" class="bg-primary">                            
+                            {{ strtoupper($item['tipo_pago']) }} - INGRESOS
+                        </th>
+                    </tr>
                     <tr>
                         <th>Cliente</th>
                         <th>Presupuesto</th>
@@ -129,23 +148,27 @@
                     @foreach ($item['ingresos'] as $ing)
                         <tr>
                             <td>{{ $ing->cliente }}</td>
-                            <td>{{ $ing->presupuesto }}</td>
-                            <td>{{ $ing->descripcion }}</td>
-                            <td class="text-end">$ {{ number_format($ing->valor, 2, ',', '.') }}</td>
+                            <td class="bg-rosa-suave">{{ $ing->presupuesto }}</td>
+                            <td class="bg-rosa-suave">{{ $ing->descripcion }}</td>
+                            <td class="text-end bg-light-gray">$ {{ number_format($ing->valor, 2, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
-                    <tr class="totales">
-                        <td colspan="3" class="text-end">Total</td>
-                        <td class="text-end">$ {{ number_format($item['total_ingreso'], 2, ',', '.') }}</td>
+                    <tr>
+                        <th colspan="3" class="text-end bg-light-blue">Total</th>
+                        <th class="text-end bg-light-blue">$ {{ number_format($item['total_ingreso'], 2, ',', '.') }}</th>
                     </tr>
                 </tfoot>
             </table>
 
-            <div class="section-title">Egresos</div>
             <table>
                 <thead>
+                    <tr>
+                        <th colspan="2" class="bg-primary">                            
+                            {{ strtoupper($item['tipo_pago']) }} - EGRESOS
+                        </th>
+                    </tr>
                     <tr>
                         <th>Descripción</th>
                         <th class="text-end">Valor</th>
@@ -154,15 +177,15 @@
                 <tbody>
                     @foreach ($item['egresos'] as $egr)
                         <tr>
-                            <td>{{ $egr->descripcion }}</td>
-                            <td class="text-end">$ {{ number_format($egr->valor, 2, ',', '.') }}</td>
+                            <td class="bg-light-gray">{{ $egr->descripcion }}</td>
+                            <td class="text-end bg-rosa-suave">$ {{ number_format($egr->valor, 2, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
-                    <tr class="totales">
-                        <td class="text-end">Total</td>
-                        <td class="text-end">$ {{ number_format($item['total_egreso'], 2, ',', '.') }}</td>
+                    <tr>
+                        <th class="text-end bg-light-blue">Total</th>
+                        <th class="text-end bg-light-blue">$ {{ number_format($item['total_egreso'], 2, ',', '.') }}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -170,45 +193,41 @@
     @endforeach
 
     {{-- RESUMEN FINAL --}}
-    <div class="card">
-        <div class="resumen-titulo">Resumen</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Responsable</th>
-                    <th>Método de Pago</th>
-                    <th class="text-end">Saldo</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $agrupadoPorResponsable = collect($detalle)->groupBy('responsable'); @endphp
-                @foreach ($agrupadoPorResponsable as $responsable => $items)
-                    @foreach ($items as $i => $item)
-                        <tr>
-                            @if ($i === 0)
-                                <td rowspan="{{ count($items) }}">{{ $responsable }}</td>
-                            @endif
-                            <td>{{ strtoupper($item['tipo_pago']) }}</td>
-                            <td class="text-end">${{ number_format($item['saldo'], 2, ',', '.') }}</td>
-                        </tr>
-                    @endforeach
-                    <tr class="bg-warning">
-                        <td colspan="2" class="text-end"><strong>Total {{ strtoupper($responsable) }}</strong></td>
-                        <td class="text-end"><strong>${{ number_format(collect($items)->sum('saldo'), 2, ',', '.') }}</strong></td>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2" class="bg-primary">
+                    RESUMEN
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $agrupadoPorResponsable = collect($detalle)->groupBy('responsable'); @endphp
+            @foreach ($agrupadoPorResponsable as $responsable => $items)
+                @foreach ($items as $i => $item)
+                    <tr>
+                        @if ($i === 0)
+                            <td class="text-end" rowspan="{{ count($items) }}">SALDO - {{ $responsable }} - {{ strtoupper($item['tipo_pago']) }}</td>
+                        @endif
+                        <td class="text-end">${{ number_format($item['saldo'], 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
-            </tbody>
-            <tfoot>
-                <tr class="totales">
-                    <td colspan="2" class="text-end"><strong>Total General</strong></td>
-                    <td class="text-end"><strong>${{ number_format($saldo_general, 2, ',', '.') }}</strong></td>
+                <tr class="bg-light-blue">
+                    <td class="text-end"><strong>Total {{ strtoupper($responsable) }}</strong></td>
+                    <td class="text-end"><strong>${{ number_format(collect($items)->sum('saldo'), 2, ',', '.') }}</strong></td>
                 </tr>
-            </tfoot>
-        </table>
-    </div>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr class="bg-light-blue">
+                <td class="text-end"><strong>Total General</strong></td>
+                <td class="text-end"><strong>${{ number_format($saldo_general, 2, ',', '.') }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
 
     {{-- OBSERVACIONES --}}
-    <div class="card">
+    <div class="card" style="margin-top: 20px;">
         <div class="card-header bg-primary">Observaciones</div>
         <div class="observaciones">
             {{ $cuadre->observaciones ?? 'Sin observaciones.' }}

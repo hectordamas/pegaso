@@ -8,7 +8,7 @@
 
     @foreach($monedas as $index => $m)
     <div class="col-xl-4 col-md-6">
-        <div class="card {{$temas[$index]}} text-white shadow">
+        <div class="card {{$temas[$index]}} text-white shadow" style="height: 85%;">
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col">
