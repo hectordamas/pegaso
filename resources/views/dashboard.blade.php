@@ -1,4 +1,5 @@
 <div class="row">
+    @if(Auth::user()->role == 'Directiva')
     <div class="col-xl-3">
         <div class="card bg-c-green text-white shadow-sm">
             <div class="card-block">
@@ -14,8 +15,9 @@
             </div>
         </div>
     </div>
+    @endif
 
-    <div class="col-xl-9">
+    <div class="col-xl-{{ Auth::user()->role == 'Directiva' ? '9' : '12' }}">
         @php
             $themesEntregas = [11 => 'bg-c-yellow', 12 => 'bg-c-pink', 13 => 'bg-c-blue'];
             $textEntregas = [11 => 'text-c-yellow', 12 => 'text-c-pink', 13 => 'text-c-blue'];
@@ -49,7 +51,7 @@
 
 
 <div class="row">
-
+    @if(Auth::user()->role == 'Directiva')
     <div class="col-lg-3">
         <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
@@ -71,9 +73,9 @@
             </div>
         </div>
     </div>
-
+    @endif
     
-    <div class="col-lg-6">
+    <div class="col-lg-{{ Auth::user()->role == 'Directiva' ? '6' : '8' }}">
         <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>📌 Proyectos</h5>
@@ -85,7 +87,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-{{ Auth::user()->role == 'Directiva' ? '3' : '4' }}">
         <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>🤝 Atención a Clientes</h5>
@@ -104,7 +106,7 @@
 
 <div class="row">
 
-    <div class="col-lg-6">
+    <div class="col-lg-{{ Auth::user()->role == 'Analista' ? '8' : '6' }}">
         <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
                 <h5>📅 Programación de Eventos</h5>
@@ -116,6 +118,7 @@
         </div>
     </div>
 
+    @if(Auth::user()->role != 'Analista')
     <div class="col-lg-6">
         <div class="card shadow-sm" style="height: 95%">
             <div class="card-header">
@@ -127,6 +130,7 @@
             </div>
         </div>
     </div>
+    @endif
 
 
 </div>

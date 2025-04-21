@@ -11,13 +11,7 @@
 
 @section('content')
 
-    @if(Auth::user()->role == 'Directiva')
-        @include('dashboard.directiva')
-    @elseif(Auth::user()->role == 'Gerencia')
-        @include('dashboard.gerencia')
-    @else
-        @include('dashboard.analista')
-    @endif
+    @include('dashboard')
 
 @endsection
 
