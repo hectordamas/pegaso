@@ -55,11 +55,14 @@ class HomeController extends Controller
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
 
         //Entregas
-        $entregas = Safact::whereIn('codestatus', [11, 12, 13])
+        $entregas = Safact::whereIn('codestatus', [12])
         ->selectRaw('codestatus, COUNT(*) as cantidad')
         ->with('estatusPre')
         ->groupBy('codestatus')
         ->get();
+
+        $entregasComprado = Safact::where('codestatus', 11)->get()->count();
+        $entregasEntregado = Safact::where('codestatus', 13)->get()->count();
 
         //Atención al cliente
         $atencionClientes = AtencionCliente::selectRaw('estatusat.nombre as estatus, COUNT(atencioncliente.codestatus) as cantidad')
@@ -71,8 +74,7 @@ class HomeController extends Controller
         $atencionClientesCantidad =  $atencionClientes->pluck('cantidad');
 
         //Eventos
-        $eventos =  Calendario::all()
-        ->map(function ($item) {
+        $eventos =  Calendario::all()->map(function ($item) {
             return [
                 'id'    => $item->id,
                 'title' => $item->title,
@@ -103,9 +105,14 @@ class HomeController extends Controller
             'cxcColors' => $cxcColors,
             'estatusProyectos' => $estatusProyectos,
             'cantidadesPorProyectos' => $cantidadesPorProyectos,
+
             'entregas' => $entregas,
+            'entregasComprado' => $entregasComprado,
+            'entregasEntregado' => $entregasEntregado,
+            'atencionClientes' => $atencionClientes,
             'atencionClientesEstatus' => $atencionClientesEstatus,
             'atencionClientesCantidad' => $atencionClientesCantidad,
+
             'eventos' => $eventos,
             'entradaEquiposEstatus' => $entradaEquiposEstatus,
             'entradaEquiposCantidad' =>  $entradaEquiposCantidad

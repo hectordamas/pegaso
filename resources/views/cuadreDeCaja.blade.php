@@ -40,6 +40,7 @@
                                     <th>Total DS</th>
                                     <th>Observaciones</th>
                                     <th>Acciones</th>
+                                    <th>Revisado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,6 +60,14 @@
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                         </td>
+                                        <td>
+                                            <input class="checkbox-revisado" 
+                                                {{ $cuadre->revisado ? 'checked' : '' }} 
+                                                {{ auth()->user()->master ? '' : 'disabled' }} 
+                                                data-id="{{ $cuadre->id }}" 
+                                                type="checkbox"
+                                            >
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -72,4 +81,34 @@
 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function () {
+        $(document).on('change', '.checkbox-revisado', function() {
+            var id = $(this).data('id');
+            var revisado = $(this).is(':checked') ? 1 : 0;
+
+            $.ajax({
+                url: `cuadre-de-caja/${id}/revisado`,
+                method: 'POST',
+                data: {
+                    revisado: revisado,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        console.log('Estado actualizado');
+                    } else {
+                        alert('Error al actualizar el estado');
+                    }
+                },
+                error: function () {
+                    alert('Error al contactar el servidor');
+                }
+            });
+        });
+    });
+</script>
 @endsection

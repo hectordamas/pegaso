@@ -207,6 +207,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         Route::post('cuadre-de-caja/store', 'store')->name('cuadre-de-caja.store')->middleware('menu.permission:139');
         Route::post('cuadre-de-caja/update/{id}', 'update')->name('cuadre-de-caja.update')->middleware('menu.permission:139');
+        Route::post('cuadre-de-caja/{id}/revisado', 'actualizarRevisado')->middleware('menu.permission:139');
     });
 });
 

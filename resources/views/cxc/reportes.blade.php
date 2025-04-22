@@ -13,18 +13,28 @@
             </div>
             <div class="card-block">
                 <form class="row" action="{{ url('cuentas-por-cobrar/reportes') }}">
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label for="from">Desde</label>
                         <input type="date" class="form-control" name="from" id="from" value="{{ $requestFrom ?? '' }}">
                     </div>
 
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                         <label for="until">Hasta</label>
                         <input type="date" class="form-control" name="until" id="until" value="{{ $requestUntil ?? '' }}">
                     </div>
 
-                    <div class="col-md-4 form-group d-flex align-items-center">
-                        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-search"></i> Consultar</button>
+                    <div class="form-group col-md-3">
+                        <label for="clienteSaint" class="fw-bold">Cliente Saint</label>
+                        <select name="codclie" id="clienteSaint" class="form-control js-example-basic-single">
+                            <option value="">Elige una Opción</option>
+                            @foreach($saclie as $item)
+                                <option value="{{ $item->codclie }}" {{ $requestCodclie ?  ($item->codclie == $requestCodclie ? 'selected' : '') : '' }}>{{ $item->descrip }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 form-group d-flex align-items-center">
+                        <button type="submit" class="btn btn-primary mt-2 shadow rounded"><i class="fas fa-search"></i> Consultar</button>
                     </div>
                 </form>
             </div>

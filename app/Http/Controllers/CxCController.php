@@ -211,8 +211,11 @@ class CxCController extends Controller
     }
 
     public function reportes(Request $request){
+		$saclie = Saclie::orderby('descrip','asc')->get();
+
         $abonos = DetalleCxC::byDateRange($request->from, $request->until)
-        ->select(DB::raw('detallecxc.file, detallecxc.fecha,detallecxc.codcxc,cxc.cliente,cxc.observacion,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,detallecxc.descripcion,detallecxc.monto,usuario.nombre as usuario'))
+        ->bySaclie($request->codclie)
+        ->select(DB::raw('detallecxc.file, detallecxc.fecha,detallecxc.codcxc,cxc.cliente, cxc.codclie ,cxc.observacion,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,detallecxc.descripcion,detallecxc.monto,usuario.nombre as usuario'))
         ->join('tipomoneda','tipomoneda.codtipomoneda','=','detallecxc.codtipomoneda')
         ->join('moneda','moneda.codmoneda','=','tipomoneda.codmoneda')
         ->join('cxc','cxc.codcxc','=','detallecxc.codcxc')
@@ -220,10 +223,13 @@ class CxCController extends Controller
         ->orderBy('codcxc','desc')
         ->get();
 
+
         return view('cxc.reportes', [
             'abonos' => $abonos,
             'requestFrom' => $request->from,
             'requestUntil' => $request->until,
+            'requestCodclie' => $request->codclie,
+            'saclie' => $saclie
         ]);
     }
 

@@ -219,4 +219,13 @@ class CuadreDeCajaController extends Controller
     
         return collect($detalle);
     }
+
+    public function actualizarRevisado(Request $request, $id)
+    {
+        $cuadre = CuadreDeCaja::findOrFail($id);
+        $cuadre->revisado = $request->revisado;
+        $cuadre->save();
+    
+        return response()->json(['success' => true]);
+    }
 }

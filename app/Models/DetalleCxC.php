@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{TipoMoneda};
+use App\Models\{TipoMoneda, CxC};
 use Carbon\Carbon;
 
 class DetalleCxC extends Model
@@ -17,6 +17,10 @@ class DetalleCxC extends Model
         return $this->belongsTo(TipoMoneda::class, 'codtipomoneda', 'codtipomoneda');
     }
 
+    public function cxc(){
+        return $this->belongsTo(CxC::class, 'codcxc', 'codcxc');
+    }
+
     public function scopeByDateRange($query, $from, $until){
         if ($from && $until) {
             return $query->whereBetween('detallecxc.fecha', [Carbon::parse($from)->startOfDay(), Carbon::parse($until)->endOfDay()]);
@@ -27,6 +31,13 @@ class DetalleCxC extends Model
         }else{
             return $query->whereBetween('detallecxc.fecha', [Carbon::now()->subMonths(2), Carbon::now()]);
         }
+    }
+
+    public function scopeBySaclie($query, $codclie){
+        if($codclie)
+            return $query->where('cxc.codclie', $codclie);
+
+        
     }
 }
 
