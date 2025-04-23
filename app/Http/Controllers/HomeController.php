@@ -14,9 +14,29 @@ class HomeController extends Controller
     }
 
 
-    public function index(){
+    public function index(Request $request){
+        $type = $request->type;
+        $hoy = now();
+
+        switch ($type) {
+            case 'dia':
+                $desde = $hoy->copy()->startOfDay();
+                $hasta = $hoy->copy()->endOfDay();
+                break;
+            case 'mes':
+                $desde = $hoy->copy()->startOfMonth();
+                $hasta = $hoy->copy()->endOfMonth();
+                break;
+            case 'anio':
+            default:
+                $desde = $hoy->copy()->startOfYear();
+                $hasta = $hoy->copy()->endOfYear();
+                break;
+        }
+
         //Cuentas por Cobrar
         $cxcs = CxC::where('codwallet', 1)
+        ->whereBetween('fecha', [$desde, $hasta])
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
         ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
@@ -29,6 +49,7 @@ class HomeController extends Controller
         $saldoPorCobrar = $cxcs->sum('saldo');
 
         $saldosPorCliente = CxC::selectRaw('codclie, SUM(monto) as total_monto, SUM(abono) as total_abono')
+        ->whereBetween('fecha', [$desde, $hasta])
         ->where('codwallet', 1)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
@@ -47,6 +68,7 @@ class HomeController extends Controller
 
         //Proyectos
         $proyectos = Safact::whereIn('codestatus', [3, 4, 7, 8, 10])
+        ->whereBetween('fechae', [$desde, $hasta])
         ->selectRaw('codestatus, COUNT(*) as cantidad')
         ->groupBy('codestatus')
         ->get();
@@ -54,18 +76,13 @@ class HomeController extends Controller
         $estatusProyectos = ['PROYECTO', 'COMPLETADO', 'EN PROCESO', 'EJECUTADO', 'CONTROL DE CALIDAD'];
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
 
-        //Entregas
-        $entregas = Safact::whereIn('codestatus', [12])
-        ->selectRaw('codestatus, COUNT(*) as cantidad')
-        ->with('estatusPre')
-        ->groupBy('codestatus')
-        ->get();
-
-        $entregasComprado = Safact::where('codestatus', 11)->get()->count();
-        $entregasEntregado = Safact::where('codestatus', 13)->get()->count();
+        $entregasComprado = Safact::where('codestatus', 11)->whereBetween('fechae', [$desde, $hasta])->get()->count();
+        $entregasEnProceso = Safact::where('codestatus', 12)->whereBetween('fechae', [$desde, $hasta])->get()->count();
+        $entregasEntregado = Safact::where('codestatus', 13)->whereBetween('fechae', [$desde, $hasta])->get()->count();
 
         //Atención al cliente
-        $atencionClientes = AtencionCliente::selectRaw('estatusat.nombre as estatus, COUNT(atencioncliente.codestatus) as cantidad')
+        $atencionClientes = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
+        ->selectRaw('estatusat.nombre as estatus, COUNT(atencioncliente.codestatus) as cantidad')
         ->join('estatusat', 'atencioncliente.codestatus', '=', 'estatusat.codestatus') // Unimos las tablas por codestatus
         ->groupBy('estatusat.nombre') // Agrupamos por el nombre del estatus
         ->get();
@@ -91,7 +108,8 @@ class HomeController extends Controller
         });
 
         //Entrada Equipos
-        $entradaEquipos = EntradaEquipos::selectRaw('estatus.nombre as estatus, COUNT(entradaequipos.codestatus) as cantidad')
+        $entradaEquipos = EntradaEquipos::whereBetween('fecha', [$desde, $hasta])
+        ->selectRaw('estatus.nombre as estatus, COUNT(entradaequipos.codestatus) as cantidad')
         ->join('estatus', 'entradaequipos.codestatus', '=', 'estatus.codestatus') // Unimos las tablas por codestatus
         ->groupBy('estatus.nombre') // Agrupamos por el nombre del estatus
         ->get();
@@ -99,6 +117,46 @@ class HomeController extends Controller
         $entradaEquiposEstatus =  $entradaEquipos->pluck('estatus');
         $entradaEquiposCantidad =  $entradaEquipos->pluck('cantidad');
 
+        $ventasPorVendedor = Safact::whereBetween('fechae', [$desde, $hasta])
+            ->whereIn('codestatus', [3, 4, 7, 8, 10, 11, 12, 13]) // Estados válidos para ventas
+            ->whereNotNull('codvend')
+            ->with('savend') // Asegura que se cargue la relación
+            ->get()
+            ->groupBy('codvend')
+            ->map(function ($ventas) {
+                $vendedor = $ventas->first()->savend->descrip ?? 'Sin nombre';
+                $total = $ventas->sum(function ($venta) {
+                    return $venta->factor ? $venta->mtototal / $venta->factor : 0;
+                });
+            
+                return [
+                    'vendedor' => $vendedor,
+                    'total' => round($total, 2)
+                ];
+            })->values(); // Convierte la colección a array limpio (sin claves por codvend)
+        
+        // Extraemos datos para la vista
+        $ventasVendedorLabels = $ventasPorVendedor->pluck('vendedor');
+        $ventasVendedorTotales = $ventasPorVendedor->pluck('total');
+        $cobrosVendedorTotales = [];
+
+        $solicitudesPorConsultor = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
+        ->whereNotNull('codconsultor')
+        ->where('codestatus', 3)
+        ->selectRaw('codconsultor, COUNT(*) as cantidad')
+        ->groupBy('codconsultor')
+        ->orderByDesc('cantidad')        
+        ->get()
+        ->map(function ($item) {
+            return [
+                'consultor' => $item->consultor->nombre ?? 'Sin nombre',
+                'cantidad' => $item->cantidad,
+            ];
+        });
+    
+        $consultoresLabels = $solicitudesPorConsultor->pluck('consultor');
+        $consultoresCantidades = $solicitudesPorConsultor->pluck('cantidad');
+    
         return view('home', [
             'saldoPorCobrar' => $saldoPorCobrar,
             'saldosPorCliente' => $saldosPorCliente,
@@ -106,16 +164,27 @@ class HomeController extends Controller
             'estatusProyectos' => $estatusProyectos,
             'cantidadesPorProyectos' => $cantidadesPorProyectos,
 
-            'entregas' => $entregas,
             'entregasComprado' => $entregasComprado,
             'entregasEntregado' => $entregasEntregado,
+            'entregasEnProceso' => $entregasEnProceso,
+
             'atencionClientes' => $atencionClientes,
             'atencionClientesEstatus' => $atencionClientesEstatus,
             'atencionClientesCantidad' => $atencionClientesCantidad,
 
             'eventos' => $eventos,
+
             'entradaEquiposEstatus' => $entradaEquiposEstatus,
-            'entradaEquiposCantidad' =>  $entradaEquiposCantidad
+            'entradaEquiposCantidad' =>  $entradaEquiposCantidad,
+
+            'ventasVendedorLabels' => $ventasVendedorLabels,
+            'ventasVendedorTotales' => $ventasVendedorTotales,
+            'cobrosVendedorTotales' => $cobrosVendedorTotales,
+
+            'consultoresLabels' => $consultoresLabels,
+            'consultoresCantidades' => $consultoresCantidades,
+
+            'type' => $type ?? 'anio'
         ]);
     }
 }

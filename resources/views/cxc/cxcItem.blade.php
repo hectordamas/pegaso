@@ -2,8 +2,8 @@
 <div class="row">
     @foreach($saldosPorCliente as $item)
         <div class="col-md-6 col-xl-4 cxc-item" data-codclie="{{ $item->codclie }}">
-            <div class="card widget-card-1 shadow-sm border-success border-3 shadow-lg">
-                <div class="card-block-small p-3">
+            <div class="card widget-card-1 border-success border-3 shadow" style="height: 85%;">
+                <div class="card-block-small p-3 h-100">
                     <i class="fas fa-hand-holding-usd bg-c-green card1-icon"></i>
                     <span>
                         <label class="badge badge-success">{{ $item->codclie }}</label>

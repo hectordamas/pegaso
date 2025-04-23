@@ -216,6 +216,8 @@
                                 </li>
                             </ul>
                             @endif
+                            <div class="pcoded-navigatio-lavel text-center">V {{ env('APP_VERSION') }}</div>
+
                         </div>
                     </nav>
                     <div class="pcoded-content">
@@ -233,6 +235,18 @@
             </div>
         </div>
     </div>
+
+    <footer class="sticky-footer bg-white">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-0">
+                    <div class="card-header copyright text-center">
+                        <span>Copyright © {{ env('APP_NAME') }} {{ date('Y') }} / V{{ env('APP_VERSION') }} </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery/dist/jquery.min.js') }}"></script>

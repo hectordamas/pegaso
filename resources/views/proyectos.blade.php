@@ -239,6 +239,11 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="col-md-12 form-group">
+                            <label class="control-label">Monto Abonado</label>
+                            <input type="text" class="form-control montopcd" name="monto" onkeyup="convertirmonto(this.form)">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -258,6 +263,20 @@
 
 @section('scripts')
 <script>
+    function convertirmonto(input){
+		$(".montopcd").on({
+			"focus": function (event) {
+				$(event.target).select();
+			},
+			"keyup": function (event) {
+				$(event.target).val(function (index, value ) {
+					return value.replace(/\D/g, "")
+						.replace(/([0-9])([0-9]{2})$/, '$1,$2')
+						.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+				});	   
+			}
+		});
+	}
 
     var presupuestosTable;
 

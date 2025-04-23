@@ -16,14 +16,14 @@
         <p><i class="far fa-clock"></i> <span class="fw-bold">Fecha:</span> {{date('d-m-Y h:i A')}}</p>
     </div>
     <div class="col-xl-6 col-md-12 form-group text-right">
-        <div class="btn-group" id="btnDia">
-            <a type="button" class="btn btn-inverse btn-outline-success btn-round">
+        <div class="btn-group">
+            <a href="{{ url('home?type=anio') }}" type="button" class="btn btn-inverse btn-round {{ $type == 'anio' ? '' : 'btn-outline-success' }}">
                 <i class="fas fa-check-circle"></i> Año
             </a>
-            <a type="button" class="btn btn-inverse btn-outline-success btn-round">
+            <a href="{{ url('home?type=mes') }}"  type="button" class="btn btn-inverse btn-round {{ $type == 'mes' ? '' : 'btn-outline-success' }}">
                 <i class="fas fa-check-circle"></i> Mes
             </a>
-            <a type="button" class="btn btn-inverse btn-round">
+            <a href="{{ url('home?type=dia') }}"  type="button" class="btn btn-inverse btn-round {{ $type == 'dia' ? '' : 'btn-outline-success' }}">
                 <i class="fas fa-check-circle"></i> Día
             </a>
         </div>
@@ -33,7 +33,7 @@
 <div class="row">
     @if(Auth::user()->role == 'Directiva')
     <div class="col-xl-3">
-        <div class="card bg-c-green text-white shadow-sm">
+        <div class="card bg-c-green text-white shadow">
             <div class="card-block">
                 <div class="row align-items-center">
                     <div class="col">
@@ -60,7 +60,7 @@
 
             {{-- Entregados sobre comprados --}}
             <div class="col-xl-4 col-md-6">
-                <div class="card {{ $themesEntregas[11] }} text-white shadow-sm">
+                <div class="card {{ $themesEntregas[11] }} text-white shadow">
                     <div class="card-block">
                         <div class="row align-items-center">
                             <div class="col">
@@ -76,27 +76,25 @@
             </div>
 
             {{-- En Proceso --}}
-            @foreach($entregas as $index => $en)
             <div class="col-xl-4 col-md-6">
-                <div class="card {{ $themesEntregas[$en->codestatus] }} text-white shadow-sm">
+                <div class="card {{ $themesEntregas[12] }} text-white shadow">
                     <div class="card-block">
                         <div class="row align-items-center">
                             <div class="col">
-                                <p class="m-b-5"><strong>{{ucwords(strtolower($en->estatusPre->nombre))}}</strong> <small>(Entregas)</small></p>
-                                <h4 class="m-b-0">{{$en->cantidad}}</h4>
+                                <p class="m-b-5"><strong>En Proceso</strong> <small>(Entregas)</small></p>
+                                <h4 class="m-b-0">{{$entregasEnProceso}}</h4>
                             </div>
                             <div class="col col-auto text-end">
-                                <i class="fas {{ $iconEntregas[$en->codestatus] }} f-50 {{ $textEntregas[$en->codestatus] }}" style="filter: brightness(0.9);"></i>
+                                <i class="fas {{ $iconEntregas[12] }} f-50 {{ $textEntregas[12] }}" style="filter: brightness(0.9);"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            @endforeach
 
 
             <div class="col-xl-4 col-md-6">
-                <div class="card text-white shadow-sm bg-c-blue">
+                <div class="card text-white shadow bg-c-blue">
                     <div class="card-block">
                         <div class="row align-items-center">
                             <div class="col">
@@ -121,7 +119,7 @@
 <div class="row">
     @if(Auth::user()->role == 'Directiva')
     <div class="col-lg-3">
-        <div class="card shadow-sm" style="height: 95%">
+        <div class="card shadow" style="height: 95%">
             <div class="card-header">
                     <h5>💳 Saldo Por Cobrar (Clientes)</h5>
                     <span>Clientes con mayor saldo por cobrar</span>
@@ -144,7 +142,7 @@
     @endif
     
     <div class="col-lg-{{ Auth::user()->role == 'Directiva' ? '6' : '8' }}">
-        <div class="card shadow-sm" style="height: 95%">
+        <div class="card shadow" style="height: 95%">
             <div class="card-header">
                 <h5>📌 Proyectos</h5>
                 <span>Cantidad de Proyectos en proceso, ejecutados, completados y en Control de Calidad</span>
@@ -156,7 +154,7 @@
     </div>
 
     <div class="col-lg-{{ Auth::user()->role == 'Directiva' ? '3' : '4' }}">
-        <div class="card shadow-sm" style="height: 95%">
+        <div class="card shadow" style="height: 95%">
             <div class="card-header">
                 <h5>🤝 Atención a Clientes</h5>
                 <span>Cantidad de solicitudes atendidas por estatus</span>
@@ -167,15 +165,13 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 
 <div class="row">
 
     <div class="col-lg-{{ Auth::user()->role == 'Analista' ? '8' : '6' }}">
-        <div class="card shadow-sm" style="height: 95%">
+        <div class="card shadow" style="height: 95%">
             <div class="card-header">
                 <h5>📅 Programación de Eventos</h5>
                 <span class="text-muted">Eventos y actividades de la semana</span>
@@ -188,7 +184,7 @@
 
     @if(Auth::user()->role != 'Analista')
     <div class="col-lg-6">
-        <div class="card shadow-sm" style="height: 95%">
+        <div class="card shadow" style="height: 95%">
             <div class="card-header">
                 <h5>💻 Entrada Equipos</h5>
                 <span class="text-muted">Cantidad de equipos ingresados por estatus</span>
@@ -201,6 +197,33 @@
     @endif
 
 
+</div>
+
+<div class="row">
+    
+    <div class="col-lg-6">
+        <div class="card shadow" style="height: 95%">
+            <div class="card-header">
+                <h5>💲 Ventas Por Ejecutivo</h5>
+                <span>Ventas concretadas por cada uno de los Ejecutivos</span>
+            </div>
+            <div class="card-block">
+                <canvas id="ventasPorVendedor" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow" style="height: 95%">
+            <div class="card-header">
+                <h5>❤️‍🩹 Clientes Atendidos Por Consultor</h5>
+                <span>Solicitudes Atendidas por consultor</span>
+            </div>
+            <div class="card-block">
+                <canvas id="solicitudesPorConsultor" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Mostrar Evento Modal -->
@@ -285,7 +308,8 @@
                     tooltips: {
                       callbacks: {
                         label: function (tooltipItem, data) {
-                            return (data['datasets'][0]['data'][tooltipItem['index']]).toLocaleString('en-US', {
+                            console.log(data)
+                            return 'Por Cobrar: ' + (data['datasets'][0]['data'][tooltipItem['index']]).toLocaleString('en-US', {
                               style: 'currency',
                               currency: 'USD',
                             })
@@ -432,6 +456,93 @@
                 }
             });
         }
+
+
+        
+        if($('#ventasPorVendedor').length){
+            var ctx = document.getElementById('ventasPorVendedor').getContext('2d');
+            new Chart(ctx, {
+                type: 'horizontalBar', // puedes usar horizontalBar en Chart.js v2, pero en v3+ es solo 'bar' con `indexAxis`
+                data: {
+                    labels: @json($ventasVendedorLabels),
+                    datasets: [
+                        {
+                            label: 'Ventas',
+                            data: @json($ventasVendedorTotales),
+                            backgroundColor: 'rgba(26, 82, 118, 1)', // Azul oscuro más intenso
+                            borderColor: 'rgba(26, 82, 118, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Cobrado',
+                            data: @json($cobrosVendedorTotales),
+                            backgroundColor: 'rgb(22, 198, 12)', // Verde claro estilo Apple más brillante
+                            borderColor: 'rgb(22, 198, 12)',
+                            borderWidth: 1
+                        }
+                    ]
+
+                },
+                options: {
+                    indexAxis: 'y', // para hacer las barras horizontales
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                maxTicksLimit: 8,
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString('en-US', {
+                                        style: 'currency',
+                                        currency: 'USD'
+                                    });
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                      callbacks: {
+                        label: function (tooltipItem, data) {
+                            return (data['datasets'][0]['data'][tooltipItem['index']]).toLocaleString('en-US', {
+                              style: 'currency',
+                              currency: 'USD',
+                            })
+                        }
+                      }
+                    }
+                }
+            });
+        }
+
+        if($('#solicitudesPorConsultor').length){
+            new Chart(document.getElementById('solicitudesPorConsultor').getContext('2d'), {
+                type: 'horizontalBar',
+                data: {
+                    labels: @json($consultoresLabels),
+                    datasets: [{
+                        label: 'Solicitudes Atendidas',
+                        data: @json($consultoresCantidades),
+                        backgroundColor: 'rgba(153, 102, 255, 0.7)', // morado pastel
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes:[{
+                            beginAtZero: false,
+                            ticks: {
+                                precision: 0
+                            }
+                        }] 
+                    }
+                }
+            });
+        }
+
 
     })
 </script>
