@@ -1,4 +1,3 @@
-{{-- view comisiones.table --}}
 <div class="card">
     <div class="card-header">
         <h5>Equipo de Ventas</h5>
@@ -11,12 +10,10 @@
                     <th>#</th>
                     <th>Gerente</th>
                     <th>Vendedor</th>
-                    <th>Servicio (%)</th>
-                    <th>Producto (%)</th>
-                    <th>Gerencia (%)</th>
                     <th>Monto Servicio</th>
                     <th>Monto Producto</th>
                     <th>Monto Gerencia</th>
+                    <th>Configuración</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,36 +24,6 @@
                         <input type="checkbox" name="es_gerente" class="es_gerente" {{ $c->es_gerente ? 'checked' : '' }}>
                     </td>
                     <td>{{ $c->vendedor }}</td>
-                    <td>
-                        <div class="input-group mb-0 pb-0">
-                            <input type="number" name="servicio" class="form-control servicio" value="{{$c->percent_comision_servicio}}"
-                                placeholder="0" min="0" max="100">
-                            <span class="input-group-text bg-inverse text-light fw-bold update-comisiones" data-toggle="tooltip" data-placement="top"
-                            title="Calcular Comisión">
-                                <i class="fas fa-percent"></i>                                    
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group mb-0 pb-0">
-                            <input type="number" name="producto" class="form-control producto" value="{{$c->percent_comision_producto}}"
-                                placeholder="0" min="0" max="100">
-                            <span class="input-group-text bg-inverse text-light fw-bold update-comisiones" data-toggle="tooltip" data-placement="top"
-                            title="Calcular Comisión">
-                                <i class="fas fa-percent"></i>                                    
-                            </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="input-group mb-0 pb-0">
-                            <input type="number" name="gerencia" class="form-control gerencia" value="{{$c->percent_comision_gerencial}}"
-                                placeholder="0" min="0" max="100" {{ $c->es_gerente ? '' : 'disabled' }} >
-                            <span class="input-group-text bg-inverse text-light fw-bold update-comisiones" data-toggle="tooltip" data-placement="top"
-                                title="Calcular Comisión">
-                                <i class="fas fa-percent"></i>                                    
-                            </span>
-                        </div>
-                    </td>
                     <td class="monto-servicio">
                         $ {{ number_format($c->comision_servicio, 2, '.', ',') }}
                     </td>
@@ -65,6 +32,11 @@
                     </td>
                     <td class="monto-gerencia">
                         $ {{ number_format($c->comision_gerencial, 2, '.', ',') }}
+                    </td>
+                    <td>
+                        <a href="{{ url('comisiones/vendedor/' . $c->id) }}" class="btn btn-inverse"  data-toggle="tooltip" data-placement="top" title="Configurar">
+                            <i class="fas fa-cog"></i> 
+                        </a>
                     </td>
                 </tr>
                 @endforeach

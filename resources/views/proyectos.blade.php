@@ -6,24 +6,20 @@
 
 @section('styles')
 <style>
-    .estatus-container {
-        overflow-x: auto; /* Activa el scroll horizontal */
-        white-space: nowrap; /* Evita el salto de línea */
-        padding: 10px 0;
+    .owl-carousel {
+        position: relative;
+        z-index: 10;
     }
-
-    .estatus-row {
-        display: flex;
-        flex-wrap: nowrap; /* Evita que los elementos se vayan a una nueva línea */
-        gap: 15px; /* Espacio entre tarjetas */
+    .estatus-container, .owl-carousel, .estatus-row {
+        overflow: visible !important;
     }
-
-    .estatus-item {
-        min-width: 200px; /* Asegura que cada tarjeta tenga un ancho mínimo */
-        flex-shrink: 0; /* Evita que se reduzcan demasiado */
+    .owl-carousel .item {
+        min-width: 200px;
+        padding: 20px 0;
     }
 
     .status-card {
+        height: 100%;
         cursor: pointer;
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
@@ -40,37 +36,50 @@
 @endsection
 
 @section('content')
-<div class="row">
-    @php
-        $estatusCollection = [
-            ['id' => 3, 'name' => 'Proyectos', 'count' => 0, 'color' => 'primary', 'icon' => 'fas fa-project-diagram'],
-            ['id' => 4, 'name' => 'Completados', 'count' => 0, 'color' => 'success', 'icon' => 'fas fa-clipboard-check'],
-            ['id' => 5, 'name' => 'Rechazados', 'count' => 0, 'color' => 'danger', 'icon' => 'fas fa-times-circle'],
-            ['id' => 6, 'name' => 'Descartados', 'count' => 0, 'color' => 'secondary', 'icon' => 'fas fa-trash-alt'],
-            ['id' => 7, 'name' => 'En Proceso', 'count' => 0, 'color' => 'info', 'icon' => 'fas fa-spinner'],
-            ['id' => 8, 'name' => 'Ejecutado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-play-circle'],
-            ['id' => 9, 'name' => 'Pausado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-pause-circle'],
-            ['id' => 10, 'name' => 'Control de Calidad', 'count' => 0, 'color' => 'dark', 'icon' => 'fas fa-check-double'],
-        ];
-    @endphp
+<div class="row mb-3">
+    <div class="col-md-12">
+        @php
+            $estatusCollection = [
+                ['id' => 3, 'name' => 'Proyectos', 'count' => 0, 'color' => 'primary', 'icon' => 'fas fa-project-diagram'],
+                ['id' => 4, 'name' => 'Completados', 'count' => 0, 'color' => 'success', 'icon' => 'fas fa-clipboard-check'],
+                ['id' => 5, 'name' => 'Rechazados', 'count' => 0, 'color' => 'danger', 'icon' => 'fas fa-times-circle'],
+                ['id' => 6, 'name' => 'Descartados', 'count' => 0, 'color' => 'secondary', 'icon' => 'fas fa-trash-alt'],
+                ['id' => 7, 'name' => 'En Proceso', 'count' => 0, 'color' => 'info', 'icon' => 'fas fa-spinner'],
+                ['id' => 8, 'name' => 'Ejecutado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-play-circle'],
+                ['id' => 9, 'name' => 'Pausado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-pause-circle'],
+                ['id' => 10, 'name' => 'Control de Calidad', 'count' => 0, 'color' => 'dark', 'icon' => 'fas fa-check-double'],
+            ];
+        @endphp
 
 
-    {{-- Consultar Presupuestos por Estatus --}}
-
-    <div class="estatus-container">
-        <div class="estatus-row">
+        {{-- Consultar Presupuestos por Estatus --}}
+        <div class="owl-carousel owl-theme d-none d-md-block">
             @foreach($estatusCollection as $status)
-            <div class="estatus-item">
-                <div class="card text-white bg-{{ $status['color'] }} shadow status-card getProyectosByStatus" data-id="{{ $status['id'] }}">
-                    <div class="card-body text-center">
-                        <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
-                        <h5 class="mt-2">{{ $status['name'] }}</h5>
-                        <h4 class="fw-bold count{{ $status['id'] }}">0</h4>
+                <div class="item">
+                    <div class="card text-white bg-{{ $status['color'] }} shadow status-card getProyectosByStatus mb-0" data-id="{{ $status['id'] }}">
+                        <div class="card-body text-center">
+                            <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
+                            <h5 class="mt-2">{{ $status['name'] }}</h5>
+                            <h4 class="fw-bold count{{ $status['id'] }}">0</h4>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
+
+        {{-- Consultar Presupuestos por Estatus en mobile --}}
+        @foreach($estatusCollection as $status)
+        <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6 d-block d-md-none">
+            <div class="card text-white bg-{{ $status['color'] }} shadow status-card getPresupuestosByStatus" data-id="{{ $status['id'] }}">
+                <div class="card-body text-center">
+                    <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
+                    <h5 class="mt-2">{{ $status['name'] }}</h5>
+                    <h4 class="fw-bold count{{ $status['id'] }}">0</h4>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
     </div>
 </div>
 
@@ -241,8 +250,12 @@
                         </div>
 
                         <div class="col-md-12 form-group">
+
+                        </div>
+
+                        <div class="col-md-12 form-group d-none">
                             <label class="control-label">Monto Abonado</label>
-                            <input type="text" class="form-control montopcd" name="monto" onkeyup="convertirmonto(this.form)">
+                            <input type="text" class="form-control montopcd" id="montoAbonado" name="monto" onkeyup="convertirmonto(this.form)">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -399,13 +412,16 @@
     $('#proyectoUpdateStatusButton').on('click', function(){
         var $codestatus = $('#estatusProyectoId').val();
         var $proyectoId = $('#proyectoId').val()
+        var $montoAbonado = $('#montoAbonado').val()
+
         $.ajax({
 			url: '{{ route("proyectos.update") }}', // Asegúrate de que esta ruta sea correcta
 			method: 'POST',
 			data: {
 				_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
                 codestatus: $codestatus,
-                proyectoId: $proyectoId
+                proyectoId: $proyectoId,
+                montoAbonado: $montoAbonado
 			},
 			success: function(response) {
                 getProyectosData(response.success);
@@ -524,5 +540,29 @@
         }
     });
     
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.owl-carousel').owlCarousel({
+            margin: 10,
+            loop: false,
+            nav: false,
+            dots: true,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 4
+                },
+                1000: {
+                    items: 6
+                }
+            },
+            autoWidth: true,
+            navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
+        });
+    });
 </script>
 @endsection

@@ -23,7 +23,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header">
                 <h5>Reporte de Comisiones 💰</h5>
@@ -31,7 +31,7 @@
             </div>
             <div class="card-block">
                 <div class="row">    
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-6 form-group">
                         <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
                         <select name="mes" id="mes" class="form-control">
                             @foreach($meses as $mes)

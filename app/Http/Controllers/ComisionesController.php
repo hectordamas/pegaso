@@ -86,4 +86,29 @@ class ComisionesController extends Controller
         return response()->json(['html' => $html]);
     }
     
+
+    public function vendedor($id, Request $request){
+        $savend = Savend::find($id);
+
+        return view('comisiones.vendedor', [
+            'savend' => $savend
+        ]);
+    }
+
+    public function set($id, Request $request){
+
+        $vendedor = Savend::find($id);
+
+        if ($vendedor) {
+            // Actualizar los valores en la BD (opcional)
+            $vendedor->es_gerente = $request->es_gerente ? 1 : 0;
+            $vendedor->activo = $request->activo ? 1 : 0;
+            $vendedor->comision_servicio = $request->comision_servicio;
+            $vendedor->comision_producto = $request->comision_producto;
+            $vendedor->comision_gerencia = $request->comision_gerencia;
+            $vendedor->save();
+        }
+
+        return redirect("comisiones/vendedor/{$id}")->with('message', 'Configuración guardada con éxito');
+    }
 }

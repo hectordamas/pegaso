@@ -37,6 +37,9 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/jquery.mCustomScrollbar.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/customAssets/owlcarousel/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customAssets/owlcarousel/owl.theme.default.css') }}">
+
     <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=2') }}">
 
 </head>
@@ -306,6 +309,7 @@
     <!-- SweetAlert2 -->
     <script src="{{ asset('assets/customAssets/js/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
+    <script src="{{ asset('assets/customAssets/owlcarousel/owl.carousel.min.js') }}"></script>
 
     @yield('scripts')
 
