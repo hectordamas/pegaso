@@ -80,6 +80,17 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label class="fw-bold mb-2" for="departamento">Departamento</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-inverse text-light"><i class="fas fa-user-tag"></i></span>
+                            <select name="departamento" id="departamento" class="form-control">
+                                @foreach (['Ventas', 'Otros'] as $departamento)
+                                    <option value="{{ $departamento }}">{{ $departamento }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <table class="table table-bordered">
                             <tr>

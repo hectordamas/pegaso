@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{AtencionCliente, Safact, CxC};
+use App\Models\{AtencionCliente, Safact, CxC, Calendario, EntradaEquipos, Visita};
 
 class Saclie extends Model
 {
@@ -23,4 +23,17 @@ class Saclie extends Model
     public function cxc(){
         return $this->hasMany(CxC::class, 'codclie', 'codclie');
     }
+
+    public function calendario(){
+        return $this->hasMany(Calendario::class, 'codclie', 'codclie');
+    }
+
+    public function entradaEquipos(){
+        return $this->hasMany(EntradaEquipos::class, 'codclie', 'codclie');
+    }
+
+    public function visitas(){
+        return $this->hasMany(Visita::class, 'codclie', 'codclie');
+    }
+
 }

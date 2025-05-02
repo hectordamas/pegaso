@@ -122,7 +122,6 @@
                                 </tr>
                             </thead>
                             <tbody id="presupuestosTbody">
-
                                 {{-- @include('presupuestos.tr-index') --}}
                             </tbody>
                         </table>
@@ -157,7 +156,7 @@
 
 <!-- Modal Cambiar Estatus de Presupuesto -->
 <div class="modal fade PresupuestoModalEdit" tabindex="-1" id="PresupuestoModalEdit" aria-labelledby="PresupuestoModalEditLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="PresupuestoModalEditLabel">Cambiar Estatus de Presupuesto #<span class="presupuestoId"></span></h6>
@@ -170,18 +169,27 @@
                     <input type="hidden" name="presupuestoId" id="presupuestoId">
 
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="control-label">Estatus</label>
-                                <select name="codestatus" class="form-control" id="estatusPresupuestoId" required>
-                                    @foreach($estatus as $e)
-                                        <option value="{{ $e->id }}">{{ $e->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <div class="col-md-6 form-group">
+                            <label class="control-label">Estatus</label>
+                            <select name="codestatus" class="form-control" id="estatusPresupuestoId" required>
+                                @foreach($estatus as $e)
+                                    <option value="{{ $e->id }}">{{ $e->nombre }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-md-12 form-group d-none" id="razon-container">
-                            <label for="" class="control-label" id="razonLabel"></label>
+
+                        <div class="col-md-6 form-group abonado-container d-none">
+                            <label for="" class="control-label">Monto Abonado</label>
+                            <input type="text" class="form-control montopcd" id="abono" name="abono" onkeyup="convertirmonto(this.form)"  required>
+                        </div>
+                        
+                        <div class="col-md-6 form-group abonado-container d-none">
+                            <label for="control-label">Subir Comprobante</label>
+                            <input type="file" class="form-control" name="file" id="file" accept="*" />
+                        </div> 
+
+                        <div class="col-md-6 form-group d-none" id="razon-container">
+                            <label for="" class="control-label" id="razonLabel">Motivo</label>
                             <textarea name="razon" id="razon" class="form-control"></textarea>
                         </div>
                     </div>
@@ -202,6 +210,20 @@
 
 @section('scripts')
 <script>
+    function convertirmonto(input){
+		$(".montopcd").on({
+			"focus": function (event) {
+				$(event.target).select();
+			},
+			"keyup": function (event) {
+				$(event.target).val(function (index, value ) {
+					return value.replace(/\D/g, "")
+						.replace(/([0-9])([0-9]{2})$/, '$1,$2')
+						.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+				});	   
+			}
+		});
+	}
 
     var presupuestosTable;
 
@@ -323,40 +345,59 @@
         var $codestatus = $('#estatusPresupuestoId').val();
         var $presupuestoId = $('#presupuestoId').val()
         var $razon = $('#razon').val()
-        $.ajax({
-			url: '{{ route("presupuestos.update") }}', // Asegúrate de que esta ruta sea correcta
-			method: 'POST',
-			data: {
-				_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
-                codestatus: $codestatus,
-                presupuestoId: $presupuestoId,
-                razon: $razon
-			},
-			success: function(response) {
-                getPresupuestosData(response.success);
-                $("#PresupuestoModalEdit").modal("hide")
-			},
-			error: function(response){
-				alert('Error de Conexión')
-                console.log(response)
-				$("#loadingSpinner").css("display", "none");
-			}
-		});
+        var $abono = $('#abono').val()
+        var fileInput = $("#file")[0].files[0]; // Obtener archivo
+
+        let reader = new FileReader();
+        reader.readAsDataURL(fileInput);
+        reader.onload = function () {
+            $.ajax({
+		    	url: '{{ route("presupuestos.update") }}', // Asegúrate de que esta ruta sea correcta
+		    	method: 'POST',
+		    	data: {
+		    		_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
+                    codestatus: $codestatus,
+                    presupuestoId: $presupuestoId,
+                    abono: $abono,
+                    file: reader.result
+		    	},
+		    	success: function(response) {
+                    getPresupuestosData(response.success);
+                    $("#PresupuestoModalEdit").modal("hide")
+		    	},
+		    	error: function(response){
+		    		alert('Error de Conexión')
+                    console.log(response)
+		    		$("#loadingSpinner").css("display", "none");
+		    	}
+		    });
+        }
     })
 
-    $('#PresupuestoModalEdit').addEventListener('show.bs.modal', function () {
+    $('#PresupuestoModalEdit').on('show.bs.modal', function () {
         $('#razon').val('');
+        $('#abono').val('');
+        $('#file').val('');
     });
 
-    $("#estatusPresupuestoId").on('input', function(){
+    $("#estatusPresupuestoId").on('change', function(){
         var codestatus = $(this).val();
-        $('#razon').val('');
 
+        console.log(codestatus)
+        $('#razon').val('');
         if (codestatus == 5 || codestatus == 6) {
             $('#razon-container').removeClass('d-none'); // Muestra el campo
             codestatus == 5 ? $('#razonLabel').html('Razón del Rechazo:') : $('#razonLabel').html('Razón del Descarte:');
         } else {
             $('#razon-container').addClass('d-none'); // Oculta el campo si no es 5 o 6
+        }
+
+        $('#abono').val('');
+        $('#file').val('');
+        if(codestatus == 3 || codestatus == 11){
+            $('.abonado-container').removeClass('d-none'); // Muestra el campo
+        } else {
+            $('.abonado-container').addClass('d-none'); // Oculta el campo si no es 5 o 6
         }
     });
 

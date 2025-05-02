@@ -50,4 +50,10 @@ class Visita extends Model
         if($codconsultor)
             return $query->where('codconsultor', $codconsultor);
     }
+
+    public function scopeBySaclie($query, $codclie){
+        if($codclie)
+            return $query->where('codclie', $codclie);
+    }
+
 }

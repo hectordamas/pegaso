@@ -10,15 +10,17 @@ use Mail;
 
 class CxCController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
 		$wallet = Wallet::where('inactivo', false)->get();  
 		$tipomoneda = TipoMoneda::where('codtipomoneda', 2)->where('inactivo', false)->get();
 		$saclie = Saclie::orderby('descrip','asc')->get();
+        $client = $request->client;
 
         return view('cxc', [
             'wallet' => $wallet,
             'tipomoneda' => $tipomoneda, 
-            'saclie' => $saclie
+            'saclie' => $saclie,
+            'client' => $client
         ]);
     }
 
@@ -59,7 +61,8 @@ class CxCController extends Controller
         $codwallet = $request->codwallet;
         
         //Todas las cxc de este wallet
-        $cxcs = CxC::where('codwallet', $codwallet)
+        $cxcs = CxC::bySaclie($request->client)
+        ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
         ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
@@ -71,7 +74,8 @@ class CxCController extends Controller
         });
     
         // Obtener las CxC con los datos necesarios por cliente
-        $saldosPorCliente = CxC::selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
+        $saldosPorCliente = CxC::bySaclie($request->client)
+        ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')

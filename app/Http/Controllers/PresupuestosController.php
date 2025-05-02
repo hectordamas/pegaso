@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Safact, EstatusPre, Savend};
+use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC};
 use Carbon\Carbon;
+use Auth;
 
 class PresupuestosController extends Controller
 {
     public function index(){
         $estatus = EstatusPre::where('inactivo', false)
-        ->whereIn('id', [2, 3, 5, 6])
+        ->whereIn('id', [2, 3, 5, 6, 11])
         ->get();
 
         $vendedores = Savend::where('activo', true)
@@ -94,9 +95,49 @@ class PresupuestosController extends Controller
     public function update(Request $request){
         $presupuesto = Safact::find($request->presupuestoId);
         $presupuesto->codestatus = $request->codestatus;
-        if($request->razon){
-            $presupuesto->razon = $request->razon;
+
+        if($codestatus == 5 || $codestatus == 6){
+            if($request->razon){
+                $presupuesto->razon = $request->razon;
+            }       
         }
+ 
+        
+        if($codestatus == 3 || $codestatus == 11){
+            if($request->abono){
+                $presupuesto->abono = $request->abono;
+
+                $cxc = new CxC();
+                $cxc->codwallet	= 1;			
+                $cxc->fecha	= date('Y-m-d');			
+                $cxc->codmoneda	= 2;			
+                $cxc->codtipomoneda	= 4;		
+                $cxc->codclie = $safact->saclie->codclie;			
+                $cxc->cliente = $safact->saclie->rif . ' | '. $safact->saclie->descrip;			
+                $cxc->monto	= $safact->mtototal / $safact->factor;			
+                $cxc->codusuario = Auth::user()->codusuario;	
+                $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $safact->numerod : 'Entrega: '. $safact->numerod ;	
+                $cxc->save();
+
+                $abono = new DetalleCxC();
+                $abono->codcxc = $cxc->codcxc;	
+                $abono->codtipomoneda = 4;
+                $abono->fecha = date('Y-m-d');			
+                $abono->monto = $request->abono;			
+                $abono->descripcion = $codestatus == 3 ? 'Abono Proyecto: ' . $safact->numerod : 'Abono Entrega: '. $safact->numerod;	
+                $abono->file = $request->input('file');	
+                $abono->codusuario = Auth::user()->codusuario;	
+                $abono->save();
+                
+                $cxc = Cxc::where('codcxc','=',$codcxc)->first();
+                
+                if($cxc){
+                    $cxc->abono = $cxc->abono + $request->abono;
+                    $cxc->save();
+                }
+            }
+        }
+
         $presupuesto->save();
 
         return response()->json([
@@ -108,7 +149,7 @@ class PresupuestosController extends Controller
         $presupuesto = Safact::find($id);
         $items = $presupuesto->saitemfac;
 
-        $html = view('presupuestos.detalles', compact('items'))->render(); // Cargar la vista que contiene los mensajes del chat
+        $html = view('presupuestos.detalles', compact('items', 'presupuesto'))->render(); // Cargar la vista que contiene los mensajes del chat
 
         return response()->json([
             'items' => $html,

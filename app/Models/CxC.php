@@ -13,6 +13,11 @@ class CxC extends Model
     protected $table = "cxc";
     protected $primaryKey = "codcxc";
 
+    public function scopeBySaclie($query, $codclie){
+        if($codclie)
+            return $query->where('codclie', $codclie);
+    }
+
     public function user(){
         return $this->belongsTo(User::class, 'codusuario', 'codusuario');
     }

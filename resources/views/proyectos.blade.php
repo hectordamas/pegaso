@@ -551,18 +551,23 @@
             dots: true,
             responsive: {
                 0: {
-                    items: 1
+                    items: 1,
+                    slideBy: 1
                 },
                 600: {
-                    items: 4
+                    items: 4,
+                    slideBy: 4
                 },
                 1000: {
-                    items: 6
+                    items: 6,
+                    slideBy: 6
                 }
             },
             autoWidth: true,
             navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
         });
+
+
     });
 </script>
 @endsection

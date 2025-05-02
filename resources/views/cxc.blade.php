@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow-sm">
@@ -497,13 +498,21 @@
     $(document).ready(function(){
         //$('#createCxcModal').modal('show');
 
+
+        if($('#client').val()){
+            $('#cmbcodwallet').val(1);
+            consultaDeCxc();
+        }
+
         function consultaDeCxc(eliminado) {
             var codwallet = $('#cmbcodwallet').val();
+            var client = $('#client').val();
             $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
 
             $.ajax({
 				data:{
-                    "codwallet": codwallet
+                    "codwallet": codwallet,
+                    'client': client
                 },
 				url: "{{ route('cxc.balance') }}",
 				type: 'get',

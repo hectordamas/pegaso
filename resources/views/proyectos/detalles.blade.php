@@ -136,6 +136,12 @@
             </div>
         </div>
     @endif
+
+    @if($proyecto->razon)
+        <div class="col-md-12 mt-3">
+            <p><strong>Razón: </strong> {{ $proyecto->razon }}</p>
+        </div>
+    @endif
 </div>
 
 

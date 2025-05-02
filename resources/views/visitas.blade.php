@@ -4,6 +4,8 @@
 @endsection
 
 @section('content')
+<input type="hidden" value="{{$client ?? ''}}" id="client">
+
 <div class="row">
     <div class="col-md-12">
         <div class="card shadow-sm">

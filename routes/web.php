@@ -32,7 +32,8 @@ use App\Http\Controllers\{
     UsersController,
     LicenciasAActivarController,
 
-    CuadreDeCajaController
+    CuadreDeCajaController,
+    ClientesController
 };
 
 Route::get('/', function () {
@@ -210,6 +211,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('cuadre-de-caja/store', 'store')->name('cuadre-de-caja.store')->middleware('menu.permission:139');
         Route::post('cuadre-de-caja/update/{id}', 'update')->name('cuadre-de-caja.update')->middleware('menu.permission:139');
         Route::post('cuadre-de-caja/{id}/revisado', 'actualizarRevisado')->middleware('menu.permission:139');
+    });
+
+    //Clientes
+    Route::controller(ClientesController::class)->group(function(){
+        Route::get('clientes', 'index')->name('clientes.index')->middleware('menu.permission:140');
+        Route::get('clientes/{id}', 'show')->name('clientes.show')->middleware('menu.permission:140');
     });
 });
 
