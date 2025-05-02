@@ -28,7 +28,11 @@ class AtencionClienteController extends Controller
 	
 		// Si no se filtra por estatus, aplicar el filtro por defecto
 		if (!$codestatus) {
-			$atencionClientes->whereIn('codestatus', [1, 2]);
+			if($request->all){
+				$atencionClientes->whereIn('codestatus', [1, 2, 3]);
+			}else{
+				$atencionClientes->whereIn('codestatus', [1, 2]);
+			}
 		} else {
 			$atencionClientes->byStatus($codestatus);
 		}

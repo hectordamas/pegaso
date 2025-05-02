@@ -156,7 +156,6 @@
                                         $submenuConfig[] = $menu;
                                     @endphp
                                 @else
-                                    <!-- Si ya acumulamos elementos de "Cuentas por Cobrar", renderizamos el dropdown -->
                                     @if(count($submenuCXC) > 0)
                                         <li class="pcoded-hasmenu {{ Request::is('cuentas-por-cobrar*') ? 'active' : '' }}">
                                             <a href="javascript:void(0)">
@@ -179,7 +178,7 @@
                                             </ul>
                                         </li>
                                         @php
-                                            $submenuCXC = []; // Limpiar la lista después de renderizar
+                                            $submenuCXC = [];
                                         @endphp
                                     @endif
                         

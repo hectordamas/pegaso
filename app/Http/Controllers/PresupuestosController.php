@@ -9,7 +9,7 @@ use Auth;
 
 class PresupuestosController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $estatus = EstatusPre::where('inactivo', false)
         ->whereIn('id', [2, 3, 5, 6, 11])
         ->get();
@@ -17,9 +17,12 @@ class PresupuestosController extends Controller
         $vendedores = Savend::where('activo', true)
         ->get();
 
+        $client = $request->client;
+
         return view('presupuestos', [
             'estatus' => $estatus, 
             'vendedores' => $vendedores,
+            'client' => $client
         ]);
     }
 
@@ -30,6 +33,7 @@ class PresupuestosController extends Controller
             ->byDateRange($request->input('from'), $request->input('until'))
             ->bySavend($request->input('codvend'))
             ->byStatus($request->input('codestatus'))
+            ->bySaclie($request->input('client'))
             ->with(['saclie', 'estatusPre', 'savend'])
             ->get();
     

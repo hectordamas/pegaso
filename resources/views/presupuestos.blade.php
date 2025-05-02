@@ -23,6 +23,8 @@
 @endsection
 
 @section('content')
+<input type="hidden" value="{{$client ?? ''}}" id="client">
+
 <div class="row">
     @php
         $estatusCollection = [
@@ -244,6 +246,7 @@
         let until = $('#until').val();
         let codvend = $('#codvend').val();
         let codestatus =  id || $('#codestatus').val(); // this ahora está correctamente referenciado
+        let client = $('#client').val();
 
         $('#presupuestos-table').DataTable({
             "bDeferRender": true,
@@ -280,6 +283,7 @@
 				aoData.push( { "name": "until", "value": until } );
 				aoData.push( { "name": "codvend", "value": codvend } );
 				aoData.push( { "name": "codestatus", "value": codestatus } );
+                aoData.push( { "name": "client", "value": client } );
             },
 			order: [[0, 'desc']],
             dom: 'Bfrtip',
@@ -383,7 +387,6 @@
     $("#estatusPresupuestoId").on('change', function(){
         var codestatus = $(this).val();
 
-        console.log(codestatus)
         $('#razon').val('');
         if (codestatus == 5 || codestatus == 6) {
             $('#razon-container').removeClass('d-none'); // Muestra el campo

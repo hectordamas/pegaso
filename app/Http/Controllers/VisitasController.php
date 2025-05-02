@@ -28,7 +28,8 @@ class VisitasController extends Controller
 
         // Construcción de la consulta de visitas
         $visitasQuery = Visita::byDateRange($request->from, $request->until)
-            ->byConsultor($request->codconsultor);
+            ->byConsultor($request->codconsultor)
+            ->bySaclie($request->client);
 
         // Si el usuario no tiene permiso "vertodo", solo puede ver sus visitas
         if (!$puedeVerTodo) {

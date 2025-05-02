@@ -8,7 +8,7 @@ use Carbon\Carbon;
 
 class ProyectosController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $clientes = Saclie::all();
         $savend = Savend::where('activo', true)->get();
 
@@ -17,12 +17,14 @@ class ProyectosController extends Controller
         ->get();   
 
 		$saclie = Saclie::orderby('descrip', 'asc')->get();
+        $client = $request->client;
 
         return view('proyectos', [
             'estatusPre' => $estatusPre, 
             'clientes' => $clientes,
             'savend' => $savend,
-            'saclie' => $saclie
+            'saclie' => $saclie,
+            'client' => $client
         ]);
     }
 
