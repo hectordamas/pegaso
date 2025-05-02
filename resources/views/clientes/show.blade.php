@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('metadata')
-<title>{{ ucwords(strtolower($saclie->descrip)) }} - {{ env('APP_NAME') }}</title>
+<title>{{ $saclie->descrip }} - {{ env('APP_NAME') }}</title>
 @endsection
 
 @section('styles')
@@ -55,7 +55,7 @@
     <div class="col-md-12">
         <div class="card shadow">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5>👥📞 {{ ucwords($saclie->descrip) }}</h5>
+                <h5>👥📞 {{ $saclie->descrip }}</h5>
                 <a href="{{ url('clientes') }}" class="btn btn-dark shadow rounded"><i class="fas fa-mug-hot"></i> Volver a Clientes</a>
 
             </div>
@@ -63,8 +63,8 @@
                 @php
                     $items = [
                         ['title' => 'Solicitudes', 'count' => $saclie->atencionclientes->count(), 'icon' => 'fas fa-headset', 'color' => 'pink', 'url' => "atencionclientes?client={$saclie->codclie}&from=2000-01-01&until=" . date('Y-m-d') . '&all=Y'],
-                        ['title' => 'Eventos', 'count' => $saclie->calendario->count(), 'icon' => 'fas fa-calendar-alt', 'color' => 'green', 'url' => "atencionclientes?client={$saclie->codclie}"],
-                        ['title' => 'CxC', 'count' => $saclie->cxc()->whereColumn('monto', '>', 'abono')->count(), 'icon' => 'fas fa-file-invoice-dollar', 'color' => 'blue', 'url' => "cuentas-por-cobrar?client={$saclie->codclie}"],
+                        ['title' => 'Eventos', 'count' => $saclie->calendario->count(), 'icon' => 'fas fa-calendar-alt', 'color' => 'green', 'url' => "calendario/clientes/{$saclie->codclie}"],
+                        ['title' => 'Cuentas Por Cobrar', 'count' => $saclie->cxc()->whereColumn('monto', '>', 'abono')->count(), 'icon' => 'fas fa-file-invoice-dollar', 'color' => 'blue', 'url' => "cuentas-por-cobrar?client={$saclie->codclie}"],
                         ['title' => 'Entrada Equipos', 'count' => $saclie->entradaEquipos->count(), 'icon' => 'fas fa-laptop-medical', 'color' => 'yellow', 'url' => "entradaequipos?client={$saclie->codclie}"],
 
                         // Nuevos colores
@@ -79,7 +79,7 @@
                 <div class="row">
 
                     @foreach($items as $item)
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-3">
                         <div class="card user-widget-card bg-c-{{ $item['color'] }} status-card shadow">
                             <div class="card-block">
                                 <i class="{{ $item['icon'] }} bg-simple-c-{{ $item['color'] }} card1-icon"></i>

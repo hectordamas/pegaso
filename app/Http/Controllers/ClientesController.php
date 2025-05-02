@@ -7,11 +7,13 @@ use App\Models\{Saclie, AtencionCliente, Calendario, CxC, EntradaEquipos, Visita
 
 class ClientesController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
 		$saclie = Saclie::orderby('descrip', 'asc')->get();
+        $client = $request->client;
 
         return view('clientes', [
-            'saclie' => $saclie
+            'saclie' => $saclie,
+            'client' => $client
         ]);
     }
 
@@ -21,6 +23,15 @@ class ClientesController extends Controller
 
         return view('clientes.show', [
             'saclie' => $saclie,
+        ]);
+    }
+
+    public function calendario($codclie){
+        $saclie = Saclie::where('codclie', $codclie)->first();
+
+        return view('calendario.cliente', [
+            'saclie' => $saclie,
+            'calendario' => $saclie->calendario()->with(['saclie', 'consultor'])->orderBy('id', 'desc')->get()
         ]);
     }
 }

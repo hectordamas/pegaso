@@ -79,8 +79,8 @@
                         <label for="client">Cliente</label>
                         <select name="client" id="client" class="form-control js-example-basic-single">
                             <option selected value="">Elige una Opción</option>
-                            @foreach($saclie as $client)
-                                <option value="{{ $client->codclie }}">{{ $client->descrip }} | {{$client->rif}}</option>
+                            @foreach($saclie as $c)
+                                <option value="{{ $c->codclie }}" {{ $client == $c->codclie ? 'selected' : ''}}>{{ $c->descrip }} | {{$c->rif}}</option>
                             @endforeach
                         </select>
                     </div>

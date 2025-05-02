@@ -217,6 +217,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(ClientesController::class)->group(function(){
         Route::get('clientes', 'index')->name('clientes.index')->middleware('menu.permission:140');
         Route::get('clientes/{id}', 'show')->name('clientes.show')->middleware('menu.permission:140');
+        Route::get('calendario/clientes/{codclie}', 'calendario')->middleware('menu.permission:140');
     });
 });
 
