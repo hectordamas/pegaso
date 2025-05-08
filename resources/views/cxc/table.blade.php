@@ -20,8 +20,25 @@
                 <td><p>{{ $cxc->codcxc }}</p></td>
                 <td><p>{{ \Carbon\Carbon::parse($cxc->fecha)->format('d-m-Y') }}</p></td>
                 <td><p>{{ $cxc->cliente }}</p></td>
-                <td><p>{{ $cxc->observacion }}</p></td>
-                <td><p>{{ $cxc->moneda->nombre }}</p></td>
+                <td>
+                    <p>{{ $cxc->observacion }}                         
+                        <br>
+                        @if($cxc->anulado) 
+                        <span class="badge badge-danger">
+                            Anulado
+                        </span>
+                        @endif
+                    </p>
+                </td>
+                <td>
+                    <p>{{ $cxc->moneda->nombre }} 
+                        @if($cxc->anulado) <br>
+                        <span class="badge badge-danger">
+                            Anulado
+                        </span>
+                        @endif
+                    </p>
+                </td>
                 <td><p>{{ number_format($cxc->monto, 2, ',', '.') }}</p></td>
                 <td><p>{{ number_format($cxc->abono, 2, ',', '.') }}</p></td>
                 <td><p>{{ number_format($cxc->saldo, 2, ',', '.') }}</p></td>
@@ -38,6 +55,7 @@
                     @endif
                 </td>
                 <td>
+                    @if(!$cxc->anulado)
                     <div class="btn-group">
                         <button type="button" class="btn btn-success" data-toggle="tooltip" title="Registrar Abono"
                             data-bs-target="#AbonoModalView" data-bs-toggle="modal" 
@@ -57,7 +75,21 @@
                             onclick="aceptarEliminar('{{ $cxc->codcxc }}')">
                             <i class="far fa-trash-alt"></i>                        
                         </button>
+
+                        @if(!$cxc->anulado)
+                        <button type="button" 
+                            class="btn btn-warning" data-toggle="tooltip" title="Anular Cuenta" 
+                            onclick="anular('{{ $cxc->codcxc }}')">
+                            <i class="far fa-times-circle"></i>                      
+                        </button>
+                        @endif
                     </div>
+                    @else
+                        <br>
+                        <span class="badge badge-danger">
+                            Anulado
+                        </span>
+                    @endif
                 </td>
             </tr>
             @endforeach

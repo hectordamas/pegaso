@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,10 +12,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('safact', function (Blueprint $table) {
-            $table->float('abono', 100, 2)->nullable();
-            $table->bigInteger('codcxc')->unsigned()->nullable();
+        Schema::table('tipomoneda', function (Blueprint $table) {
+            
         });
+
+        $sql = "INSERT INTO `tipomoneda` (`codtipomoneda`, `nombre`, `codmoneda`, `inactivo`) VALUES
+        (10, 'ANULADO', 1, 0),
+        (11, 'ANULADO', 2, 0),
+        (12, 'ANULADO', 3, 0);";
+
+        DB::unprepared($sql);
     }
 
     /**
@@ -22,8 +29,5 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('safact', function (Blueprint $table) {
-            $table->dropColumn(['abono', 'razon', 'codcxc']);
-        });
     }
 };

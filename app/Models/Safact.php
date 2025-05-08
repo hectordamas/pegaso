@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{EstatusPre, Savend, Saclie, ChatProyecto, ChatEntrega, saitemfac, SafactEstatusHistorial};
+use App\Models\{EstatusPre, Savend, Saclie, ChatProyecto, ChatEntrega, saitemfac, SafactEstatusHistorial, CxC};
 use Carbon\Carbon;
 
 class Safact extends Model
@@ -71,6 +71,17 @@ class Safact extends Model
     public function estatusHistorial()
     {
         return $this->hasMany(SafactEstatusHistorial::class, 'safact_id', 'id');
+    }
+
+    public function cxc(){
+        return $this->hasOne(CxC::class, 'safact_id', 'id');
+    }
+
+    public function scopeByMonth($query, $month){
+        if ($month) 
+            return $query->whereMonth('fechae', $month)
+                    ->whereYear('fechae', date('Y'));
+        
     }
 
 }

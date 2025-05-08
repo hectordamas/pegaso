@@ -15,6 +15,6 @@ class TipoMoneda extends Model
     protected $primaryKey = 'codtipomoneda';
 
     public function moneda(){
-        return $this->hasMany(Moneda::class);
+        return $this->belongsTo(Moneda::class, 'codmoneda', 'codmoneda');
     }
 }

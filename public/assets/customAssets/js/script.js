@@ -79,7 +79,15 @@ $(document).ready(function(){
 		});
 	})
 
-
+	//Modal Actualizacion de licencias
+	$('#ActualizacionDeLicenciasModalCreate').on('shown.bs.modal', function () {
+		$('#codclie').select2({
+			//theme: 'classic', // Mantiene el estilo Classic
+			width: '100%', // Ocupar todo el ancho disponible
+			dropdownParent: $('#ActualizacionDeLicenciasModalCreate')
+		});
+	})
+	
 	//Actualizar id al hacer click en modal para actualizar estatus Atencion al cliente
 	window.btnUpdateStatus = function(atencionId){
 		console.log(atencionId)

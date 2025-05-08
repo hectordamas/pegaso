@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('safact', function (Blueprint $table) {
-            $table->float('abono', 100, 2)->nullable();
-            $table->bigInteger('codcxc')->unsigned()->nullable();
+        Schema::table('savend', function (Blueprint $table) {
+            $table->string('email')->nullable();
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('safact', function (Blueprint $table) {
-            $table->dropColumn(['abono', 'razon', 'codcxc']);
+        Schema::table('savend', function (Blueprint $table) {
+            $table->dropColumn(['email']);
         });
     }
 };

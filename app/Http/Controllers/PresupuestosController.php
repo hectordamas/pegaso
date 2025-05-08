@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC};
+use App\Mail\ProyectoAprobadoMail;
 use Carbon\Carbon;
 use Auth;
+use Mail;
 
 class PresupuestosController extends Controller
 {
@@ -98,7 +100,9 @@ class PresupuestosController extends Controller
 
     public function update(Request $request){
         $presupuesto = Safact::find($request->presupuestoId);
+        $codestatus = $request->codestatus;
         $presupuesto->codestatus = $request->codestatus;
+
 
         if($codestatus == 5 || $codestatus == 6){
             if($request->razon){
@@ -116,11 +120,12 @@ class PresupuestosController extends Controller
                 $cxc->fecha	= date('Y-m-d');			
                 $cxc->codmoneda	= 2;			
                 $cxc->codtipomoneda	= 4;		
-                $cxc->codclie = $safact->saclie->codclie;			
-                $cxc->cliente = $safact->saclie->rif . ' | '. $safact->saclie->descrip;			
-                $cxc->monto	= $safact->mtototal / $safact->factor;			
+                $cxc->codclie = $presupuesto->saclie->codclie;			
+                $cxc->cliente = $presupuesto->saclie->rif . ' | '. $presupuesto->saclie->descrip;			
+                $cxc->monto	= $presupuesto->mtototal / $presupuesto->factor;			
                 $cxc->codusuario = Auth::user()->codusuario;	
-                $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $safact->numerod : 'Entrega: '. $safact->numerod ;	
+                $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod ;
+                $cxc->departamento = 'Ventas';	
                 $cxc->save();
 
                 $abono = new DetalleCxC();
@@ -128,21 +133,30 @@ class PresupuestosController extends Controller
                 $abono->codtipomoneda = 4;
                 $abono->fecha = date('Y-m-d');			
                 $abono->monto = $request->abono;			
-                $abono->descripcion = $codestatus == 3 ? 'Abono Proyecto: ' . $safact->numerod : 'Abono Entrega: '. $safact->numerod;	
+                $abono->descripcion = $codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: '. $presupuesto->numerod;	
                 $abono->file = $request->input('file');	
                 $abono->codusuario = Auth::user()->codusuario;	
+                $abono->departamento = 'Ventas';	
                 $abono->save();
                 
-                $cxc = Cxc::where('codcxc','=',$codcxc)->first();
+                $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();
                 
                 if($cxc){
-                    $cxc->abono = $cxc->abono + $request->abono;
+                    $cxc->abono = floatval($cxc->abono ?? 0) + floatval($request->abono ?? 0);
                     $cxc->save();
                 }
             }
         }
 
         $presupuesto->save();
+
+        if ($presupuesto->codestatus == 3) {
+            $email = $presupuesto->savend->email ?? null;
+        
+            if ($email) {
+                Mail::to($email)->send(new ProyectoAprobadoMail($presupuesto));
+            }
+        }
 
         return response()->json([
             'success' => true

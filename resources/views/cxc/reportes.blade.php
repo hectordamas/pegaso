@@ -70,15 +70,15 @@
                         <tr>
                             <td><p>{{$reg->codcxc}}</p></td>
                             <td><p>{{date('d/m/Y', strtotime($reg->fecha))}}</p></td>
-                            <td><p>{{$reg->cliente}}</p></td>
+                            <td><p>{{$reg->cxc->cliente ?? 'N/A'}}</p></td>
                             <td><p>{{$reg->observacion}}</p></td>
                             <td><p>{{$reg->descripcion}}</p></td>
-                            <td><p>{{$reg->moneda ?? 'N/A'}}</p></td>
-                            <td><p>{{$reg->tipomoneda ?? 'N/A'}}</p></td>
+                            <td><p>{{$reg->tipomoneda->moneda->siglas ?? 'N/A'}}</p></td>
+                            <td><p>{{$reg->tipomoneda->nombre ?? 'N/A'}}</p></td>
                             <td><p>{{number_format($reg->monto, 2, ',', '.')}}</p></td>
                             <td>
                                 @if($reg->file)
-                                    <a href="javascript:void(0)" onclick="openBase64Image('{{ $reg->file }}')" target="_blank">
+                                    <a href="javascript:void(0)" onclick="openBase64Image('{{ $reg->file }}')">
                                         <img src="{{ $reg->file }}" style="max-width: 80px;"/>
                                     </a>
                                 @else
@@ -86,7 +86,7 @@
                                 @endif
                             </td>
                             <td>
-                                <p>{{$reg->usuario}}</p>
+                                <p>{{$reg->user->name}}</p>
                             </td>
                         </tr>
                         @endforeach

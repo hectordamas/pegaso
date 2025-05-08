@@ -33,7 +33,9 @@ use App\Http\Controllers\{
     LicenciasAActivarController,
 
     CuadreDeCajaController,
-    ClientesController
+    ClientesController,
+
+    ActualizacionDeLicenciasController
 };
 
 Route::get('/', function () {
@@ -136,7 +138,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('cxc/updateColor', 'updateColor')->name('cxc.updateColor');
 
         Route::post('cxc/eliminar/{codcxc}', 'destroy');
-        
+        Route::post('cxc/anular/{codcxc}', 'anular');
+
         //Cxc Reportes
         Route::get('cuentas-por-cobrar/reportes', 'reportes')->middleware('menu.permission:14');
     });
@@ -218,6 +221,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('clientes', 'index')->name('clientes.index')->middleware('menu.permission:140');
         Route::get('clientes/{id}', 'show')->name('clientes.show')->middleware('menu.permission:140');
         Route::get('calendario/clientes/{codclie}', 'calendario')->middleware('menu.permission:140');
+    });
+
+    //Actrualizacion de licencias
+    Route::controller(ActualizacionDeLicenciasController::class)->group(function(){
+        Route::get('actualizacion-licencias', 'index')->name('actualizacion-licencias.index')->middleware('menu.permission:141');
+        Route::post('actualizacion-licencias/store', 'store')->name('actualizacion-licencias.store')->middleware('menu.permission:141');
+        Route::get('actualizacion-licencias/{id}/edit', 'edit')->name('actualizacion-licencias.edit')->middleware('menu.permission:141');
+        Route::post('actualizacion-licencias/{id}/update', 'update')->name('actualizacion-licencias.update')->middleware('menu.permission:141');
     });
 });
 

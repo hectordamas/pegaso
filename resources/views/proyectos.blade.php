@@ -425,6 +425,13 @@
                 montoAbonado: $montoAbonado
 			},
 			success: function(response) {
+                if(response.error){
+                    $("#loadingSpinner").css("display", "none");
+                    $("#ProyectoModalEdit").modal("hide")
+
+                   return Swal.fire({text: response.error, icon: "error"});
+                }
+
                 getProyectosData(response.success);
                 $("#ProyectoModalEdit").modal("hide")
 			},

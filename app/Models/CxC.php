@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{User, Saclie, TipoMoneda, Moneda, DetalleCxC};
+use App\Models\{User, Saclie, TipoMoneda, Moneda, DetalleCxC, Safact};
 
 class CxC extends Model
 {
@@ -36,5 +36,9 @@ class CxC extends Model
     
     public function detallecxc(){
         return $this->hasMany(DetalleCxC::class, 'codcxc', 'codcxc');
+    }
+
+    public function safact(){
+        return $this->belongsTo(Safact::class, 'safact_id', 'id');
     }
 }

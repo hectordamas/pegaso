@@ -69,9 +69,9 @@
 
                         // Nuevos colores
                         ['title' => 'Visitas', 'count' =>  $saclie->visitas->count(), 'icon' => 'fas fa-user-check', 'color' => 'success', 'url' => "visitas?client={$saclie->codclie}&from=2000-01-01&until=" . date('Y-m-d')],
-                        ['title' => 'Presupuestos', 'count' =>  $saclie->safact()->where('tipofac', 'F')->where('codestatus', [1, 2, 4, 5, 6])->count(), 'icon' => 'fas fa-money-check-alt', 'color' => 'secondary', 'url' => "presupuestos?client={$saclie->codclie}"],
-                        ['title' => 'Proyectos', 'count' => $saclie->safact()->where('tipofac', 'F')->where('codestatus', [3, 7, 8, 9, 10])->count(), 'icon' => 'fas fa-project-diagram', 'color' => 'danger', 'url' => "proyectos?client={$saclie->codclie}"],
-                        ['title' => 'Entregas', 'count' => $saclie->safact()->where('tipofac', 'F')->where('codestatus', [11, 12, 13])->count(), 'icon' => 'fas fa-dolly', 'color' => 'primary', 'url' => "entregas-y-suministros?client={$saclie->codclie}"],
+                        ['title' => 'Presupuestos', 'count' =>  $saclie->safact()->where('tipofac', 'F')->whereIn('codestatus', [1, 2, 4, 5, 6])->count(), 'icon' => 'fas fa-money-check-alt', 'color' => 'secondary', 'url' => "presupuestos?client={$saclie->codclie}"],
+                        ['title' => 'Proyectos', 'count' => $saclie->safact()->where('tipofac', 'F')->whereIn('codestatus', [3, 7, 8, 9, 10])->count(), 'icon' => 'fas fa-project-diagram', 'color' => 'danger', 'url' => "proyectos?client={$saclie->codclie}"],
+                        ['title' => 'Entregas', 'count' => $saclie->safact()->where('tipofac', 'F')->whereIn('codestatus', [11, 12, 13])->count(), 'icon' => 'fas fa-dolly', 'color' => 'primary', 'url' => "entregas-y-suministros?client={$saclie->codclie}"],
                     ];
                 @endphp
 

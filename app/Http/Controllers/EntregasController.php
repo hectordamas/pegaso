@@ -9,7 +9,7 @@ use Auth;
 
 class EntregasController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         $clientes = Saclie::all();
         $savend = Savend::where('activo', true)->get();
 
@@ -18,12 +18,14 @@ class EntregasController extends Controller
         ->get();   
 
 		$saclie = Saclie::orderby('descrip', 'asc')->get();
+        $client = $request->client;
 
         return view('entregas', [
             'estatusPre' => $estatusPre, 
             'clientes' => $clientes,
             'savend' => $savend,
-            'saclie' => $saclie
+            'saclie' => $saclie,
+            'client' => $client
         ]);
     }
 
@@ -81,6 +83,17 @@ class EntregasController extends Controller
     public function update(Request $request){
         // Buscar el Entrega
         $entrega = Safact::findOrFail($request->entregaId);
+
+        if($request->codestatus == 13){
+            $noCompletado = $entrega->saitemfac()->where('valor', false)->count();
+
+            if($noCompletado > 0){
+                return response()->json([
+                    'error' => 'Esta entrega aún tiene artículos en proceso, por lo que el estatus no puede ser actualizado'
+                ]);
+            }
+
+        }
 
         // Verificar si el estado realmente cambió
         if ($entrega->codestatus != $request->codestatus) {

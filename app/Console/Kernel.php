@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Programar el comando que creamos antes
-        $schedule->command('event:sendReminder')->everyFiveMinutes();  // O el intervalo que necesites    
+        $schedule->command('event:sendReminder')->everyFiveMinutes();  // O el intervalo que necesites  
+        $schedule->command('presupuestos:notificar-pendientes')->daily();
+  
     }
     /**
      * Register the commands for the application.

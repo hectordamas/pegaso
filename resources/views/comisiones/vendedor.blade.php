@@ -37,7 +37,11 @@
                             % Por Gerencia
                         </label>
                         <input type="number" class="form-control" name="comision_gerencia" value="{{ $savend->comision_gerencia }}" id="comision_gerencia" {{ !$savend->es_gerente ? 'disabled' : '' }} step="any">
-                    </div>                     
+                    </div>       
+                    <div class="col-md-3 form-group">
+                        <label for="email" class="control-label">E-Mail</label>
+                        <input type="email" class="form-control" name="email" id="email" value="{{ $savend->email }}">
+                    </div>              
                     <div class="col-md-1 form-group">
                         <label for="" class="control-label">
                             <input type="checkbox" {{ $savend->es_gerente ? 'checked' : '' }} name="es_gerente" id="es_gerente"> Gerente
@@ -48,7 +52,7 @@
                             <input type="checkbox" {{ $savend->activo ? 'checked' : '' }} name="activo"> Activo
                         </label>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 mt-3">
                         <button type="submit" class="btn btn-inverse shadow">
                             <i class="fas fa-cog"></i> Guardar Configuración
                         </button>

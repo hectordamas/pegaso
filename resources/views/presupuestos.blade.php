@@ -187,7 +187,7 @@
                         
                         <div class="col-md-6 form-group abonado-container d-none">
                             <label for="control-label">Subir Comprobante</label>
-                            <input type="file" class="form-control" name="file" id="file" accept="*" />
+                            <input type="file" id="file" name="file" accept="image/*" class="form-control" required>
                         </div> 
 
                         <div class="col-md-6 form-group d-none" id="razon-container">
@@ -344,40 +344,48 @@
     });
     
 
-    //Actualizar Estatus de Presupuesto
     $('#presupuestoUpdateStatusButton').on('click', function(){
-        var $codestatus = $('#estatusPresupuestoId').val();
-        var $presupuestoId = $('#presupuestoId').val()
-        var $razon = $('#razon').val()
-        var $abono = $('#abono').val()
-        var fileInput = $("#file")[0].files[0]; // Obtener archivo
-
-        let reader = new FileReader();
-        reader.readAsDataURL(fileInput);
-        reader.onload = function () {
-            $.ajax({
-		    	url: '{{ route("presupuestos.update") }}', // Asegúrate de que esta ruta sea correcta
-		    	method: 'POST',
-		    	data: {
-		    		_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
-                    codestatus: $codestatus,
-                    presupuestoId: $presupuestoId,
-                    abono: $abono,
-                    file: reader.result
-		    	},
-		    	success: function(response) {
-                    getPresupuestosData(response.success);
-                    $("#PresupuestoModalEdit").modal("hide")
-		    	},
-		    	error: function(response){
-		    		alert('Error de Conexión')
-                    console.log(response)
-		    		$("#loadingSpinner").css("display", "none");
-		    	}
-		    });
+        var codestatus = $('#estatusPresupuestoId').val();
+        var presupuestoId = $('#presupuestoId').val();
+        var razon = $('#razon').val();
+        var abono = $('#abono').val();
+        var fileInput = $("#file")[0].files[0];
+        
+        if (fileInput) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                sendPresupuestoUpdate(e.target.result);
+            };
+            reader.readAsDataURL(fileInput);
+        } else {
+            sendPresupuestoUpdate(null); // No se seleccionó archivo
         }
-    })
-
+    
+        function sendPresupuestoUpdate(fileBase64) {
+            $.ajax({
+                url: '{{ route("presupuestos.update") }}',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    codestatus: codestatus,
+                    presupuestoId: presupuestoId,
+                    abono: abono,
+                    razon: razon,
+                    file: fileBase64
+                },
+                success: function(response) {
+                    getPresupuestosData(response.success);
+                    $("#PresupuestoModalEdit").modal("hide");
+                },
+                error: function(response){
+                    alert('Error de Conexión');
+                    console.log(response);
+                    $("#loadingSpinner").hide();
+                }
+            });
+        }
+    });
     $('#PresupuestoModalEdit').on('show.bs.modal', function () {
         $('#razon').val('');
         $('#abono').val('');

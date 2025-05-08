@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos};
+use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos, DetalleCxC, Savend};
 use Auth;
 
 class HomeController extends Controller
@@ -117,28 +117,47 @@ class HomeController extends Controller
         $entradaEquiposEstatus =  $entradaEquipos->pluck('estatus');
         $entradaEquiposCantidad =  $entradaEquipos->pluck('cantidad');
 
-        $ventasPorVendedor = Safact::whereBetween('fechae', [$desde, $hasta])
-            ->whereIn('codestatus', [3, 4, 7, 8, 10, 11, 12, 13]) // Estados válidos para ventas
-            ->whereNotNull('codvend')
-            ->with('savend') // Asegura que se cargue la relación
-            ->get()
-            ->groupBy('codvend')
-            ->map(function ($ventas) {
-                $vendedor = $ventas->first()->savend->descrip ?? 'Sin nombre';
-                $total = $ventas->sum(function ($venta) {
-                    return $venta->factor ? $venta->mtototal / $venta->factor : 0;
-                });
-            
-                return [
-                    'vendedor' => $vendedor,
-                    'total' => round($total, 2)
-                ];
-            })->values(); // Convierte la colección a array limpio (sin claves por codvend)
         
+
+        $ventasPorVendedor = Safact::whereBetween('fechae', [$desde, $hasta])
+        ->whereIn('codestatus', [3, 4, 7, 8, 10, 11, 12, 13]) // Estados válidos para ventas
+        ->whereNotNull('codvend')
+        ->with('savend') // Asegura que se cargue la relación
+        ->get()
+        ->groupBy('codvend')
+        ->map(function ($ventas) {
+            $vendedor = $ventas->first()->savend->descrip ?? 'Sin nombre';
+            $total = $ventas->sum(function ($venta) {
+                return $venta->factor ? $venta->mtototal / $venta->factor : 0;
+            });
+        
+            return [
+                'vendedor' => $vendedor,
+                'total' => round($total, 2),
+                'cobros' => 0
+            ];
+        });
+
         // Extraemos datos para la vista
         $ventasVendedorLabels = $ventasPorVendedor->pluck('vendedor');
         $ventasVendedorTotales = $ventasPorVendedor->pluck('total');
         $cobrosVendedorTotales = [];
+        foreach($ventasVendedorLabels as $v){
+            $vendedor = Savend::where('descrip', $v)->first();
+            $cobroTotal = 0;
+            foreach($vendedor->safact as $safact){
+                if($safact->cxc){
+                    $abonos = $safact->cxc->detallecxc()
+                    ->whereBetween('fecha', [$desde, $hasta])
+                    ->sum('monto');
+    
+                    $cobroTotal += $abonos;
+                }
+            }
+
+            array_push($cobrosVendedorTotales, $cobroTotal);
+        }
+
 
         $solicitudesPorConsultor = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
         ->whereNotNull('codconsultor')

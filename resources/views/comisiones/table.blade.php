@@ -8,11 +8,11 @@
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
-                    <th>Gerente</th>
                     <th>Vendedor</th>
-                    <th>Monto Servicio</th>
                     <th>Monto Producto</th>
+                    <th>Monto Servicio</th>
                     <th>Monto Gerencia</th>
+                    <th>Gerente</th>
                     <th>Configuración</th>
                 </tr>
             </thead>
@@ -20,18 +20,20 @@
                 @foreach($comisiones as $c)
                 <tr class="comisiones-row" data-id="{{ $c->id }}">
                     <td>{{ $c->id }}</td>
-                    <td class="text-center">
-                        <input type="checkbox" name="es_gerente" class="es_gerente" {{ $c->es_gerente ? 'checked' : '' }}>
-                    </td>
                     <td>{{ $c->vendedor }}</td>
-                    <td class="monto-servicio">
-                        $ {{ number_format($c->comision_servicio, 2, '.', ',') }}
-                    </td>
                     <td class="monto-producto">
                         $ {{ number_format($c->comision_producto, 2, '.', ',') }}
                     </td>
+                    <td class="monto-servicio">
+                        $ {{ number_format($c->comision_servicio, 2, '.', ',') }}
+                    </td>
                     <td class="monto-gerencia">
                         $ {{ number_format($c->comision_gerencial, 2, '.', ',') }}
+                    </td>
+                    <td>
+                        @if($c->es_gerente) 
+                            <i class="fas fa-check fa-2x"></i>
+                        @endif
                     </td>
                     <td>
                         <a href="{{ url('comisiones/vendedor/' . $c->id) }}" class="btn btn-inverse"  data-toggle="tooltip" data-placement="top" title="Configurar">

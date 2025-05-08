@@ -97,6 +97,18 @@ class ProyectosController extends Controller
         // Buscar el proyecto
         $proyecto = Safact::findOrFail($request->proyectoId);
 
+
+        if($request->codestatus == 4 || $request->codestatus == 8){
+            $noCompletado = $proyecto->saitemfac()->where('valor', false)->count();
+
+            if($noCompletado > 0){
+                return response()->json([
+                    'error' => 'Este proyecto aún tiene tareas sin completar, por lo que su estatus no pueder actualizado!'
+                ]);
+            }
+
+        }
+
         // Verificar si el estado realmente cambió
         if ($proyecto->codestatus != $request->codestatus) {
             $historialAnterior = SafactEstatusHistorial::where('safact_id', $proyecto->id)

@@ -461,6 +461,11 @@
         
         if($('#ventasPorVendedor').length){
             var ctx = document.getElementById('ventasPorVendedor').getContext('2d');
+            console.log([
+                @json($ventasVendedorLabels), 
+                @json($ventasVendedorTotales),
+                @json($cobrosVendedorTotales)
+            ]);
             new Chart(ctx, {
                 type: 'horizontalBar', // puedes usar horizontalBar en Chart.js v2, pero en v3+ es solo 'bar' con `indexAxis`
                 data: {
@@ -502,14 +507,16 @@
                         }]
                     },
                     tooltips: {
-                      callbacks: {
-                        label: function (tooltipItem, data) {
-                            return (data['datasets'][0]['data'][tooltipItem['index']]).toLocaleString('en-US', {
+                        callbacks: {
+                          label: function (tooltipItem, data) {
+                            var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var value = dataset.data[tooltipItem.index];
+                            return `${dataset.label}: ${value.toLocaleString('en-US', {
                               style: 'currency',
                               currency: 'USD',
-                            })
+                            })}`;
+                          }
                         }
-                      }
                     }
                 }
             });

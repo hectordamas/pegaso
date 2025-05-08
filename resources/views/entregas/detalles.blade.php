@@ -54,70 +54,73 @@
     @if($entrega->estatusHistorial->isNotEmpty())
         <div class="col-md-12 mt-3">
             <h5 class="mb-2">Historial de Cambios</h5>
-            <table class="table table-striped text-center table-bordered table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th><small>#</small></th>
-                        <th><small>Estatus</small></th>
-                        <th><small>Fecha Inicio</small></th>
-                        <th><small>Fecha Fin</small></th>
-                        <th><small>Tiempo Total</small></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($entrega->estatusHistorial as $index => $h)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $h->estatusPre->nombre }}</td>
-                        <td>{{ \Carbon\Carbon::parse($h->fecha_inicio)->format('d/m/Y H:i a') }}</td>
-                        <td>
-                            @if(in_array($h->estatusPre_id, [4, 5, 6]))
-                                {{ \Carbon\Carbon::parse($h->fecha_inicio)->format('d/m/Y H:i a') }}
-                            @elseif($h->fecha_fin)
-                                {{ \Carbon\Carbon::parse($h->fecha_fin)->format('d/m/Y H:i a') }}
-                            @else
-                                <span class="badge badge-success">En curso</span>
-                            @endif
-                        </td>
-                        <td>
-                            @if(in_array($h->estatusPre_id, [4, 5, 6, 8]))
-                                <span class="badge badge-primary"><i class="fas fa-check-double"></i> Finalizado</span>
-                            @elseif($h->fecha_fin)
-                                {{ \Carbon\Carbon::parse($h->fecha_inicio)->diffForHumans(\Carbon\Carbon::parse($h->fecha_fin), true) }}
-                            @else
-                                <span class="badge badge-success">En curso</span>
-                            @endif
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot class="table-dark">
-                    @php
-                        $fechaInicio = \Carbon\Carbon::parse($entrega->fechae);
-                        $ultimoHistorial = $entrega->estatusHistorial()->latest('fecha_inicio')->first();
-                        $total = 'No se guardó un historial de cambios de estatus.';
+            <div class="table-responsive dt-responsive">
 
-                        if ($ultimoHistorial) {
-                            $fechaFin = $ultimoHistorial->fecha_fin ? \Carbon\Carbon::parse($ultimoHistorial->fecha_fin) : \Carbon\Carbon::parse($ultimoHistorial->created_at);
-                            $diferencia = $fechaInicio->diff($fechaFin);
+                <table class="table table-striped text-center table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><small>#</small></th>
+                            <th><small>Estatus</small></th>
+                            <th><small>Fecha Inicio</small></th>
+                            <th><small>Fecha Fin</small></th>
+                            <th><small>Tiempo Total</small></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($entrega->estatusHistorial as $index => $h)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $h->estatusPre->nombre }}</td>
+                            <td>{{ \Carbon\Carbon::parse($h->fecha_inicio)->format('d/m/Y H:i a') }}</td>
+                            <td>
+                                @if(in_array($h->estatusPre_id, [4, 5, 6]))
+                                    {{ \Carbon\Carbon::parse($h->fecha_inicio)->format('d/m/Y H:i a') }}
+                                @elseif($h->fecha_fin)
+                                    {{ \Carbon\Carbon::parse($h->fecha_fin)->format('d/m/Y H:i a') }}
+                                @else
+                                    <span class="badge badge-success">En curso</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if(in_array($h->estatusPre_id, [4, 5, 6, 8]))
+                                    <span class="badge badge-primary"><i class="fas fa-check-double"></i> Finalizado</span>
+                                @elseif($h->fecha_fin)
+                                    {{ \Carbon\Carbon::parse($h->fecha_inicio)->diffForHumans(\Carbon\Carbon::parse($h->fecha_fin), true) }}
+                                @else
+                                    <span class="badge badge-success">En curso</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot class="table-dark">
+                        @php
+                            $fechaInicio = \Carbon\Carbon::parse($entrega->fechae);
+                            $ultimoHistorial = $entrega->estatusHistorial()->latest('fecha_inicio')->first();
+                            $total = 'No se guardó un historial de cambios de estatus.';
 
-                            $total = collect([
-                                $diferencia->y > 0 ? $diferencia->y . ' año' . ($diferencia->y > 1 ? 's' : '') : null,
-                                $diferencia->m > 0 ? $diferencia->m . ' mes' . ($diferencia->m > 1 ? 'es' : '') : null,
-                                $diferencia->d > 0 ? $diferencia->d . ' día' . ($diferencia->d > 1 ? 's' : '') : null
-                            ])->filter()->implode(', ');
-                        }
-                    @endphp
-                    <tr>
-                        <td colspan="4"><strong>Fecha de Creación:</strong></td>
-                        <td>{{ $fechaInicio->format('d-m-Y h:i a') }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"><strong>Duración total del proyecto:</strong></td>
-                        <td>{{ $total }}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                            if ($ultimoHistorial) {
+                                $fechaFin = $ultimoHistorial->fecha_fin ? \Carbon\Carbon::parse($ultimoHistorial->fecha_fin) : \Carbon\Carbon::parse($ultimoHistorial->created_at);
+                                $diferencia = $fechaInicio->diff($fechaFin);
+
+                                $total = collect([
+                                    $diferencia->y > 0 ? $diferencia->y . ' año' . ($diferencia->y > 1 ? 's' : '') : null,
+                                    $diferencia->m > 0 ? $diferencia->m . ' mes' . ($diferencia->m > 1 ? 'es' : '') : null,
+                                    $diferencia->d > 0 ? $diferencia->d . ' día' . ($diferencia->d > 1 ? 's' : '') : null
+                                ])->filter()->implode(', ');
+                            }
+                        @endphp
+                        <tr>
+                            <td colspan="4"><strong>Fecha de Creación:</strong></td>
+                            <td>{{ $fechaInicio->format('d-m-Y h:i a') }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><strong>Duración total del proyecto:</strong></td>
+                            <td>{{ $total }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     @else
         <div class="col-md-12">
@@ -151,6 +154,12 @@
                 @endif
             </div>
         </div>
+    @endif
+
+    @if($entrega->razon)
+    <div class="col-md-12 mt-3">
+        <p><strong>Razón: </strong> {{ $entrega->razon }}</p>
+    </div>
     @endif
 </div>
 

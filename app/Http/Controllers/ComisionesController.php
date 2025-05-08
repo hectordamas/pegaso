@@ -13,63 +13,54 @@ class ComisionesController extends Controller
 
     public function balance(Request $request)
     {
-        $mes = $request->mes;
-        $datos = $request->comisiones; // Recibe datos desde AJAX
-    
-        if($datos){
-            foreach ($datos as $dato) {
-                $vendedor = Savend::find($dato['id']);
-
-                if ($vendedor) {
-                    // Actualizar los valores en la BD (opcional)
-                    $vendedor->es_gerente = $dato['es_gerente'];
-                    $vendedor->comision_servicio = $dato['servicio'];
-                    $vendedor->comision_producto = $dato['producto'];
-                    $vendedor->comision_gerencia = $dato['gerencia'];
-                    $vendedor->save();
-                }
-            }
-        }
-
-        // Obtener vendedores con datos actualizados
-        $vendedores = Savend::with(['saitemfac' => function ($query) use ($mes) {
-            $query->byMonth($mes)->where('TipoFac', 'F')->with('safact'); // Cargar la relación 'safact' dentro de 'saitemfac'
-        }])->get();
-
-    
+        $vendedores = Savend::with(['safact.cxc', 'safact.saitemfac'])->where('activo', true)->get();
         $comisiones = [];
+        $mes = $request->mes;
         $totalVentasDepartamento = 0;
-    
+        
         foreach ($vendedores as $vendedor) {
-            $totalVentas = 0;
             $comisionProducto = 0;
             $comisionServicio = 0;
+
+            $totalAbonado = 0;
+
+            foreach ($vendedor->safact as $safact) {
+                $items = $safact->saitemfac;
+                $factor = $safact->factor ?: 1;
     
-            foreach ($vendedor->saitemfac as $item) {
-                $montoConvertido = $item->TotalItem / $item->safact->factor;
-                $totalVentas += $montoConvertido;
+                $productoTotal = $items->where('EsServ', false)->sum(fn($item) => $item->TotalItem / $factor);
+                $servicioTotal = $items->where('EsServ', true)->sum(fn($item) => $item->TotalItem / $factor);
     
-                if ($item->EsServ) {
-                    $comisionProducto += $montoConvertido * ($vendedor->comision_producto / 100);
-                } else {
-                    $comisionServicio += $montoConvertido * ($vendedor->comision_servicio / 100);
+                $cxc = $safact->cxc;
+                $abonosMes = 0;
+                
+                if ($cxc) {
+                    $abonosMes = $cxc->detallecxc()
+                        ->whereMonth('fecha', $mes)
+                        ->whereYear('fecha', date('Y'))
+                        ->sum('monto');
                 }
+    
+                // Distribución de abonos: lógica pura y clara
+                $montoParaProducto = min($abonosMes, $productoTotal);
+                $montoParaServicio = max(0, $abonosMes - $productoTotal);
+    
+                // Aplicar comisiones sobre montos efectivamente abonados
+                $comisionProducto += $montoParaProducto * ($vendedor->comision_producto / 100);
+                $comisionServicio += $montoParaServicio * ($vendedor->comision_servicio / 100);
+                $totalAbonado += $montoParaProducto + $montoParaServicio;
+
             }
     
-            $totalVentasDepartamento += $totalVentas;
+            $totalVentasDepartamento += $totalAbonado;
     
             $comisiones[] = [
                 'id' => $vendedor->id,
                 'vendedor' => $vendedor->descrip,
                 'es_gerente' => $vendedor->es_gerente,
-                'total_ventas' => $totalVentas,
-
                 'comision_producto' => $comisionProducto,
                 'comision_servicio' => $comisionServicio,
                 'comision_gerencial' => 0,
-
-                'percent_comision_producto' => $vendedor->comision_producto,
-                'percent_comision_servicio' => $vendedor->comision_servicio,
                 'percent_comision_gerencial' => $vendedor->comision_gerencia,
             ];
         }
@@ -78,9 +69,8 @@ class ComisionesController extends Controller
             if ($comision['es_gerente']) {
                 $comision['comision_gerencial'] = $totalVentasDepartamento * ($comision['percent_comision_gerencial'] / 100);
             }
-
         }
-
+    
         $html = view('comisiones.table', ['comisiones' => collect($comisiones)->map(fn($i) => (object) $i)])->render();
     
         return response()->json(['html' => $html]);
@@ -106,6 +96,7 @@ class ComisionesController extends Controller
             $vendedor->comision_servicio = $request->comision_servicio;
             $vendedor->comision_producto = $request->comision_producto;
             $vendedor->comision_gerencia = $request->comision_gerencia;
+            $vendedor->email = $request->email;
             $vendedor->save();
         }
 

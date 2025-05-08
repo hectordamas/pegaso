@@ -1,3 +1,4 @@
+@if(!($p->codestatus == 3))
 <a href="javascript:void(0);" 
     data-bs-toggle="modal" 
     data-bs-target="#PresupuestoModalEdit"
@@ -5,6 +6,7 @@
     class="btn btn-success">
     <i class="fas fa-edit"></i> Actualizar Estatus
 </a>
+@endif
 <a href="javascript:void(0);" 
     onclick="presupuestoDetalles({{ $p->id }})"
     class="btn btn-warning">

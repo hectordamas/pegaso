@@ -62,6 +62,15 @@ class CxCController extends Controller
         
         //Todas las cxc de este wallet
         $cxcs = CxC::bySaclie($request->client)
+        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
+            $q->where('departamento', 'Ventas');
+        })
+        ->when(Auth::user()->role == 'Analista', function ($q) {
+            $q->where('codusuario', Auth::user()->codusuario);
+        })
+        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
+            // Sin restricciones
+        })
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
@@ -75,9 +84,20 @@ class CxCController extends Controller
     
         // Obtener las CxC con los datos necesarios por cliente
         $saldosPorCliente = CxC::bySaclie($request->client)
+        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
+            $q->where('departamento', 'Ventas');
+        })
+        ->when(Auth::user()->role == 'Analista', function ($q) {
+            $q->where('codusuario', Auth::user()->codusuario);
+        })
+        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
+            // Sin restricciones
+        })
+        ->where('codwallet', $codwallet)
         ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
+        ->where('anulado', false)
         ->whereColumn('monto', '>', 'abono')
         ->groupBy('codclie', 'cliente')
         ->orderByRaw('SUM(monto) - SUM(abono) ASC')
@@ -214,20 +234,14 @@ class CxCController extends Controller
         ]);
     }
 
-    public function reportes(Request $request){
-		$saclie = Saclie::orderby('descrip','asc')->get();
-
+    public function reportes(Request $request)
+    {
+        $saclie = Saclie::orderBy('descrip', 'asc')->get();
         $abonos = DetalleCxC::byDateRange($request->from, $request->until)
         ->bySaclie($request->codclie)
-        ->select(DB::raw('detallecxc.file, detallecxc.fecha,detallecxc.codcxc,cxc.cliente, cxc.codclie ,cxc.observacion,moneda.nombre as moneda,tipomoneda.nombre as tipomoneda,detallecxc.descripcion,detallecxc.monto,usuario.nombre as usuario'))
-        ->join('tipomoneda','tipomoneda.codtipomoneda','=','detallecxc.codtipomoneda')
-        ->join('moneda','moneda.codmoneda','=','tipomoneda.codmoneda')
-        ->join('cxc','cxc.codcxc','=','detallecxc.codcxc')
-        ->join('usuario','usuario.codusuario','=','detallecxc.codusuario')
-        ->orderBy('codcxc','desc')
+        ->orderBy('codcxc', 'desc')
         ->get();
-
-
+    
         return view('cxc.reportes', [
             'abonos' => $abonos,
             'requestFrom' => $request->from,
@@ -292,6 +306,22 @@ class CxCController extends Controller
         }
     }
     
+
+    public function anular(Request $request, $codcxc){
+            $cxc = CxC::find($codcxc);
+            if (!$cxc) {
+                return response()->json(["success" => false, "message" => "Cuenta por cobrar no encontrada"]);
+            }
+
+            $cxc->anulado = true;
+            $cxc->save();
+            $tipomoneda = TipoMoneda::where('codmoneda', $cxc->codmoneda)->where('nombre', 'ANULADO')->first();
+            $cxc->codtipomoneda = $tipomoneda->codtipomoneda;
+            $cxc->save();
+
+            return response()->json(["success" => true, "message" => "Cuenta por cobrar anulada correctamente"]);
+
+    }
 
     protected function enviaremail($asunto, $emaildestino, $datos, $formato){
         try {    
