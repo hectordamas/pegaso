@@ -10,7 +10,24 @@
 @endsection
 
 @section('content')
+@if(Auth::user()->role == 'Analista')
+
 <div class="row">
+    @foreach($menus as $menu)
+    <div class="col-md-3">
+        <div class="card shadow">
+            <div class="card-block text-center">
+                <i class="{{ $menu->logo_boostrap }} text-c-lite-green d-block f-40"></i>
+                <h4 class="m-t-20 text-c-light-green">{{ $menu->nombre }}</h4>
+                <a href="{{ url($menu->ruta) }}" class="btn btn-primary btn-sm btn-round">Ingresar</a>
+            </div>
+        </div>
+    </div>
+    @endforeach
+</div>
+
+@else
+    <div class="row">
     <div class="col-md-6">
         <h6 class="fw-bold"><i class="far fa-smile-beam"></i> Bienvenido a {{ env('APP_NAME') }}, {{ auth()->user()->name }}!</h6>
         <p><i class="far fa-clock"></i> <span class="fw-bold">Fecha:</span> {{date('d-m-Y h:i A')}}</p>
@@ -28,9 +45,9 @@
             </a>
         </div>
     </div>
-</div>
+    </div>
 
-<div class="row">
+    <div class="row">
     @if(Auth::user()->role == 'Directiva')
     <div class="col-xl-3">
         <div class="card bg-c-green text-white shadow">
@@ -113,10 +130,10 @@
 
     </div>
 
-</div>
+    </div>
 
 
-<div class="row">
+    <div class="row">
     @if(Auth::user()->role == 'Directiva')
     <div class="col-lg-3">
         <div class="card shadow" style="height: 95%">
@@ -165,10 +182,10 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 
-<div class="row">
+    <div class="row">
 
     <div class="col-lg-{{ Auth::user()->role == 'Analista' ? '8' : '6' }}">
         <div class="card shadow" style="height: 95%">
@@ -197,10 +214,10 @@
     @endif
 
 
-</div>
+    </div>
 
-@if(Auth::user()->role == 'Gerencia' || Auth::user()->role == 'Directiva')
-<div class="row">
+    @if(Auth::user()->role == 'Gerencia' || Auth::user()->role == 'Directiva')
+    <div class="row">
     
     <div class="col-lg-6">
         <div class="card shadow" style="height: 95%">
@@ -225,11 +242,11 @@
             </div>
         </div>
     </div>
-</div>
-@endif
+    </div>
+    @endif
 
-<!-- Mostrar Evento Modal -->
-<div class="modal fade" id="showEventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <!-- Mostrar Evento Modal -->
+    <div class="modal fade" id="showEventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -275,7 +292,8 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+@endif
 
 @endsection
 

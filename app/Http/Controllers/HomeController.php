@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos, DetalleCxC, Savend};
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -176,6 +177,17 @@ class HomeController extends Controller
         $consultoresLabels = $solicitudesPorConsultor->pluck('consultor');
         $consultoresCantidades = $solicitudesPorConsultor->pluck('cantidad');
     
+        $userId = Auth::id();
+
+        $menus = DB::table('menupermiso')
+        ->select('menus.*')
+        ->join('menus', 'menupermiso.codmenu', '=', 'menus.codmenu')
+        ->where('menupermiso.codusuario', $userId)
+        ->where('menus.inactivo', false)
+        ->orderBy('menus.position', 'asc')
+        ->get();
+
+    
         return view('home', [
             'saldoPorCobrar' => $saldoPorCobrar,
             'saldosPorCliente' => $saldosPorCliente,
@@ -203,7 +215,9 @@ class HomeController extends Controller
             'consultoresLabels' => $consultoresLabels,
             'consultoresCantidades' => $consultoresCantidades,
 
-            'type' => $type ?? 'anio'
+            'type' => $type ?? 'anio',
+
+            'menus' => $menus
         ]);
     }
 }
