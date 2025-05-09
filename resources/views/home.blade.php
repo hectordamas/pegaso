@@ -11,15 +11,14 @@
 
 @section('content')
 @if(Auth::user()->role == 'Analista')
-
 <div class="row">
     @foreach($menus as $menu)
     <div class="col-md-3">
         <div class="card shadow">
             <div class="card-block text-center">
                 <i class="{{ $menu->logo_boostrap }} text-c-lite-green d-block f-40"></i>
-                <h4 class="m-t-20 text-c-light-green">{{ $menu->nombre }}</h4>
-                <a href="{{ url($menu->ruta) }}" class="btn btn-primary btn-sm btn-round">Ingresar</a>
+                <h4 class="m-t-20 text-c-light-green mb-3">{{ $menu->nombre }}</h4>
+                <a href="{{ url($menu->ruta) }}" class="btn btn-primary btn-sm btn-round shadow">Ingresar</a>
             </div>
         </div>
     </div>

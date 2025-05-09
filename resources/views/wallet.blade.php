@@ -180,6 +180,8 @@ $(document).ready(function(){
     });
 
     function getWalletData(eliminado) {
+        const exp = $('#exp').val();
+
         $("#loadingSpinner").css("display", "flex"); 
 
         if ($.fn.DataTable.isDataTable('#wallet-table')) {
@@ -219,7 +221,35 @@ $(document).ready(function(){
             },
             order: [[0, 'desc']],
             dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+			buttons: [
+				'copy',
+				'csv',
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave == exp) {
+							$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave === claveExportacion) {
+							$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				'print'
+			],            
             "responsive": true, 
             "lengthChange": false, 
             "autoWidth": false,

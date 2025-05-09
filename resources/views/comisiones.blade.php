@@ -65,6 +65,8 @@
     var comisionesTable;
 
     function initializeComisionesTable(){
+        const exp = $('#exp').val();
+
         if ($.fn.DataTable.isDataTable('#comisiones-table')) {
             $('#comisiones-table').dataTable().fnClearTable();
             $('#comisiones-table').dataTable().fnDestroy();
@@ -82,7 +84,35 @@
             ],
             pageLength: -1,
             dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+			buttons: [
+				'copy',
+				'csv',
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave == exp) {
+							$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave === claveExportacion) {
+							$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				'print'
+			],	            
             language: {
                 sProcessing: "Procesando...",
                 sLengthMenu: "Mostrar _MENU_ registros",

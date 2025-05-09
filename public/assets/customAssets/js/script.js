@@ -1,6 +1,8 @@
 var tableApp;
 
 function initializeDataTable() {
+	const exp = $('#exp').val();
+
 	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#licencias-table').length || $('#cuadre-table').length || $('#clientes-table').length){
 		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #licencias-table, #cuadre-table, #clientes-table').DataTable({
 			deferRender: true, // Solo renderiza lo visible
@@ -13,7 +15,35 @@ function initializeDataTable() {
 				[10, 50, 100, 150, 'Todos']
 			],
 			dom: 'Bfrtip',
-			buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+			buttons: [
+				'copy',
+				'csv',
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave == exp) {
+							$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: function (e, dt, node, config) {
+						const clave = prompt("Introduce la clave para exportar:");
+						if (clave === claveExportacion) {
+							$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
+						} else {
+							alert("Clave incorrecta. Exportación cancelada.");
+						}
+					}
+				},
+				'print'
+			],			
 			language: {
 				sProcessing: "Procesando...",
 				sLengthMenu: "Mostrar _MENU_ registros",
@@ -29,15 +59,6 @@ function initializeDataTable() {
 					sNext: "Siguiente",
 					sPrevious: "Anterior"
 				},
-				buttons: {
-					pageLength: {
-						_: "Ver %d Registros",
-						'-1': "Todos"
-					},
-					colvis: "Columnas",
-					copy: "Copiar",
-					print: "Imprimir"
-				}
 			}
 		});
 	}
