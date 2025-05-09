@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('assets/strdash/css/responsive.css') }}">
     <!-- modernizr css -->
     <script src="{{ asset('assets/strdash/js/vendor/modernizr-2.8.3.min.js') }}"></script>
+
+    @yield('styles')
 </head>
 
 <body>
@@ -45,6 +47,8 @@
     <!-- others plugins -->
     <script src="{{ asset('assets/strdash/js/plugins.js') }}"></script>
     <script src="{{ asset('assets/strdash/js/scripts.js') }}"></script>
+
+    @yield('scripts')
 </body>
 
 </html>

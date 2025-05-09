@@ -33,31 +33,6 @@ return new class extends Migration
             $table->longText('photo')->nullable();
         });
 
-        $user = new \App\Models\User();
-        $user->codusuario = 1000;
-        $user->codtipodoc = 1;
-        $user->documento = '27439674';
-        $user->name = "Héctor Damas";
-        $user->email = 'hectorgabrieldm@hotmail.com';
-        $user->telefonocel = '04241930033';
-        $user->fecha = now();
-        $user->master = true;
-        $user->inactivo = false;
-        $user->photo = null;
-        $user->password  = bcrypt('123456789'); // Convertir SHA-1 a bcrypt
-        $user->role = "Directiva";
-        $user->save();
-
-        $user->codusuario = $user->id;
-        $user->save();
-
-
-        $consultor = new \App\Models\Consultor();
-        $consultor->codconsultor = $user->id;
-        $consultor->codusuario = $user->id;
-        $consultor->nombre = $user->name;
-        $consultor->inactivo = false;
-        $consultor->save();
     }
 
     /**

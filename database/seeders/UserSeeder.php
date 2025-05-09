@@ -36,25 +36,7 @@ class UserSeeder extends Seeder
                 'updated_at'  => now(),
             ]);
         }
-
-        $user = new User();
-        $user->codusuario = 1000;
-        $user->codtipodoc = 1;
-        $user->documento = '27439674';
-        $user->name = "Héctor Damas";
-        $user->email = 'hectorgabrieldm@hotmail.com';
-        $user->telefonocel = '04241930033';
-        $user->fecha = now();
-        $user->master = true;
-        $user->inactivo = false;
-        $user->photo = null;
-        $user->password  = bcrypt('123456789'); // Convertir SHA-1 a bcrypt
-        $user->role = "Directiva";
-        $user->save();
-
-        $user->codusuario = $user->id;
-        $user->save();
-
+        
         echo "Usuarios importados correctamente.\n";
     }
 }

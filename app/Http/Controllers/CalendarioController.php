@@ -32,10 +32,10 @@ class CalendarioController extends Controller
         $eventos = $eventosQuery->get()->map(function ($item) {
             return [
                 'id'    => $item->id,
-                'title' => $item->title,
+                'title' => $item->consultor->nombre . ' | ' . ($item->saclie->descrip ?? $item->lead),
                 'description' => $item->description,
                 'consultor' => $item->consultor->nombre,
-                'eventType' => $item->evenType,
+                'eventType' => $item->eventType,
                 'interactionType' => $item->interactionType,
                 'cliente' => $item->saclie->descrip ?? $item->lead,
                 'start' => $item->entry_date,

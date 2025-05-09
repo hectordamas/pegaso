@@ -199,6 +199,7 @@
 
 </div>
 
+@if(Auth::user()->role == 'Gerencia' || Auth::user()->role == 'Directiva')
 <div class="row">
     
     <div class="col-lg-6">
@@ -225,6 +226,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <!-- Mostrar Evento Modal -->
 <div class="modal fade" id="showEventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -419,7 +421,7 @@
                     $('#modalConsultor').text(event.consultor ?? 'No Registrado');
                     $('#modalDescription').text(event.description ?? 'No Registrado');
                     $('#modalEventType').text(event.eventType ?? 'No Registrado');
-                    $('#modalInteractionType').text(event.interationType ?? 'No Registrado');
+                    $('#modalInteractionType').text(event.interactionType ?? 'No Registrado');
                     // Mostrar el modal
                     $('#showEventModal').modal('show');
                 },

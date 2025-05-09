@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('metadata')
-<title>Actualización de Licencias - {{ env('APP_NAME') }}</title>
+<title>Actualización Homologación - {{ env('APP_NAME') }}</title>
 @endsection
 
 @section('content')
@@ -37,7 +37,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h5>Filtrar Actualización de Licencias</h5>
+                <h5>Filtrar Actualización de Homologación</h5>
                 
                 <span>Filtra por Estado, Fecha e Incidencias</span>
             </div>
@@ -97,7 +97,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
-                    <h5>Lista de Actualizaciones</h5>
+                    <h5>Lista de Homologación</h5>
                     <span>Licencias actualizadas y pendientes por actualización</span>
                 </div>
                 <div>
@@ -147,7 +147,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="ActualizacionDeLicenciasModalCreate">Registrar Actualización de Licencias</h6>
+                <h6 class="modal-title" id="ActualizacionDeLicenciasModalCreate">Registrar Actualización Homologación</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

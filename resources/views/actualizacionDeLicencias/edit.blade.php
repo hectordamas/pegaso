@@ -14,7 +14,7 @@
         <div class="card">
             <div class="card-header">
                 <h5>Actualizar</h5>
-                <span>Modificar Solicitud de Actualización</span>
+                <span>Modificar Solicitud de Actualización Homologación</span>
             </div>
             <div class="card-block">
                 <form action="{{ route('actualizacion-licencias.update', ['id' => $licencia->id]) }}" method="POST">

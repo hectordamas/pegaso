@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('color');    
 
             $table->bigInteger('codusuario')->unsigned(); // Código del usuario que registra
-            $table->foreign('codusuario')->references('codusuario')->on('users')->onDelete('cascade');
         });
     }
 

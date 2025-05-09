@@ -22,14 +22,11 @@ return new class extends Migration
             $table->string('direccionconex')->nullable(); // Dirección si es presencial
 
             $table->unsignedBigInteger('codestatus'); // Estado de la solicitud
-            $table->foreign('codestatus')->references('codestatus')->on('estatusat')->onDelete('cascade');
 
 
             $table->unsignedBigInteger('codconsultor'); // Código del consultor asignado
-            $table->foreign('codconsultor')->references('codconsultor')->on('consultor')->onDelete('cascade');
 
             $table->unsignedBigInteger('codusuario'); // Código del usuario que registra
-            $table->foreign('codusuario')->references('codusuario')->on('users')->onDelete('cascade');
 
             $table->string('codclie')->nullable();
            // $table->foreign('codclie')->references('codclie')->on('saclie')->onDelete('cascade');

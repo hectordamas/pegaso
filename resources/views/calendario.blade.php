@@ -255,7 +255,7 @@
                     $('#modalConsultor').text(event.consultor ?? 'No Registrado');
                     $('#modalDescription').text(event.description ?? 'No Registrado');
                     $('#modalEventType').text(event.eventType ?? 'No Registrado');
-                    $('#modalInteractionType').text(event.interationType ?? 'No Registrado');
+                    $('#modalInteractionType').text(event.interactionType ?? 'No Registrado');
 
                     // Mostrar el modal
                     $('#showEventModal').modal('show');
