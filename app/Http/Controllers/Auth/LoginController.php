@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Validation\ValidationException;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -46,5 +49,20 @@ class LoginController extends Controller
             'password' => $request->password,
             'inactivo' => false
         ];
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && $user->inactivo) {
+            throw ValidationException::withMessages([
+                'email' => ['Tu usuario está inactivo. Por favor, contacta al administrador.'],
+            ]);
+        }
+
+        throw ValidationException::withMessages([
+            'email' => [trans('auth.failed')],
+        ]);
     }
 }
