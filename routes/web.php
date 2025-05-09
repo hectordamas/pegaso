@@ -35,7 +35,8 @@ use App\Http\Controllers\{
     CuadreDeCajaController,
     ClientesController,
 
-    ActualizacionDeLicenciasController
+    ActualizacionDeLicenciasController,
+    TicketsController
 };
 
 Route::get('/', function () {
@@ -223,12 +224,20 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('calendario/clientes/{codclie}', 'calendario')->middleware('menu.permission:140');
     });
 
-    //Actrualizacion de licencias
+    //Actualizacion de licencias
     Route::controller(ActualizacionDeLicenciasController::class)->group(function(){
         Route::get('actualizacion-licencias', 'index')->name('actualizacion-licencias.index')->middleware('menu.permission:141');
         Route::post('actualizacion-licencias/store', 'store')->name('actualizacion-licencias.store')->middleware('menu.permission:141');
         Route::get('actualizacion-licencias/{id}/edit', 'edit')->name('actualizacion-licencias.edit')->middleware('menu.permission:141');
         Route::post('actualizacion-licencias/{id}/update', 'update')->name('actualizacion-licencias.update')->middleware('menu.permission:141');
+    });
+
+    //Tickets 
+    Route::controller(TicketsController::class)->group(function(){
+        Route::get('tickets', 'index')->name('tickets.index')->middleware('menu.permission:142');
+        Route::post('tickets/store', 'store')->name('tickets.store')->middleware('menu.permission:142');
+        Route::get('tickets/{id}/edit', 'edit')->name('tickets.edit')->middleware('menu.permission:142');
+        Route::post('tickets/{id}/update', 'update')->name('tickets.update')->middleware('menu.permission:142');
     });
 });
 
