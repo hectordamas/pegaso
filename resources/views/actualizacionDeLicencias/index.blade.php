@@ -116,6 +116,7 @@
                             <th>Estado de Actualización</th>
                             <th>Incidencias</th>
                             <th>Observación</th>
+                            <th>Pagada</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -129,9 +130,27 @@
                             <td>{{ $a->incidencias }}</td>
                             <td>{{ $a->observacion }}</td>
                             <td>
+                                @if($a->pagada)
+                                    <i class="fas fa-check fa-2x"></i>
+                                @endif
+                            </td>
+                            <td>
                                 <a href="{{ route('actualizacion-licencias.edit', ['id' => $a->id]) }}" class="btn btn-success">
                                     <i class="far fa-edit"></i>
                                 </a>
+
+                                    @if($a->adjunto)
+                                     <a 
+                                        target="_blank"
+                                        class="btn btn-info" 
+                                        href="{{ asset($a->adjunto) }}"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Ver Pago"
+                                     >
+                                        <i class="fas fa-file-invoice"></i>                                     
+                                    </a>
+                                    @endif
                             </td>
                         </tr>
                         @endforeach
@@ -151,7 +170,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('actualizacion-licencias.store') }}" method="POST">
+                <form action="{{ route('actualizacion-licencias.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-sm-6">
@@ -184,9 +203,20 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6"></div>
 
-                        <div class="col-sm-6">
+
+
+                        <div class="col-sm-6 form-group form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" value="1"> 
+                            <label for="pagada" class="fw-bold mb-2">Pagada</label>
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label for="control-label">Subir Comprobante</label>
+                            <input type="file" class="form-control" name="file" accept="*" />
+                        </div> 
+
+                        <div class="col-sm-6 pt-3">
                             <div class="form-group">
                                 <label class="control-label">Observación</label>
                                 <textarea class="form-control" id="observacion" name="observacion" rows="5"></textarea>

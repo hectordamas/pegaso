@@ -17,7 +17,7 @@
                 <span>Modificar Solicitud de Actualización Homologación</span>
             </div>
             <div class="card-block">
-                <form action="{{ route('actualizacion-licencias.update', ['id' => $licencia->id]) }}" method="POST">
+                <form action="{{ route('actualizacion-licencias.update', ['id' => $licencia->id]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="row">
@@ -54,14 +54,24 @@
                                 <option value="Con Incidencias" {{ $licencia->incidencias == 'Con Incidencias' ? 'selected' : '' }}>Con Incidencias</option>
                             </select>
                         </div>
-                
-                
+
+                        <div class="col-sm-3 form-group form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" value="1"> 
+                            <label for="pagada" class="fw-bold mb-2">Pagada</label>
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label for="control-label">Subir Comprobante</label>
+                            <input type="file" class="form-control" name="file" accept="*" />
+                        </div> 
+
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="control-label">Observación</label>
                                 <textarea class="form-control" id="observacion" name="observacion" rows="5">{{ old('observacion', $licencia->observacion) }}</textarea>
                             </div>
                         </div>
+
 
                         <div class="col-md-12">
                             <a href="{{ route('actualizacion-licencias.index') }}" class="btn btn-secondary">

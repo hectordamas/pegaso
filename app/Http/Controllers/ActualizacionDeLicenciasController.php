@@ -69,6 +69,22 @@ class ActualizacionDeLicenciasController extends Controller
         $licencia->status = $request->status;
         $licencia->incidencias = $request->incidencias;
         $licencia->observacion = $request->observacion;
+
+        $licencia->pagada = $request->has('pagada') ? true : false;
+
+                // Guardar archivo sin usar Storage
+        if ($request->hasFile('file')) {
+            $ruta = 'uploads/actualizacionHomologacion'; 
+            $archivo = $request->file('file');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
+        
+
         $licencia->save();
     
         // Redirigir con mensaje de éxito
@@ -100,6 +116,20 @@ class ActualizacionDeLicenciasController extends Controller
         $licencia->status = $request->status;
         $licencia->incidencias = $request->incidencias;
         $licencia->observacion = $request->observacion;
+        $licencia->pagada = $request->has('pagada') ? true : false;
+
+                // Guardar archivo sin usar Storage
+        if ($request->hasFile('file')) {
+            $ruta = 'uploads/actualizacionHomologacion'; 
+            $archivo = $request->file('file');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
+        
 
         $licencia->save();
 

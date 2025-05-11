@@ -216,7 +216,6 @@ class HomeController extends Controller
             'consultoresCantidades' => $consultoresCantidades,
 
             'type' => $type ?? 'anio',
-
             'menus' => $menus
         ]);
     }
