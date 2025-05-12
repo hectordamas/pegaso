@@ -78,9 +78,9 @@
                             <td><p>{{number_format($reg->monto, 2, ',', '.')}}</p></td>
                             <td>
                                 @if($reg->file)
-                                    <a href="javascript:void(0)" onclick="openBase64Image('{{ $reg->file }}')">
-                                        <img src="{{ $reg->file }}" style="max-width: 80px;"/>
-                                    </a>
+                                    <button class="btn btn-info" onclick="openBase64Image('{{ $reg->file }}')">
+                                        Ver Comprobante
+                                    </button>
                                 @else
                                     N/A
                                 @endif
@@ -97,27 +97,31 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para mostrar Comprobante -->
+<div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="comprobanteModalLabel">Comprobante</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid" />
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-    function openBase64Image(base64) {
-        let newWindow = window.open('about:blank');
-        newWindow.document.write(`
-            <html>
-            <head>
-                <title>Comprobante</title>
-                <style>
-                    body { 
-                        background-color: black; 
-                    }
-                </style>
-            </head>
-            <body>
-                <img src="${base64}" />
-            </body>
-            </html>
-        `);
-    }
+function openBase64Image(base64) {
+    // Asignamos el base64 de la imagen al modal
+    document.getElementById('comprobanteImg').src = base64;
+
+    // Abrimos el modal
+    $('#comprobanteModal').modal('show');
+}
 </script>
 @endsection
