@@ -83,6 +83,18 @@ class ActualizacionDeLicenciasController extends Controller
         
             $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
         }
+
+        // Guardar archivo sin usar Storage
+        if ($request->hasFile('qrseniat')) {
+            $ruta = 'uploads/qrseniathomologacion'; 
+            $archivo = $request->file('qrseniat');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->qrseniat = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
         
 
         $licencia->save();
@@ -130,7 +142,18 @@ class ActualizacionDeLicenciasController extends Controller
             $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
         }
         
-
+        // Guardar archivo sin usar Storage
+        if ($request->hasFile('qrseniat')) {
+            $ruta = 'uploads/qrseniathomologacion'; 
+            $archivo = $request->file('qrseniat');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
+            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
+        
+            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
+        
+            $licencia->qrseniat = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        }
+                
         $licencia->save();
 
         return redirect()->route('actualizacion-licencias.index')
