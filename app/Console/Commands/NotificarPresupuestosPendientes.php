@@ -24,7 +24,7 @@ class NotificarPresupuestosPendientes extends Command
     public function handle()
     {
         $pendientes = Safact::where('codestatus', 1) // Asumiendo 1 = pendiente
-            ->whereDate('fechae', '<=', Carbon::now()->subDays(10))
+            ->whereDate('fechae', '=', Carbon::now()->subDays(10))
             ->get();
 
             foreach ($pendientes as $presupuesto) {
