@@ -78,8 +78,9 @@
                             <td><p>{{number_format($reg->monto, 2, ',', '.')}}</p></td>
                             <td>
                                 @if($reg->file)
-                                    <button class="btn btn-info" onclick="openBase64Image('{{ $reg->file }}')">
-                                        Ver Comprobante
+                                    <button class="btn btn-info" onclick="openBase64Image('{{ $reg->file }}')" data-toggle="tooltip" data-placement="top"
+                                        title="Ver Comprobante">
+                                        <i class="fas fa-file-invoice"></i>
                                     </button>
                                 @else
                                     N/A
