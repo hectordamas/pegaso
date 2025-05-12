@@ -60,10 +60,16 @@
                             <label for="pagada" class="fw-bold mb-2">Pagada</label>
                         </div>
 
-                        <div class="col-md-3 form-group">
-                            <label for="control-label">Subir Comprobante</label>
+                        <div class="col-md-6 form-group">
+                            <label for="control-label">Adjuntar Contrato</label>
                             <input type="file" class="form-control" name="file" accept="*" />
                         </div> 
+
+                        <div class="col-md-6 form-group">
+                            <label for="control-label">Adjuntar QR Seniat</label>
+                            <input type="file" class="form-control" name="qrseniat" accept="*" />
+                        </div> 
+
 
                         <div class="col-sm-3">
                             <div class="form-group">

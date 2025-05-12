@@ -146,11 +146,25 @@
                                         href="{{ asset($a->adjunto) }}"
                                         data-toggle="tooltip"
                                         data-placement="top"
-                                        title="Ver Pago"
+                                        title="Ver Contrato"
                                      >
                                         <i class="fas fa-file-invoice"></i>                                     
                                     </a>
                                     @endif
+
+                                    @if($a->qrseniat)
+                                    <a 
+                                       target="_blank"
+                                       class="btn btn-dark" 
+                                       href="{{ asset($a->qrseniat) }}"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Ver QR Seniat"
+                                    >
+                                        <i class="fas fa-qrcode"></i>
+                                   </a>
+                                   @endif
+
                             </td>
                         </tr>
                         @endforeach
@@ -212,8 +226,13 @@
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <label for="control-label">Subir Comprobante</label>
+                            <label for="control-label">Adjuntar Contrato</label>
                             <input type="file" class="form-control" name="file" accept="*" />
+                        </div> 
+
+                        <div class="col-md-6 form-group">
+                            <label for="control-label">Adjuntar QR Seniat</label>
+                            <input type="file" class="form-control" name="qrseniat" accept="*" />
                         </div> 
 
                         <div class="col-sm-6 pt-3">
@@ -222,7 +241,7 @@
                                 <textarea class="form-control" id="observacion" name="observacion" rows="5"></textarea>
                             </div>
                         </div>
-
+ 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

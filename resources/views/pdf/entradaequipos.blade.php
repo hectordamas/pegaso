@@ -23,6 +23,7 @@
         <b>Fecha:</b> {{ date('d/m/Y', strtotime($entrada->fecha)) }} <br>
         <b>R.I.F.:</b> {{ $entrada->saclie->rif ?? 'N/A' }} <br>
         <b>Cliente:</b> {{ $entrada->saclie->descrip ?? 'N/A' }} <br>
+        <b>Código de Cliente:</b> {{ $entrada->saclie->codclie ?? 'N/A' }} <br>
         <b>Estatus:</b> {{ $entrada->estatus->nombre ?? 'N/A' }} <br><br>
         <b>Equipos:</b> {{ $entrada->observacion }} <br>
         <b>Actividad:</b> {{ $entrada->actividad }} <br><br>
