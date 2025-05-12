@@ -131,14 +131,16 @@ class VisitasController extends Controller
         $pdf = Pdf::loadView('pdf.visitas', $data);
         $pdfOutput = $pdf->output();
 
-        // Obtener los emails de los consultores mencionados
-        $emails = User::whereIn('codusuario', $request->acompanantes)
-        ->get()
-        ->pluck('email')
-        ->filter()
-        ->unique()
-        ->toArray(); // Obtiene solo los emails únicos en un array
-        
+        $emails = [];
+
+        if (is_array($request->acompanantes) && count($request->acompanantes)) {
+            $emails = User::whereIn('codusuario', $request->acompanantes)
+                ->get()
+                ->pluck('email')
+                ->filter()
+                ->unique()
+                ->toArray();
+        }
 
         Mail::send('mails.visita', ['visita' => $visita, 'cliente' => $cliente], function ($message) use ($emails, $visita, $pdfOutput) {
             $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
