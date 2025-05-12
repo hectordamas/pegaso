@@ -30,7 +30,7 @@ class CuadreDeCajaController extends Controller
         // Validar los datos del formulario
         $request->validate([
             'fecha' => 'required|date',
-            'numero_orden' => 'nullable|numeric',
+            'numero_orden' => 'nullable',
             'observaciones' => 'nullable|string',
             'responsable' => 'required|array',
             'responsable.*' => 'required|string',
@@ -136,7 +136,7 @@ class CuadreDeCajaController extends Controller
         // Validar los datos del formulario
         $request->validate([
             'fecha' => 'required|date',
-            'numero_orden' => 'nullable|numeric',
+            'numero_orden' => 'nullable',
             'observaciones' => 'nullable|string',
             'responsable' => 'required|array',
             'responsable.*' => 'required|string',
