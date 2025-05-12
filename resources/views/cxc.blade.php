@@ -385,34 +385,32 @@
 		    	],
 		    	dom: 'Bfrtip',
                 buttons: [
-			    	'copy',
-			    	'csv',
-			    	{
-			    		extend: 'excel',
-			    		text: 'Exportar Excel',
-			    		action: function (e, dt, node, config) {
-			    			const clave = prompt("Introduce la clave para exportar:");
-			    			if (clave == exp) {
-			    				$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
-			    			} else {
-			    				alert("Clave incorrecta. Exportación cancelada.");
-			    			}
-			    		}
-			    	},
-			    	{
-			    		extend: 'pdf',
-			    		text: 'Exportar PDF',
-			    		action: function (e, dt, node, config) {
-			    			const clave = prompt("Introduce la clave para exportar:");
-			    			if (clave === claveExportacion) {
-			    				$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
-			    			} else {
-			    				alert("Clave incorrecta. Exportación cancelada.");
-			    			}
-			    		}
-			    	},
-			    	'print'
-			    ],
+				{
+					extend: 'copy',
+					text: 'Copiar',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
+				},
+				{
+					extend: 'csv',
+					text: 'Exportar CSV',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
+				},
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+				},
+				{
+					extend: 'print',
+					text: 'Imprimir',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
+				}
+			],	
 		    	language: {
 		    		sProcessing: "Procesando...",
 		    		sLengthMenu: "Mostrar _MENU_ registros",
@@ -463,34 +461,32 @@
 		    	],
 		    	dom: 'Bfrtip',
                 buttons: [
-				    'copy',
-				    'csv',
-				    {
-				    	extend: 'excel',
-				    	text: 'Exportar Excel',
-				    	action: function (e, dt, node, config) {
-				    		const clave = prompt("Introduce la clave para exportar:");
-				    		if (clave == exp) {
-				    			$.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, node, config);
-				    		} else {
-				    			alert("Clave incorrecta. Exportación cancelada.");
-				    		}
-				    	}
-				    },
-				    {
-				    	extend: 'pdf',
-				    	text: 'Exportar PDF',
-				    	action: function (e, dt, node, config) {
-				    		const clave = prompt("Introduce la clave para exportar:");
-				    		if (clave === claveExportacion) {
-				    			$.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, node, config);
-				    		} else {
-				    			alert("Clave incorrecta. Exportación cancelada.");
-				    		}
-				    	}
-				    },
-				    'print'
-			    ],		    	
+				{
+					extend: 'copy',
+					text: 'Copiar',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
+				},
+				{
+					extend: 'csv',
+					text: 'Exportar CSV',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
+				},
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+				},
+				{
+					extend: 'print',
+					text: 'Imprimir',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
+				}
+			],		    	
                 language: {
 		    		sProcessing: "Procesando...",
 		    		sLengthMenu: "Mostrar _MENU_ registros",

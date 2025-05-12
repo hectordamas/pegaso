@@ -313,7 +313,7 @@
 
     @yield('scripts')
 
-    <script src="{{ asset('assets/customAssets/js/script.js?v=3') }}"></script>
+    <script src="{{ asset('assets/customAssets/js/script.js?v=4') }}"></script>
 
 
     @if(session()->has('message'))
