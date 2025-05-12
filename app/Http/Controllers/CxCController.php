@@ -331,7 +331,7 @@ class CxCController extends Controller
             ], 
             function ($message) use ($datos, $asunto, $emaildestino) {
 
-				 $message->from('no-responder@saintnetweb.info','Ds Pegaso');
+				 $message->from(env('MAIL_FROM_ADDRESS'),'Ds Pegaso');
 				 $message->subject($asunto);
 				 $message->to($emaildestino);
 			 });

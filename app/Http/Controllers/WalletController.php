@@ -241,7 +241,7 @@ class WalletController extends Controller
     protected function enviaremail($asunto, $emaildestino, $datos){
         try {
             return Mail::send('mails.addWallet', ['datos' => $datos], function ($message) use ($asunto, $emaildestino) {
-                $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
+                $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                 ->subject($asunto)
                 ->to([$emaildestino, 'jfarfan@saintnet.net', 'hectorgabrieldm@hotmail.com']);
             });

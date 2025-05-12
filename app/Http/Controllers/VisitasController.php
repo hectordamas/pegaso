@@ -143,7 +143,7 @@ class VisitasController extends Controller
         }
 
         Mail::send('mails.visita', ['visita' => $visita, 'cliente' => $cliente], function ($message) use ($emails, $visita, $pdfOutput) {
-            $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
+            $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                 ->to($emails)
                 ->to([$visita->user->email, 'hectorgabrieldm@hotmail.com'])
                 ->subject('Nueva Visita Creada')

@@ -147,7 +147,7 @@ class LlamadasController extends Controller
     {
         try {    
             Mail::send($formato, ['datos' => $datos], function ($message) use ($datos, $asunto, $emaildestino, $emailConsultorOriginal) {
-                $message->from('no-responder@saintnetweb.info', env('APP_NAME'));
+                $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'));
                 $message->subject($asunto);
                 $message->to($emaildestino); // Laravel acepta un array de emails aquí
                 $message->cc($emailConsultorOriginal);

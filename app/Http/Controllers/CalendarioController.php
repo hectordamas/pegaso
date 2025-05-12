@@ -185,7 +185,7 @@ class CalendarioController extends Controller
     {
         try {    
             return Mail::send('mails.calendario', ['datos' => $datos], function ($message) use ($asunto, $userEmail) {
-                $message->from('no-responder@saintnetweb.info', env('APP_NAME'))
+                $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                     ->to([$userEmail, 'info@saintnet.net', 'hectorgabrieldm@hotmail.com'])
                     ->subject($asunto);
             });
