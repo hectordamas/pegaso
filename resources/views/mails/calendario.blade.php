@@ -3,11 +3,11 @@
     $cliente = $datos['cliente'];
     $consultor = $datos['consultor'];
     $tipo = $datos['tipo']; // 'asignacion', 'anulacion' recordatorio o 'modificacion'
+    $interactionType = $datos['interactionType'];
 
     if($tipo == 'recordatorio'){
         $codconsultor = $datos['codconsultor'];
         $codclie = $datos['codclie'];
-        $interactionType = $datos['interactionType'];
         $description = $datos['description'];
         $fechaFinal = $datos['fechaFinal'];
 
