@@ -35,7 +35,7 @@ class LicenciasAActivarController extends Controller
             'descripcion' => 'required|string|max:255',
             'licencias'   => 'required|string|max:100',
             'fechadepago' => 'required|date',
-            'monto'       => 'required|numeric',
+            'monto'       => 'required',
             'activada'    => 'nullable|boolean',
             'pagada'      => 'nullable|boolean',
         ]);
@@ -65,7 +65,7 @@ class LicenciasAActivarController extends Controller
         
         $licencia->save();
     
-        return redirect()->back()->with('success', 'Licencia registrada exitosamente.');
+        return redirect()->back()->with('message', 'Licencia registrada exitosamente.');
     }
 
     public function upload(Request $request){

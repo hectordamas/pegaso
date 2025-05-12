@@ -475,8 +475,6 @@
                 }
             });
         }
-
-
         
         if($('#ventasPorVendedor').length){
             var ctx = document.getElementById('ventasPorVendedor').getContext('2d');
@@ -568,8 +566,21 @@
                 }
             });
         }
-
-
     })
+</script>
+
+
+<script>
+    function getHomeData(){
+
+        $.ajax({
+
+            url: "{{ route('getHomeData') }}"
+
+        })
+
+    }
+
+    getHomeData();
 </script>
 @endsection

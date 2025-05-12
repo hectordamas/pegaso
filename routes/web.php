@@ -42,9 +42,11 @@ use App\Http\Controllers\{
 Route::get('/', function () {
     return redirect('/home');
 });
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('getHomeData', [HomeController::class, 'getHomeData'])->name('getHomeData');
 
 Route::group(['middleware' => 'auth'], function () {
 
