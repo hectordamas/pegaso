@@ -36,8 +36,9 @@ class SendEventReminder extends Command
             $event->reminder_sent = true;
             $event->save();
 
-            $emailEnviado = $this->mail('⏳ Recordatorio de Evento Programado en Calendario', $event->user->email, $datos);
-
+            if ($event->user && $event->user->email) {
+                $emailEnviado = $this->mail('⏳ Recordatorio de Evento Programado en Calendario', $event->user->email, $datos);
+            }
         }
 
         $this->info('Recordatorios enviados correctamente.');

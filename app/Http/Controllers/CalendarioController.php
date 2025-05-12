@@ -83,6 +83,7 @@ class CalendarioController extends Controller
             $event->lead = $request->codclie;
         }
         $event->codconsultor = $request->codconsultor;
+        $event->codusuario = Auth::user()->codusuario;
         $event->entry_date = $fechaDesde;
         $event->departure_date = $departure_date;
         $event->title = $request->title;
