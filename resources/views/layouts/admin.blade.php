@@ -59,6 +59,25 @@
     </div>
     <!-- Pre-loader end -->
 
+    
+    <!-- Spinner de carga para Ajax -->
+    <div id="loadingSpinner" style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999999999999;
+        align-items: center;
+        justify-content: center;">
+
+        <div class="spinner-border text-light" role="status" style="width: 4rem; height: 4rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
         <div class="pcoded-container navbar-wrapper">
@@ -350,23 +369,6 @@
     @endforeach
 
 
-    <!-- Spinner de carga para Ajax -->
-    <div id="loadingSpinner" style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999999999999;
-        align-items: center;
-        justify-content: center;">
-
-        <div class="spinner-border text-light" role="status" style="width: 4rem; height: 4rem;">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
-    </div>
 
 
 </body>

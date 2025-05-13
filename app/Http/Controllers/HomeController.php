@@ -47,6 +47,7 @@ class HomeController extends Controller
                 $cxc->saldo = $cxc->monto - $cxc->abono;
                 return $cxc;
             });
+
         $saldoPorCobrar = $cxcs->sum('saldo');
     
         $saldosPorCliente = CxC::selectRaw('codclie, SUM(monto) as total_monto, SUM(abono) as total_abono')
@@ -71,6 +72,7 @@ class HomeController extends Controller
             ->selectRaw('codestatus, COUNT(*) as cantidad')
             ->groupBy('codestatus')
             ->get();
+
         $estatusProyectos = ['PROYECTO', 'COMPLETADO', 'EN PROCESO', 'EJECUTADO', 'CONTROL DE CALIDAD'];
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
     
@@ -83,9 +85,11 @@ class HomeController extends Controller
             ->join('estatusat', 'atencioncliente.codestatus', '=', 'estatusat.codestatus')
             ->groupBy('estatusat.nombre')
             ->get();
+
         $atencionClientesEstatus =  $atencionClientes->pluck('estatus');
         $atencionClientesCantidad =  $atencionClientes->pluck('cantidad');
-    
+        $clientesAtendidos = $atencionClientes->sum('cantidad');
+
         $eventos = Calendario::all()->map(function ($item) {
             return [
                 'id'    => $item->id,
@@ -162,15 +166,6 @@ class HomeController extends Controller
         $consultoresLabels = $solicitudesPorConsultor->pluck('consultor');
         $consultoresCantidades = $solicitudesPorConsultor->pluck('cantidad');
     
-        $userId = Auth::id();
-        $menus = DB::table('menupermiso')
-            ->select('menus.*')
-            ->join('menus', 'menupermiso.codmenu', '=', 'menus.codmenu')
-            ->where('menupermiso.codusuario', $userId)
-            ->where('menus.inactivo', false)
-            ->orderBy('menus.position', 'asc')
-            ->get();
-
         return compact(
             'saldoPorCobrar',
             'saldosPorCliente',
@@ -180,6 +175,7 @@ class HomeController extends Controller
             'entregasComprado',
             'entregasEntregado',
             'entregasEnProceso',
+            'clientesAtendidos',
             'atencionClientes',
             'atencionClientesEstatus',
             'atencionClientesCantidad',
@@ -191,18 +187,23 @@ class HomeController extends Controller
             'cobrosVendedorTotales',
             'consultoresLabels',
             'consultoresCantidades',
-            'menus'
         );
     }
 
     public function index(Request $request)
     {
-        $type = $request->type ?? 'anio';
-        $data = $this->obtenerDatosDashboard($type);
+        $userId = Auth::id();
+        $menus = DB::table('menupermiso')
+            ->select('menus.*')
+            ->join('menus', 'menupermiso.codmenu', '=', 'menus.codmenu')
+            ->where('menupermiso.codusuario', $userId)
+            ->where('menus.inactivo', false)
+            ->orderBy('menus.position', 'asc')
+            ->get();
 
-        return view('home', array_merge($data, [
-            'type' => $type,
-        ]));
+        return view('home', [
+            'menus' => $menus,
+        ]);
     }
 
     public function getHomeData(Request $request)
