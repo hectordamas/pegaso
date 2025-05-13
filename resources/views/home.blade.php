@@ -303,6 +303,13 @@
 
 @if(!(Auth::user()->role == 'Analista'))
     <script>
+        let cxcChartInstance = null;
+        let proyectosChartInstance = null;
+        let atencionChartInstance = null;
+        let entradaEquiposChartInstance = null;
+        let ventasPorVendedorChartInstance = null;
+        let solicitudesConsultorChartInstance = null;
+        
         function getHomeData(type, btn = null){
             $("#loadingSpinner").css("display", "flex");
 
@@ -346,7 +353,9 @@
                     });
 
                     if($('#cxcChart').length){
-                        new Chart(document.getElementById("cxcChart"), {
+                        if (cxcChartInstance) cxcChartInstance.destroy();
+
+                        cxcChartInstance = new Chart(document.getElementById("cxcChart"), {
                             type: 'doughnut',
                             data: {
                                 labels: cxcData.map(item => item.cliente), // Nombres de clientes
@@ -376,58 +385,62 @@
                 
                     //Chart Proyectos
                     if($('#proyectosEstatusChart').length){
-                    var ctx = document.getElementById('proyectosEstatusChart').getContext('2d');
-                    new Chart(ctx, {
-                        type: 'horizontalBar',
-                        data: {
-                            labels: res.estatusProyectos,  // Etiquetas (Estatus)
-                            datasets: [{
-                                axis: 'y',
-                                label: 'Cantidad',
-                                data: res.cantidadesPorProyectos,  // Cantidades de proyectos por cada estatus
-                                backgroundColor: [
-                                  'rgba(255, 99, 132, 0.8)',
-                                  'rgba(255, 159, 64, 0.8)',
-                                  'rgba(255, 205, 86, 0.8)',
-                                  'rgba(75, 192, 192, 0.8)',
-                                  'rgba(54, 162, 235, 0.8)',
-                                  'rgba(153, 102, 255, 0.8)',
-                                  'rgba(201, 203, 207, 0.8)'
-                                ],
-                                borderColor: [
-                                  'rgb(255, 99, 132)',
-                                  'rgb(255, 159, 64)',
-                                  'rgb(255, 205, 86)',
-                                  'rgb(75, 192, 192)',
-                                  'rgb(54, 162, 235)',
-                                  'rgb(153, 102, 255)',
-                                  'rgb(201, 203, 207)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            indexAxis: 'y',
-                            legend: {
-                                display: false
+                        var ctx = document.getElementById('proyectosEstatusChart').getContext('2d');
+                        if (proyectosChartInstance) proyectosChartInstance.destroy();
+
+                        proyectosChartInstance = new Chart(ctx, {
+                            type: 'horizontalBar',
+                            data: {
+                                labels: res.estatusProyectos,  // Etiquetas (Estatus)
+                                datasets: [{
+                                    axis: 'y',
+                                    label: 'Cantidad',
+                                    data: res.cantidadesPorProyectos,  // Cantidades de proyectos por cada estatus
+                                    backgroundColor: [
+                                      'rgba(255, 99, 132, 0.8)',
+                                      'rgba(255, 159, 64, 0.8)',
+                                      'rgba(255, 205, 86, 0.8)',
+                                      'rgba(75, 192, 192, 0.8)',
+                                      'rgba(54, 162, 235, 0.8)',
+                                      'rgba(153, 102, 255, 0.8)',
+                                      'rgba(201, 203, 207, 0.8)'
+                                    ],
+                                    borderColor: [
+                                      'rgb(255, 99, 132)',
+                                      'rgb(255, 159, 64)',
+                                      'rgb(255, 205, 86)',
+                                      'rgb(75, 192, 192)',
+                                      'rgb(54, 162, 235)',
+                                      'rgb(153, 102, 255)',
+                                      'rgb(201, 203, 207)'
+                                    ],
+                                    borderWidth: 1
+                                }]
                             },
-                            responsive: true,  // Hace que el gráfico se ajuste dinámicamente al contenedor
-                            maintainAspectRatio: false,  // Permite que el gráfico cambie de tamaño sin mantener la proporción original
-                            scales: {
-                                y: {
-                                    beginAtZero: true
+                            options: {
+                                indexAxis: 'y',
+                                legend: {
+                                    display: false
+                                },
+                                responsive: true,  // Hace que el gráfico se ajuste dinámicamente al contenedor
+                                maintainAspectRatio: false,  // Permite que el gráfico cambie de tamaño sin mantener la proporción original
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
                                 }
                             }
-                        }
-                    
-                    });
+                        
+                        });
                     }
                 
                     // Chart Atención Clientes
                     var atencionClientesEstatus = res.atencionClientesEstatus;
                     var atencionClientesCantidad = res.atencionClientesCantidad;
                     if($("#AtencionChart").length){
-                        new Chart($("#AtencionChart"), {
+                        if (atencionChartInstance) atencionChartInstance.destroy();
+
+                        atencionChartInstance = new Chart($("#AtencionChart"), {
                             type: 'pie',
                             data: {
                                 labels: atencionClientesEstatus, // Estatus
@@ -482,9 +495,11 @@
                 
                     //Entrada equipos
                     if($('#entradaEquipos').length){
+                        if (entradaEquiposChartInstance) entradaEquiposChartInstance.destroy();
+
                         var ctx = document.getElementById('entradaEquipos').getContext('2d');
                     
-                        new Chart(ctx, {
+                        entradaEquiposChartInstance = new Chart(ctx, {
                             type: 'horizontalBar', // Usa 'bar' y ajusta indexAxis en options
                             data: {
                                 labels: res.entradaEquiposEstatus,  
@@ -512,8 +527,10 @@
                     }
 
                     if($('#ventasPorVendedor').length){
+                        if (ventasPorVendedorChartInstance) ventasPorVendedorChartInstance.destroy();
+
                         var ctx = document.getElementById('ventasPorVendedor').getContext('2d');
-                        new Chart(ctx, {
+                        ventasPorVendedorChartInstance = new Chart(ctx, {
                             type: 'horizontalBar', // puedes usar horizontalBar en Chart.js v2, pero en v3+ es solo 'bar' con `indexAxis`
                             data: {
                                 labels: res.ventasVendedorLabels,
@@ -570,7 +587,9 @@
                     }
                 
                     if($('#solicitudesPorConsultor').length){
-                        new Chart(document.getElementById('solicitudesPorConsultor').getContext('2d'), {
+                        if (solicitudesConsultorChartInstance) solicitudesConsultorChartInstance.destroy();
+
+                        solicitudesConsultorChartInstance = new Chart(document.getElementById('solicitudesPorConsultor').getContext('2d'), {
                             type: 'horizontalBar',
                             data: {
                                 labels: res.consultoresLabels,
