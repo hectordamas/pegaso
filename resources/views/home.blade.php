@@ -33,14 +33,20 @@
     </div>
 
     @if(Auth::user()->role == 'Analista')
-        <div class="row">
+        <div class="row g-4">
             @foreach($menus as $menu)
-            <div class="col-md-3">
-                <div class="card shadow">
-                    <div class="card-block text-center">
-                        <i class="{{ $menu->logo_boostrap }} text-c-lite-green d-block f-40"></i>
-                        <h4 class="m-t-20 text-c-light-green mb-3">{{ $menu->nombre }}</h4>
-                        <a href="{{ url($menu->ruta) }}" class="btn btn-primary btn-sm btn-round shadow">Ingresar</a>
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                    <div class="card-body d-flex flex-column justify-content-between p-4">
+                        <div class="mb-3">
+                            <div class="icon-circle-dashboard mb-3">
+                                <i class="{{ $menu->logo_boostrap }} fa-2x text-white"></i>
+                            </div>
+                            <h5 class="card-title fw-bold">{{ $menu->nombre }}</h5>
+                        </div>
+                        <a href="{{ url($menu->ruta) }}" class="btn btn-success stretched-link mt-auto">
+                            Ver más <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
                     </div>
                 </div>
             </div>

@@ -284,3 +284,22 @@ td p.fecha{
 .fc td {
     line-height: 2;
 }
+
+/*Widgets*/
+
+
+.icon-circle-dashboard {
+    width: 55px;
+    height: 55px;
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(78, 84, 200, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.card:hover .icon-circle {
+    transform: scale(1.1);
+}
