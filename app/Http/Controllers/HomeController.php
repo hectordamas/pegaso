@@ -36,7 +36,8 @@ class HomeController extends Controller
         }
     
         // Cuentas por cobrar
-        $cxcs = CxC::where('codwallet', 1)
+        $cxcs = CxC::with(['saclie:id,codclie,descrip'])
+            ->where('codwallet', 1)
             ->whereBetween('fecha', [$desde, $hasta])
             ->where('codmoneda', 2)
             ->whereColumn('monto', '>', 'abono')
@@ -47,10 +48,11 @@ class HomeController extends Controller
                 $cxc->saldo = $cxc->monto - $cxc->abono;
                 return $cxc;
             });
-
+    
         $saldoPorCobrar = $cxcs->sum('saldo');
     
-        $saldosPorCliente = CxC::selectRaw('codclie, SUM(monto) as total_monto, SUM(abono) as total_abono')
+        $saldosPorCliente = CxC::with(['saclie:id,codclie,descrip'])
+            ->selectRaw('codclie, SUM(monto) as total_monto, SUM(abono) as total_abono')
             ->whereBetween('fecha', [$desde, $hasta])
             ->where('codwallet', 1)
             ->where('codmoneda', 2)
@@ -61,41 +63,45 @@ class HomeController extends Controller
             ->get()
             ->map(function ($cxc) {
                 return [
-                    'cliente' => $cxc->saclie->descrip,
+                    'cliente' => $cxc->saclie->descrip ?? 'Sin nombre',
                     'saldo' => $cxc->total_monto - $cxc->total_abono,
                 ];
             });
+    
         $cxcColors = ["#3498db", "#e74c3c", "#2ecc71", "#f39c12", "#9b59b6"];
     
+        // Proyectos
         $proyectos = Safact::whereIn('codestatus', [3, 4, 7, 8, 10])
             ->whereBetween('fechae', [$desde, $hasta])
             ->selectRaw('codestatus, COUNT(*) as cantidad')
             ->groupBy('codestatus')
             ->get();
-
+            
         $estatusProyectos = ['PROYECTO', 'COMPLETADO', 'EN PROCESO', 'EJECUTADO', 'CONTROL DE CALIDAD'];
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
     
+        // Entregas
         $entregasComprado = Safact::where('codestatus', 11)->whereBetween('fechae', [$desde, $hasta])->count();
         $entregasEnProceso = Safact::where('codestatus', 12)->whereBetween('fechae', [$desde, $hasta])->count();
         $entregasEntregado = Safact::where('codestatus', 13)->whereBetween('fechae', [$desde, $hasta])->count();
     
-        $atencionClientes = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
+        // Atención Clientes
+        $atencionClientes = AtencionCliente::join('estatusat', 'atencioncliente.codestatus', '=', 'estatusat.codestatus')
+            ->whereBetween('fecha', [$desde, $hasta])
             ->selectRaw('estatusat.nombre as estatus, COUNT(atencioncliente.codestatus) as cantidad')
-            ->join('estatusat', 'atencioncliente.codestatus', '=', 'estatusat.codestatus')
             ->groupBy('estatusat.nombre')
             ->get();
-
         $atencionClientesEstatus =  $atencionClientes->pluck('estatus');
         $atencionClientesCantidad =  $atencionClientes->pluck('cantidad');
         $clientesAtendidos = $atencionClientes->sum('cantidad');
-
-        $eventos = Calendario::all()->map(function ($item) {
+    
+        // Eventos
+        $eventos = Calendario::with(['consultor:id,nombre', 'saclie:id,codclie,descrip'])->get()->map(function ($item) {
             return [
                 'id'    => $item->id,
                 'title' => $item->title,
                 'description' => $item->description,
-                'consultor' => $item->consultor->nombre,
+                'consultor' => $item->consultor->nombre ?? 'Sin nombre',
                 'eventType' => $item->evenType,
                 'interactionType' => $item->interactionType,
                 'cliente' => $item->saclie->descrip ?? $item->lead,
@@ -106,55 +112,52 @@ class HomeController extends Controller
             ];
         });
     
-        $entradaEquipos = EntradaEquipos::whereBetween('fecha', [$desde, $hasta])
+        // Entrada Equipos
+        $entradaEquipos = EntradaEquipos::join('estatus', 'entradaequipos.codestatus', '=', 'estatus.codestatus')
+            ->whereBetween('fecha', [$desde, $hasta])
             ->selectRaw('estatus.nombre as estatus, COUNT(entradaequipos.codestatus) as cantidad')
-            ->join('estatus', 'entradaequipos.codestatus', '=', 'estatus.codestatus')
             ->groupBy('estatus.nombre')
             ->get();
-        $entradaEquiposEstatus =  $entradaEquipos->pluck('estatus');
-        $entradaEquiposCantidad =  $entradaEquipos->pluck('cantidad');
+        $entradaEquiposEstatus = $entradaEquipos->pluck('estatus');
+        $entradaEquiposCantidad = $entradaEquipos->pluck('cantidad');
+    
+        // Ventas por Vendedor
+        $cobrosPorVendedor = \DB::table('detallecxc')
+            ->join('cxc', 'detallecxc.codcxc', '=', 'cxc.codcxc')
+            ->join('safact', 'cxc.safact_id', '=', 'safact.id')
+            ->whereBetween('detallecxc.fecha', [$desde, $hasta])
+            ->whereNotNull('safact.codvend')
+            ->selectRaw('safact.codvend, SUM(detallecxc.monto) as total_abonos')
+            ->groupBy('safact.codvend')
+            ->pluck('total_abonos', 'codvend');
     
         $ventasPorVendedor = Safact::whereBetween('fechae', [$desde, $hasta])
             ->whereIn('codestatus', [3, 4, 7, 8, 10, 11, 12, 13])
             ->whereNotNull('codvend')
-            ->with('savend')
-            ->get()
+            ->selectRaw('codvend, SUM(mtototal/factor) as total')
             ->groupBy('codvend')
-            ->map(function ($ventas) {
-                $vendedor = $ventas->first()->savend->descrip ?? 'Sin nombre';
-                $total = $ventas->sum(function ($venta) {
-                    return $venta->factor ? $venta->mtototal / $venta->factor : 0;
-                });
+            ->with('savend:id,codvend,descrip')
+            ->get()
+            ->map(function ($venta) use ($cobrosPorVendedor) {
                 return [
-                    'vendedor' => $vendedor,
-                    'total' => round($total, 2),
-                    'cobros' => 0
+                    'vendedor' => $venta->savend->descrip ?? 'Sin nombre',
+                    'total' => round($venta->total, 2),
+                    'cobros' => round($cobrosPorVendedor[$venta->codvend] ?? 0, 2),
                 ];
             });
     
         $ventasVendedorLabels = $ventasPorVendedor->pluck('vendedor');
         $ventasVendedorTotales = $ventasPorVendedor->pluck('total');
-        $cobrosVendedorTotales = [];
-        foreach ($ventasVendedorLabels as $v) {
-            $vendedor = Savend::where('descrip', $v)->first();
-            $cobroTotal = 0;
-            foreach ($vendedor->safact as $safact) {
-                if ($safact->cxc) {
-                    $abonos = $safact->cxc->detallecxc()
-                        ->whereBetween('fecha', [$desde, $hasta])
-                        ->sum('monto');
-                    $cobroTotal += $abonos;
-                }
-            }
-            array_push($cobrosVendedorTotales, $cobroTotal);
-        }
+        $cobrosVendedorTotales = $ventasPorVendedor->pluck('cobros');
     
+        // Consultores con solicitudes
         $solicitudesPorConsultor = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
             ->whereNotNull('codconsultor')
             ->where('codestatus', 3)
             ->selectRaw('codconsultor, COUNT(*) as cantidad')
             ->groupBy('codconsultor')
             ->orderByDesc('cantidad')
+            ->with('consultor:id,nombre')
             ->get()
             ->map(function ($item) {
                 return [
