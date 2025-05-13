@@ -82,6 +82,7 @@
                             <th>Motivo</th>
                             <th>Consultor</th>
                             <th>Menciones</th>
+                            <th>Observaciones:</th>
                             <th>
                                Acciones                            
                             </th>                       
@@ -105,7 +106,10 @@
                                 @else
                                     N/A
                                 @endif
-                            </td>                            
+                            </td>    
+                            <td>
+                                {{ $llamada->observacion }}
+                            </td>                        
                             <td>
                                 @if($llamada->adjunto)
                                     <a href="{{ asset($llamada->adjunto) }}" target="_blank" class="btn btn-primary">
