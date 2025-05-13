@@ -286,8 +286,6 @@ td p.fecha{
 }
 
 /*Widgets*/
-
-
 .icon-circle-dashboard {
     width: 55px;
     height: 55px;
@@ -300,11 +298,21 @@ td p.fecha{
     transition: transform 0.3s ease;
 }
 
-.btn-widget-dashboard{
-    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+.btn-widget-dashboard:hover{
     color: #fff;
 }
 
 .card:hover .icon-circle {
     transform: scale(1.1);
+    transition: 1s;
+}
+
+.card-menu{
+    transition: .3s;
+    border-color: rgb(78, 84, 200, 0.3) !important;
+}
+
+.card-menu:hover{
+    transform: scale(1.02);
+    transition: .3s;
 }

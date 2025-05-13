@@ -36,15 +36,15 @@
         <div class="row g-4">
             @foreach($menus as $menu)
             <div class="col-md-6 col-lg-4 col-xl-3">
-                <div class="card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                <div class="card border border-inverse shadow-sm rounded-4 h-100 position-relative overflow-hidden card-menu">
                     <div class="card-body d-flex flex-column justify-content-between p-4">
-                        <div class="mb-3">
+                        <div>
                             <div class="icon-circle-dashboard mb-3">
                                 <i class="{{ $menu->logo_boostrap }} fa-2x text-white"></i>
                             </div>
-                            <h5 class="card-title fw-bold">{{ $menu->nombre }}</h5>
+                            <h6 class="card-title fw-bold">{{ $menu->nombre }}</h6>
                         </div>
-                        <a href="{{ url($menu->ruta) }}" class="btn btn-inverse stretched-link mt-auto">
+                        <a href="{{ url($menu->ruta) }}" class="btn btn-inverse stretched-link mt-auto btn-widget-dashboard">
                             Ver más <i class="fas fa-arrow-right ms-2"></i>
                         </a>
                     </div>

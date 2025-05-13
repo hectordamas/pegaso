@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="{{ asset('assets/customAssets/owlcarousel/owl.carousel.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/customAssets/owlcarousel/owl.theme.default.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=3') }}">
+    <link rel="stylesheet" href="{{ asset('assets/customAssets/css/style.css?v=4') }}">
 
 </head>
 <!-- Menu sidebar static layout -->
