@@ -76,7 +76,7 @@ class HomeController extends Controller
             ->selectRaw('codestatus, COUNT(*) as cantidad')
             ->groupBy('codestatus')
             ->get();
-            
+
         $estatusProyectos = ['PROYECTO', 'COMPLETADO', 'EN PROCESO', 'EJECUTADO', 'CONTROL DE CALIDAD'];
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
     
@@ -157,7 +157,7 @@ class HomeController extends Controller
             ->selectRaw('codconsultor, COUNT(*) as cantidad')
             ->groupBy('codconsultor')
             ->orderByDesc('cantidad')
-            ->with('consultor:id,nombre')
+            ->with('consultor:id,codconsultor,nombre')
             ->get()
             ->map(function ($item) {
                 return [

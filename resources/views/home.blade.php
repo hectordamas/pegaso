@@ -309,7 +309,7 @@
         let entradaEquiposChartInstance = null;
         let ventasPorVendedorChartInstance = null;
         let solicitudesConsultorChartInstance = null;
-        
+
         function getHomeData(type, btn = null){
             $("#loadingSpinner").css("display", "flex");
 
@@ -334,10 +334,10 @@
                 success: function (res) {
                     $("#loadingSpinner").css("display", "none");
 
-                    document.getElementById('saldoPorCobrar').innerText = `$${parseFloat(res.saldoPorCobrar).toLocaleString('es-VE', {minimumFractionDigits: 2})}`;
-                    document.getElementById('entregasEntregado').innerText = `${res.entregasEntregado} / ${res.entregasComprado}`;
-                    document.getElementById('entregasEnProceso').innerText = res.entregasEnProceso;
-                    document.getElementById('clientesAtendidos').innerText = res.clientesAtendidos;
+                    $('#saldoPorCobrar').html(`$${parseFloat(res.saldoPorCobrar).toLocaleString('es-VE', {minimumFractionDigits: 2})}`);
+                    $('#entregasEntregado').html(`${res.entregasEntregado} / ${res.entregasComprado}`);
+                    $('#entregasEnProceso').html(res.entregasEnProceso);
+                    $('#clientesAtendidos').html(res.clientesAtendidos);
 
                     var cxcData = res.saldosPorCliente;
                     var cxcColors = res.cxcColors;
