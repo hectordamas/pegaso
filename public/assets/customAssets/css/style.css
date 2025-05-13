@@ -300,6 +300,11 @@ td p.fecha{
     transition: transform 0.3s ease;
 }
 
+.btn-widget-dashboard{
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: #fff;
+}
+
 .card:hover .icon-circle {
     transform: scale(1.1);
 }

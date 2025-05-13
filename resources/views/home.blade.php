@@ -44,7 +44,7 @@
                             </div>
                             <h5 class="card-title fw-bold">{{ $menu->nombre }}</h5>
                         </div>
-                        <a href="{{ url($menu->ruta) }}" class="btn btn-success stretched-link mt-auto">
+                        <a href="{{ url($menu->ruta) }}" class="btn btn-inverse stretched-link mt-auto">
                             Ver más <i class="fas fa-arrow-right ms-2"></i>
                         </a>
                     </div>
