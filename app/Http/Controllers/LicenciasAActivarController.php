@@ -43,6 +43,7 @@ class LicenciasAActivarController extends Controller
         // Asignación manual y guardado
         $licencia = new LicenciasAActivar();
         $licencia->codclie     = $request->codclie;
+        $licencia->serial     = $request->serial;
         $licencia->descripcion = $request->descripcion;
         $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
@@ -93,6 +94,36 @@ class LicenciasAActivarController extends Controller
 
         return redirect()->back()->with('message', 'Comprobantes cargados con éxito!.');
 
+    }
+
+    public function edit($id)
+    {
+        $licencia = LicenciasAActivar::with('saclie')->findOrFail($id);
+		$saclie = Saclie::orderby('descrip', 'asc')->get();
+
+        return view('licenciasAActivar.edit', compact('licencia', 'saclie'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'licencias'   => 'required|string|max:100',
+            'notas'       => 'nullable|string',
+        ]);
+
+        $licencia = LicenciasAActivar::findOrFail($id);
+
+        $licencia->descripcion = $request->descripcion;
+        $licencia->licencias   = $request->licencias;
+        $licencia->fechadepago = $request->fechadepago;
+        $licencia->monto       = $request->monto;
+        $licencia->notas       = $request->notas;
+        $licencia->activada    = $request->has('activada');
+        $licencia->pagada      = $request->has('pagada');
+        $licencia->serial     = $request->serial;
+        $licencia->save();
+
+        return redirect()->route('licencias.index')->with('message', 'Licencia actualizada exitosamente.');
     }
 
     public function updateStatus(Request $request, $id)

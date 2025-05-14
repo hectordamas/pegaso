@@ -205,7 +205,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('licencias-a-activar/update-status/{id}', 'updateStatus')->middleware('menu.permission:138');
         Route::get('/licencias/{id}/comprobantes', 'comprobantes')->middleware('menu.permission:138');
         Route::delete('/licencias-a-activar/{id}', 'destroy')->name('licencias.destroy')->middleware('menu.permission:138');
-
+        Route::get('/licencias-a-activar/{id}/edit', 'edit')->name('licencias.edit');
+        Route::put('/licencias-a-activar/{id}', 'update')->name('licencias.update');
     });
 
 

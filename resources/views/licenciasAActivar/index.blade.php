@@ -76,6 +76,7 @@
                             <th>Licencias</th>
                             <th>Fecha de Pago</th>
                             <th>Monto</th>
+                            <th>Serial</th>
                             <th>Pagada</th>
                             <th>Activada</th>
                             <th>Acción</th>
@@ -91,6 +92,7 @@
                                 <td>{{ $item->licencias }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
                                 <td class="text-success fw-bold">$ {{ number_format($item->monto, 2, '.', ',') }}</td>
+                                <td>{{ $item->serial ?? 'No Registrado' }}</td>
                                 <td>
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
@@ -151,6 +153,16 @@
                                     </a>
                                     @endif
 
+                                    <a 
+                                        href="{{ route('licencias.edit', $item->id) }}"
+                                        class="btn btn-outline-primary"
+                                        data-toggle="tooltip"
+                                        title="Editar Licencia"
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+
                                     <button 
                                         class="btn btn-outline-danger btn-delete-licencia"
                                         data-id="{{ $item->id }}"
@@ -160,6 +172,8 @@
                                     >
                                         <i class="fas fa-trash"></i>
                                     </button>
+
+
                                 </td>
                             </tr>
                         @endforeach
@@ -201,7 +215,7 @@
 
                         <div class="col-md-6 form-group">
                             <label class="control-label">Descripción</label>
-                            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                            <input type="text" class="form-control" id="descripcion" name="descripcion">
                         </div>
 
                         
@@ -218,6 +232,11 @@
                         <div class="col-md-6 form-group">
                             <label class="control-label fw-bold mb-2">Monto</label>
                             <input name="monto" id="monto" type="text" class="form-control montopcd" onkeyup="convertirmonto(this.form)" required>
+                        </div>
+
+                        <div class="col-md-6 form-group">
+                            <label for="serial mb-2">Serial</label>
+                            <input type="text" name="serial" class="form-control"  required>
                         </div>
 
                         <div class="col-md-6 form-group d-flex align-items-center">
