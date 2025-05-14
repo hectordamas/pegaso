@@ -49,7 +49,7 @@
                 
                     <div class="form-group col-md-3">
                         <label for="serial">Serial</label>
-                        <input type="text" name="serial" class="form-control" value="{{ $licencia->serial }}" required>
+                        <input type="text" name="serial" class="form-control" value="{{ $licencia->serial }}">
                     </div>
                 
                     <div class="form-group col-md-3">

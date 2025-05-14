@@ -123,45 +123,40 @@
                                     </a>
 
                                     @if($item->comprobantes->count() > 0)
-                                     <a 
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Ver Comprobantes"
+                                        <a 
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Ver Comprobantes"
 
-                                        href="javascript:void(0);"
-                                        class="btn btn-outline-info"
-                                        onclick="cargarComprobantes({{ $item->id }})"
-                                        data-bs-toggle="offcanvas"
-                                        data-bs-target="#filesOffCanvas"
-                                     >
-                                        <i class="fas fa-file-invoice"></i>                                     
-                                    </a>
+                                            href="javascript:void(0);"
+                                            class="btn btn-outline-info"
+                                            onclick="cargarComprobantes({{ $item->id }})"
+                                            data-bs-toggle="offcanvas"
+                                            data-bs-target="#filesOffCanvas">
+                                            <i class="fas fa-file-invoice"></i>                                     
+                                        </a>
                                     @else
-                                    <a 
-                                        class="btn btn-outline-success" 
-                                        href="javascript:void(0)"
-                                        data-toggle="tooltip"
-                                        data-placement="top"
-                                        title="Subir Comprobante"
-
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#LicenciasModalUpload"
-                                        data-id="{{ $item->id }}"
-                                        onclick="setLicenciaId(this)"
-                                        >
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                    </a>
+                                        <a 
+                                            class="btn btn-outline-success" 
+                                            href="javascript:void(0)"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Subir Comprobante"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#LicenciasModalUpload"
+                                            data-id="{{ $item->id }}"
+                                            onclick="setLicenciaId(this)"
+                                            >
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                        </a>
                                     @endif
 
-                                    <a 
-                                        href="{{ route('licencias.edit', $item->id) }}"
+                                    <a  href="{{ route('licencias.edit', $item->id) }}"
                                         class="btn btn-outline-primary"
                                         data-toggle="tooltip"
-                                        title="Editar Licencia"
-                                    >
+                                        title="Editar Licencia">
                                         <i class="fas fa-edit"></i>
                                     </a>
-
 
                                     <button 
                                         class="btn btn-outline-danger btn-delete-licencia"
@@ -236,7 +231,7 @@
 
                         <div class="col-md-6 form-group">
                             <label for="serial mb-2">Serial</label>
-                            <input type="text" name="serial" class="form-control"  required>
+                            <input type="text" name="serial" class="form-control">
                         </div>
 
                         <div class="col-md-6 form-group d-flex align-items-center">
