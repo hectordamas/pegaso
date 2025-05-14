@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\VerifyPermissions;
-use App\Models\{LicenciasAActivar, Saclie};
+use App\Models\{LicenciasAActivar, Saclie, ComprobanteLicencia};
 
 class LicenciasAActivarController extends Controller
 {
@@ -51,16 +51,19 @@ class LicenciasAActivarController extends Controller
         $licencia->activada    = $request->has('activada') ? true : false;
         $licencia->pagada      = $request->has('pagada') ? true : false;
 
-        // Guardar archivo sin usar Storage
-        if ($request->hasFile('file')) {
-            $ruta = 'uploads/licenciasComprobantes'; 
-            $archivo = $request->file('file');
-            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
-            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
-        
-            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
-        
-            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        if ($request->hasFile('comprobantes')) {
+            foreach ($request->file('comprobantes') as $archivo) {
+                $ruta = 'uploads/licenciasComprobantes';
+                $nombreArchivo = time() . '_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
+                $rutaDestino = public_path($ruta);
+                $archivo->move($rutaDestino, $nombreArchivo);
+    
+                // Crear el comprobante relacionado
+                $comprobante = new ComprobanteLicencia();
+                $comprobante->licencia_id = $licencia->id; 
+                $comprobante->ruta = $ruta . '/' . $nombreArchivo; 
+                $comprobante->save();
+            }
         }
         
         $licencia->save();
@@ -71,21 +74,24 @@ class LicenciasAActivarController extends Controller
     public function upload(Request $request){
         $licencia = LicenciasAActivar::find($request->licenciaId);
 
-        // Guardar archivo sin usar Storage
-        if ($request->hasFile('file')) {
-            $ruta = 'uploads/licenciasComprobantes'; 
-            $archivo = $request->file('file');
-            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName(); // Nombre único
-            $rutaDestino = public_path($ruta); // Carpeta dentro de "public"
-        
-            $archivo->move($rutaDestino, $nombreArchivo); // Mover archivo
-        
-            $licencia->adjunto = $ruta . '/' . $nombreArchivo; // Guardar ruta en BD
+        if ($request->hasFile('comprobantes')) {
+            foreach ($request->file('comprobantes') as $archivo) {
+                $ruta = 'uploads/licenciasComprobantes';
+                $nombreArchivo = time() . '_' . uniqid() . '.' . $archivo->getClientOriginalExtension();
+                $rutaDestino = public_path($ruta);
+                $archivo->move($rutaDestino, $nombreArchivo);
+    
+                // Crear el comprobante relacionado
+                $comprobante = new ComprobanteLicencia();
+                $comprobante->licencia_id = $licencia->id; 
+                $comprobante->ruta = $ruta . '/' . $nombreArchivo; 
+                $comprobante->save();
+            }
         }
         
         $licencia->save();
 
-        return redirect()->back()->with('message', 'Archivo subido con éxito!.');
+        return redirect()->back()->with('message', 'Comprobantes cargados con éxito!.');
 
     }
 
@@ -110,5 +116,33 @@ class LicenciasAActivarController extends Controller
         return response()->json(['success' => true, 'message' => 'Estado actualizado correctamente.']);
     }
 
+
+    public function comprobantes($id)
+    {
+        $licencia = LicenciasAActivar::with('comprobantes')->findOrFail($id);
+        return view('licenciasAActivar.partials.comprobantes', compact('licencia'));
+    }
+
+    public function destroy($id)
+    {
+        $licencia = LicenciasAActivar::findOrFail($id);
+    
+        // Elimina comprobantes si los hay
+        foreach ($licencia->comprobantes as $comp) {
+            if (file_exists(public_path($comp->ruta))) {
+                unlink(public_path($comp->ruta));
+            }
+            $comp->delete();
+        }
+    
+        // Elimina adjunto si existe
+        if ($licencia->adjunto && file_exists(public_path($licencia->adjunto))) {
+            unlink(public_path($licencia->adjunto));
+        }
+    
+        $licencia->delete();
+    
+        return redirect()->back()->with('message', 'Licencia eliminada correctamente.');
+    }
     
 }

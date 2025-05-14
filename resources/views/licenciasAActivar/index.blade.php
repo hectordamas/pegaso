@@ -107,8 +107,7 @@
                                 </td>                                
                                 <td>
 
-                                    <a 
-                                        class="btn btn-outline-warning" 
+                                    <a  class="btn btn-outline-warning" 
                                         href="javascript:void(0)"
                                         data-toggle="tooltip"
                                         data-placement="top"
@@ -117,18 +116,21 @@
                                         data-bs-target="#LicenciasModalDetails"
                                         data-notas="{{ $item->notas }}"
                                         onclick="mostrarDetalles(this)"
-                                    >
+                                        >
                                         <i class="fas fa-list-ul"></i>
                                     </a>
 
-                                    @if($item->adjunto)
+                                    @if($item->comprobantes->count() > 0)
                                      <a 
-                                        target="_blank"
-                                        class="btn btn-outline-info" 
-                                        href="{{ asset($item->adjunto) }}"
                                         data-toggle="tooltip"
                                         data-placement="top"
-                                        title="Ver Comprobante"
+                                        title="Ver Comprobantes"
+
+                                        href="javascript:void(0);"
+                                        class="btn btn-outline-info"
+                                        onclick="cargarComprobantes({{ $item->id }})"
+                                        data-bs-toggle="offcanvas"
+                                        data-bs-target="#filesOffCanvas"
                                      >
                                         <i class="fas fa-file-invoice"></i>                                     
                                     </a>
@@ -149,6 +151,15 @@
                                     </a>
                                     @endif
 
+                                    <button 
+                                        class="btn btn-outline-danger btn-delete-licencia"
+                                        data-id="{{ $item->id }}"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        title="Eliminar Licencia"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -159,6 +170,10 @@
     </div>
 </div>
 
+<form id="deleteLicenciaForm" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+</form>
 
 <!-- Modal Crear Licencias -->
 <div class="modal fade LicenciasModalCreate" tabindex="-1" id="LicenciasModalCreate" aria-labelledby="LicenciasModalCreateLabel" aria-hidden="true">
@@ -227,7 +242,7 @@
 
                         <div class="col-md-6 form-group d-none" id="fileInputLicencias">
                             <label for="control-label">Subir Comprobante</label>
-                            <input type="file" class="form-control" name="file" accept="*" />
+                            <input type="file" class="form-control" name="comprobantes[]" multiple accept="*" />
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -262,7 +277,7 @@
                         <div class="col-md-8 form-group">
                             <label for="control-label">Subir Comprobante</label>
                             <input type="hidden" id="licenciaId" name="licenciaId">
-                            <input type="file" class="form-control" name="file" accept="*" />
+                            <input type="file" class="form-control" name="comprobantes[]" multiple accept="*" />
                         </div> 
                     </div>
                     <div class="modal-footer">
@@ -296,9 +311,52 @@
         </div>
     </div>
 </div>
+
+<!-- Offcanvas archivos -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filesOffCanvas" aria-labelledby="filesOffCanvasLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Comprobantes Adjuntos</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body" id="comprobantesAdjuntosLicencias">
+      <p class="text-center">Cargando...</p>
+    </div>
+</div>
+  
+
+<!-- Modal visor -->
+<div class="modal fade" id="visorModal" tabindex="-1" aria-labelledby="visorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Visor de Archivos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <iframe id="visorIframe" src="" frameborder="0" style="width:100%; height:80vh;" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+<script>
+    $(document).on('click', '.btn-delete-licencia', function () {
+        const id = $(this).data('id');
+        const claveIngresada = prompt("Ingrese la clave para eliminar esta licencia:");
+        const claveEsperada = $('#exp').val();
+    
+        if (claveIngresada === claveEsperada) {
+            const form = $('#deleteLicenciaForm');
+            form.attr('action', '/licencias-a-activar/' + id); // Ajusta la ruta si es diferente
+            form.submit();
+        } else {
+            alert("Clave incorrecta. No se eliminó la licencia.");
+        }
+    });
+ </script>
+
 <script>
     function convertirmonto(input){
     	$(".montopcd").on({
@@ -325,6 +383,20 @@
         $('#modalNotasTexto').text(notas);
     }
 
+    function cargarComprobantes(licenciaId) {
+        $('#comprobantesAdjuntosLicencias').html('<p class="text-center">Cargando...</p>');
+        $('#filesOffCanvas').offcanvas('show');
+
+        $.get(`/licencias/${licenciaId}/comprobantes`, function(data) {
+            $('#comprobantesAdjuntosLicencias').html(data);
+        });
+    }
+
+    function verComprobante(ruta) {
+        $('#visorIframe').attr('src', ruta);
+        $('#visorModal').modal('show');
+    }
+    
     $(document).ready(function() {
         $(document).on('change', '.toggle-status', function() {
             let licenciaId = $(this).data("id");

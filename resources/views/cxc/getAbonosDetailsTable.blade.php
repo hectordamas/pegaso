@@ -21,7 +21,7 @@
                 <td>{{ number_format($item->monto, 2, '.', ',') }}</td>
                 <td>
                     @if($item->file)
-                        <a href="javascript:void(0)" onclick="openBase64Image('{{ $item->file }}')" target="_blank">
+                        <a href="javascript:void(0)" onclick="openComprobanteViewer('{{ $item->file }}')">
                             <img src="{{ $item->file }}" style="max-width: 80px;"/>
                         </a>
                     @else

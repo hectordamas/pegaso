@@ -278,38 +278,42 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal superior para mostrar comprobantes -->
+<div class="modal fade" id="comprobanteViewerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <h5 class="modal-title text-white">Comprobante</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center">
+          <div id="comprobanteContent" class="w-100 text-center">
+            <!-- Contenido dinámico: imagen o PDF -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @section('scripts')
 <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script>
-    function openBase64Image(base64) {
-        let newWindow = window.open('about:blank');
-        newWindow.document.write(`
-            <html>
-            <head>
-                <title>Comprobante</title>
-                <style>
-                    body { 
-                        background-color: black; 
-                        display: flex; 
-                        justify-content: center; 
-                        align-items: center; 
-                        height: 100vh; 
-                        margin: 0;
-                    }
-                    img { 
-                        max-width: 90vw; 
-                        max-height: 90vh; 
-                        border-radius: 10px; 
-                    }
-                </style>
-            </head>
-            <body>
-                <img src="${base64}" />
-            </body>
-            </html>
-        `);
+    function openComprobanteViewer(url) {
+        let ext = url.split('.').pop().toLowerCase();
+        let content = '';
+
+        if (ext === 'pdf') {
+            content = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+        } else {
+            content = `<img src="${url}" style="width: 70%; border-radius: 10px;" />`;
+        }
+
+        $('#comprobanteContent').html(content);
+        let modal = new bootstrap.Modal(document.getElementById('comprobanteViewerModal'));
+        modal.show();
     }
 </script>
 
@@ -343,8 +347,6 @@
             type: 'raw-html'
         });
     }
-
-
 
     var cxcTable;
     var cxcDetailsTable;
@@ -758,6 +760,7 @@
         }
 
         window.getAbonosDetails = function(codcxc){
+            $('.codcxc').html(codcxc)
             $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
             $.ajax({
 				data:{
