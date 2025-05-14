@@ -123,7 +123,7 @@ class LicenciasAActivarController extends Controller
         $licencia->serial     = $request->serial;
         $licencia->save();
 
-        return redirect()->route('licencias.index')->with('message', 'Licencia actualizada exitosamente.');
+        return redirect('licencias-a-activar')->with('message', 'Licencia actualizada exitosamente.');
     }
 
     public function updateStatus(Request $request, $id)
