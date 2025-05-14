@@ -92,7 +92,7 @@
                                 <td>{{ $item->licencias }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
                                 <td class="text-success fw-bold">$ {{ number_format($item->monto, 2, '.', ',') }}</td>
-                                <td>{{ $item->serial ?? 'No Registrado' }}</td>
+                                <td>{{ $item->serial ?? 'N/R' }}</td>
                                 <td>
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
