@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Updaters;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Model\Safact;
-use App\Model\Saitemfac;
+use App\Models\Safact;
+use App\Models\saitemfac;
 
 class SafactController extends Controller
 {

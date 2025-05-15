@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Updaters;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Model\Saclie;
-use App\Model\CxC;
+use App\Models\Saclie;
+use App\Models\CxC;
 
 class SaclieController extends Controller
 {
