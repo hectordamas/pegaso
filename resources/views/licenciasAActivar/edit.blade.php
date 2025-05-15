@@ -44,7 +44,7 @@
                 
                     <div class="form-group col-md-3">
                         <label class="control-label fw-bold mb-2">Monto</label>
-                        <input name="monto" id="monto" type="text" class="form-control montopcd" value="{{ $licencia->monto }}" onkeyup="convertirmonto(this.form)" required>
+                        <input name="monto" id="monto" type="text" class="form-control montopcd" value="{{ number_format($licencia->monto, 2, ',', '.') }}" onkeyup="convertirmonto(this.form)" required>
                     </div>
                 
                     <div class="form-group col-md-3">

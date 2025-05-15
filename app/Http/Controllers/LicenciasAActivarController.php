@@ -47,7 +47,7 @@ class LicenciasAActivarController extends Controller
         $licencia->descripcion = $request->descripcion;
         $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
-        $licencia->monto       = $request->monto;
+		$licencia->monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada') ? true : false;
         $licencia->pagada      = $request->has('pagada') ? true : false;
@@ -116,7 +116,7 @@ class LicenciasAActivarController extends Controller
         $licencia->descripcion = $request->descripcion;
         $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
-        $licencia->monto       = $request->monto;
+		$licencia->monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada');
         $licencia->pagada      = $request->has('pagada');
