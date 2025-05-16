@@ -221,7 +221,7 @@
 
                         <div class="col-md-6 form-group">
                             <label class="control-label">Fecha de Pago</label>
-                            <input type="text" class="form-control" id="fechadepago" name="fechadepago" value="{{ date('Y-m-d') }}" required>
+                            <input type="date" class="form-control" id="fechadepago" name="fechadepago" value="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div class="col-md-6 form-group">
