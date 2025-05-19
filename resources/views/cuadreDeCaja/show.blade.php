@@ -71,7 +71,7 @@
                 </div>
                 <div class="card-block">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-8 table-responsive dt-responsive">
                             <table class="table table-sm table-bordered">
                                 <thead class="header-azul-oscuro">
                                     <tr>
@@ -105,7 +105,7 @@
                             </table>
                         </div>
     
-                        <div class="col-md-4">
+                        <div class="col-md-4 table-responsive dt-responsive">
                             <table class="table table-sm table-bordered">
                                 <thead class="header-azul-oscuro">
                                     <tr>
@@ -143,7 +143,7 @@
         <div class="col-md-8">
             {{-- RESUMEN FINAL AGRUPADO POR RESPONSABLE --}}
             <div class="card shadow-sm">
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive dt-responsive">
                     <table class="table table-bordered mb-0">
                         <thead class="header-azul-oscuro">
                             <tr>
@@ -190,7 +190,7 @@
         <div class="col-md-4">
             {{-- OBSERVACIONES --}}
             <div class="card shadow">
-                <div class="card-body p-0">
+                <div class="card-body p-0 table-responsive dt-responsive">
                     <table class="table table-bordered mb-0">
                         <thead class="header-azul-oscuro">
                             <tr>
