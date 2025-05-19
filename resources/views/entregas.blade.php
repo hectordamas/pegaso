@@ -400,6 +400,14 @@
 			success: function(response) {
                 getEntregasData(response.success);
                 $("#EntregaModalEdit").modal("hide")
+
+                if(response.error){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error
+                    });
+                }
 			},
 			error: function(response){
 				alert('Error de Conexión')

@@ -82,10 +82,10 @@ class EntregasController extends Controller
 
     public function update(Request $request){
         // Buscar el Entrega
-        $entrega = Safact::findOrFail($request->entregaId);
+        $entrega = Safact::find($request->entregaId);
 
         if($request->codestatus == 13){
-            $noCompletado = $entrega->saitemfac()->where('valor', false)->count();
+            $noCompletado = $entrega->saitemfac()->whereIn('estado', ['Despachado', 'Enviado'])->count();
 
             if($noCompletado > 0){
                 return response()->json([
@@ -96,7 +96,7 @@ class EntregasController extends Controller
         }
 
         // Verificar si el estado realmente cambió
-        if ($entrega->codestatus != $request->codestatus) {
+        if ($entrega->codestatus !== $request->codestatus) {
             $historialAnterior = SafactEstatusHistorial::where('safact_id', $entrega->id)
                 ->whereNull('fecha_fin')
                 ->first();
@@ -113,6 +113,7 @@ class EntregasController extends Controller
             $nuevoHistorial->fecha_inicio = Carbon::now();
             $nuevoHistorial->fecha_fin = null; // Se deja abierto hasta el próximo cambio
             $nuevoHistorial->save();
+
 
             // Actualizar el estado en la tabla `safact`
             $entrega->codestatus = $request->codestatus;
