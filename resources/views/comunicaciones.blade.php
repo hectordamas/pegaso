@@ -348,7 +348,7 @@
 <script>
     //Chat modal entrada equipos
 	window.openChatLlamadaModal = function(codllamada) {
-        $('#codentradaChat').val(codllamada)
+        $('#codllamadaChat').val(codllamada)
 		// Realizar la solicitud AJAX para cargar los chats de la entrada
         $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
 
@@ -386,7 +386,7 @@
                 method: 'POST',
                 data: {
                     mensaje: message,
-                    codentrada: codllamada, // Pasamos el codentrada al backend
+                    codllamada: codllamada, // Pasamos el codentrada al backend
                     _token: '{{ csrf_token() }}'  // CSRF Token para seguridad
                 },
                 success: function(response) {
