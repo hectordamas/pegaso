@@ -116,7 +116,9 @@
                     <div class="col-md-12">
                         <p><strong>Título del Evento:</strong> <br><span class="modalTitle"></span></p>
                     </div>
-
+                    <div class="col-md-12">
+                        <p><strong>Nombre del Evento:</strong> <br><span class="modalName"></span></p>
+                    </div>
                     <div class="col-md-12">
                         <p><strong>Fecha del Evento:</strong> <br><span id="modalStart"></span></p>
                     </div>
@@ -250,6 +252,7 @@
                     $('#eventId').text(event.id);
                     $('#eventIdInput').val(event.id)
                     $('.modalTitle').text(event.title ?? 'No Registrado');
+                    $('.modalName').text(event.name ?? 'No Registrado');
                     $('#modalStart').text(event.start.format('YYYY-MM-DD HH:mm A'));
                     $('#modalClient').text(event.cliente ?? 'No Registrado');
                     $('#modalConsultor').text(event.consultor ?? 'No Registrado');

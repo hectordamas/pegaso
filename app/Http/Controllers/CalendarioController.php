@@ -33,6 +33,7 @@ class CalendarioController extends Controller
             return [
                 'id'    => $item->id,
                 'title' => $item->consultor->nombre . ' | ' . ($item->saclie->descrip ?? $item->lead),
+                'name' => $item->title,
                 'description' => $item->description,
                 'consultor' => $item->consultor->nombre,
                 'eventType' => $item->eventType,
