@@ -89,7 +89,7 @@
                                     </tr>
                                     @foreach ($item['ingresos'] as $ing)
                                         <tr>
-                                            <td>{{ $ing->cliente }}</td>
+                                            <td>{{ $ing->saclie->descrip ?? 'N/A' }}</td>
                                             <td class="bg-light-pink">{{ $ing->presupuesto }}</td>
                                             <td class="bg-light-pink">{{ $ing->descripcion }}</td>
                                             <td style="background: #EDEDED;" class="text-end">$ {{ number_format($ing->valor, 2, ',', '.') }}</td>

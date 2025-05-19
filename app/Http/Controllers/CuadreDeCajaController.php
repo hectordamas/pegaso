@@ -69,7 +69,7 @@ public function index()
 
         // Crear los movimientos manualmente y asignar valores
         foreach ($request->responsable as $key => $responsable) {
-            $saclie = Saclie::find($request->codclie[$key]);
+            $saclie = Saclie::where('codclie', $request->codclie[$key])->first();
 
             $movimiento = new MovimientosCuadre();
             $movimiento->cuadre_id = $cuadre->id;  // Relacionar el movimiento con el cuadre de caja
