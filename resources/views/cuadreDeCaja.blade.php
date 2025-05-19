@@ -49,8 +49,8 @@
                                         <td>{{ $cuadre->id }}</td>
                                         <td>{{ \Carbon\Carbon::parse($cuadre->fecha)->format('d/m/Y') }}</td>
                                         <td>{{ $cuadre->numero_orden ?? '—' }}</td>
-                                        <td class="text-success fw-bold">$ {{ number_format($cuadre->total_general_daniel, 2, ',', '.') }}</td>
-                                        <td class="text-primary fw-bold">$ {{ number_format($cuadre->total_general_ds, 2, ',', '.') }}</td>
+                                        <td class="text-success fw-bold">$ {{ number_format($cuadre->total_daniel_sousa, 2, ',', '.') }}</td>
+                                        <td class="text-primary fw-bold">$ {{ number_format($cuadre->total_ds_sistemas_3000, 2, ',', '.') }}</td>
                                         <td>{{ Str::limit($cuadre->observaciones, 40, '...') }}</td>
                                         <td>
                                             <a href="{{ route('cuadre-de-caja.show', $cuadre->id) }}" class="btn btn-sm btn-outline-secondary">

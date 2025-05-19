@@ -8,14 +8,27 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class CuadreDeCajaController extends Controller
 {
-    public function index(Request $request){
+public function index()
+{
+    $cuadresDeCaja = CuadreDeCaja::with('movimientos')->get();
 
-        $cuadresDeCaja = CuadreDeCaja::orderBy('id', 'desc')->get();
+    $cuadresDeCaja->transform(function ($cuadre) {
+        $movimientos = $cuadre->movimientos;
 
-        return view('cuadreDeCaja', [
-            'cuadresDeCaja' => $cuadresDeCaja,
-        ]);
-    }
+        $ds_sistemas = $movimientos->where('responsable', 'DS Sistemas 3000');
+        $daniel_sousa = $movimientos->where('responsable', 'Daniel Sousa');
+
+        $cuadre->total_ds_sistemas_3000 = $ds_sistemas->where('tipo_movimiento', 'Ingreso')->sum('valor')
+                                        - $ds_sistemas->where('tipo_movimiento', 'Egreso')->sum('valor');
+
+        $cuadre->total_daniel_sousa = $daniel_sousa->where('tipo_movimiento', 'Ingreso')->sum('valor')
+                                    - $daniel_sousa->where('tipo_movimiento', 'Egreso')->sum('valor');
+
+        return $cuadre;
+    });
+
+    return view('cuadreDeCaja', compact('cuadresDeCaja'));
+}
 
     public function create(){
         $saclie = Saclie::orderby('descrip', 'asc')->get();
