@@ -264,6 +264,12 @@
                     $('#showEventModal').modal('show');
                 },
                 eventRender: function(event, element, view) {
+                    element.attr({
+                        'data-toggle': 'tooltip',
+                        'title': event.cliente || 'Sin cliente'
+                    });
+                    element.tooltip();
+
                     if (view.name === 'listMonth') {
                         element.find('.fc-event-dot').css('background-color', event.itemDotColor);
                     }else{
