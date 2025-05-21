@@ -68,7 +68,7 @@
                 </button>
                 @endif
             </div>
-            <div class="card-block">
+            <div class="card-block dt-responsive table-responsive">
                 <table id="comunicaciones-table" class="table">
                     <thead class="table-dark">
                         <tr>
