@@ -108,7 +108,7 @@
                                 @endif
                             </td>    
                             <td>
-                                {{ $llamada->observacion }}
+                               <p>{{ $llamada->observacion }}</p> 
                             </td>                        
                             <td>
                                 @if($llamada->adjunto)
