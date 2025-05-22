@@ -221,7 +221,7 @@
                                         <i class="fas fa-at"></i>                                    
                                     </span>
 
-                                    <input name="email" class="form-control"  id="email" type="email" required/>
+                                    <input name="email" class="form-control"  id="email" type="email"/>
                                 </div>
                             </div>
                         </div>

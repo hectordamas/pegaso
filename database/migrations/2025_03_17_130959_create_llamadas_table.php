@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('codtipollamada');
             $table->string('contacto', 200);
             $table->string('telefono', 15);
-            $table->string('email', 100);
+            $table->string('email', 100)->nullable();
             $table->unsignedBigInteger('codmotivo');
             $table->unsignedBigInteger('codconsultor');
             $table->text('observacion');
