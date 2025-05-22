@@ -133,7 +133,7 @@ class PresupuestosController extends Controller
                 $abono->codcxc = $cxc->codcxc;	
                 $abono->codtipomoneda = 4;
                 $abono->fecha = date('Y-m-d');			
-                $abono->monto = $request->abono;			
+                $abono->monto = str_replace(',','.', str_replace('.','', $request->abono));			
                 $abono->descripcion = $codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: '. $presupuesto->numerod;	
                 $abono->file = $request->input('file');	
                 $abono->codusuario = Auth::user()->codusuario;	

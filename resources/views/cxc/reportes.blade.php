@@ -77,14 +77,16 @@
                             <td><p>{{$reg->tipomoneda->nombre ?? 'N/A'}}</p></td>
                             <td><p>{{number_format($reg->monto, 2, ',', '.')}}</p></td>
                             <td>
-                                @if($reg->file)
-                                    <button class="btn btn-info" onclick="openBase64Image('{{ $reg->file }}')" data-toggle="tooltip" data-placement="top"
-                                        title="Ver Comprobante">
-                                        <i class="fas fa-file-invoice"></i>
-                                    </button>
-                                @else
-                                    N/A
-                                @endif
+                                @php
+                                    $isPdf = str_starts_with($reg->file, 'data:application/pdf');
+                                @endphp
+                                <button class="btn btn-info" onclick="openBase64Image('{{ $reg->file }}')" title="Ver Comprobante">
+                                    @if($isPdf)
+                                        <i class="fas fa-file-pdf"></i>
+                                    @else
+                                        <i class="fas fa-file-image"></i>
+                                    @endif
+                                </button>
                             </td>
                             <td>
                                 <p>{{$reg->user->name}}</p>
@@ -101,14 +103,18 @@
 
 <!-- Modal para mostrar Comprobante -->
 <div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="comprobanteModalLabel">Comprobante</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
-            <div class="modal-body">
-                <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid" />
+            <div class="modal-body text-center">
+                <!-- Imagen -->
+                <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid d-none" />
+
+                <!-- PDF -->
+                <iframe id="comprobantePdf" src="" style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
             </div>
         </div>
     </div>
@@ -118,10 +124,23 @@
 @section('scripts')
 <script>
 function openBase64Image(base64) {
-    // Asignamos el base64 de la imagen al modal
-    document.getElementById('comprobanteImg').src = base64;
+    const mime = base64.substring(5, base64.indexOf(';'));
 
-    // Abrimos el modal
+    const img = document.getElementById('comprobanteImg');
+    const pdf = document.getElementById('comprobantePdf');
+
+    if (mime === 'application/pdf') {
+        // Mostrar PDF
+        img.classList.add('d-none');
+        pdf.classList.remove('d-none');
+        pdf.src = base64;
+    } else {
+        // Mostrar imagen
+        pdf.classList.add('d-none');
+        img.classList.remove('d-none');
+        img.src = base64;
+    }
+
     $('#comprobanteModal').modal('show');
 }
 </script>

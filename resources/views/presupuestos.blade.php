@@ -382,6 +382,8 @@
         if (fileInput) {
             let reader = new FileReader();
             reader.onload = function (e) {
+                    console.log(e.target.result); // Verifica el encabezado
+
                 sendPresupuestoUpdate(e.target.result);
             };
             reader.readAsDataURL(fileInput);
