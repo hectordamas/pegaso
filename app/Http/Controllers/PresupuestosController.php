@@ -125,7 +125,8 @@ class PresupuestosController extends Controller
                 $cxc->monto	= $presupuesto->mtototal / $presupuesto->factor;			
                 $cxc->codusuario = Auth::user()->codusuario;	
                 $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod ;
-                $cxc->departamento = 'Ventas';	
+                $cxc->departamento = 'Ventas';
+                $cxc->safact_id = $presupuesto->id;	
                 $cxc->save();
 
                 $abono = new DetalleCxC();
