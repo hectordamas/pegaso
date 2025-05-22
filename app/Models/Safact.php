@@ -35,11 +35,7 @@ class Safact extends Model
 
     public function scopeByStatus($query, $codeStatus){
         if($codeStatus)
-            if($codeStatus == 3){
-                return $query->whereIn('codestatus', [3, 7, 8, 9, 10]);
-            }else{
-                return $query->whereIn('codestatus', [$codeStatus]);
-            }
+            return $query->whereIn('codestatus', [$codeStatus]);
     }
 
     public function chatproyecto(){

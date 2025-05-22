@@ -45,7 +45,7 @@ class ProyectosController extends Controller
         // Contadores por estatus
         $pendientes = (clone $query)->where('codestatus', 1)->count();
         $aprobados = (clone $query)->where('codestatus', 2)->count();
-        $proyectos = (clone $query)->whereIn('codestatus', [3, 7, 8, 9])->count();
+        $proyectos = (clone $query)->whereIn('codestatus', [3])->count();
         $completados = (clone $query)->where('codestatus', 4)->count();
         $rechazados = (clone $query)->where('codestatus', 5)->count();
         $descartados = (clone $query)->where('codestatus', 6)->count();
