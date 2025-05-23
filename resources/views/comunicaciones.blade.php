@@ -110,7 +110,7 @@
                                 @endif
                             </td>    
                             <td>
-                               <p>{{ $llamada->observacion }}</p> 
+                               <p style="max-width: 400px;">{{ $llamada->observacion }}</p> 
                             </td>                        
                             <td>
                                 @if($llamada->adjunto)
