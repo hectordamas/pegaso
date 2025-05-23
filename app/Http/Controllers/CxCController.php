@@ -65,7 +65,7 @@ class CxCController extends Controller
         ->when(Auth::user()->departamento == 'Ventas', function ($q) {
             $q->where('departamento', 'Ventas');
         })
-        ->when(Auth::user()->role == 'Analista', function ($q) {
+        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
             $q->where('codusuario', Auth::user()->codusuario);
         })
         ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
