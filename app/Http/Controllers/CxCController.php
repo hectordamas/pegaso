@@ -59,29 +59,32 @@ class CxCController extends Controller
     {
         $codusuario = Auth::user()->codusuario;
         $codwallet = $request->codwallet;
-        
-        //Todas las cxc de este wallet
+        $user = Auth::user();
+
         $cxcs = CxC::bySaclie($request->client)
-        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
+        ->when($user->role == 'Analista' && $user->departamento == 'Ventas', function ($q) use ($user) {
+            // Analista de Ventas → solo sus CxC
+            $q->where('departamento', 'Ventas')
+              ->where('codusuario', $user->codusuario);
+        })
+        ->when($user->role != 'Analista' && $user->departamento == 'Ventas', function ($q) {
+            // Otro usuario de Ventas → todo el dpto
             $q->where('departamento', 'Ventas');
         })
-        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
-            $q->where('codusuario', Auth::user()->codusuario);
-        })
-        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
-            // Sin restricciones
+        ->when(in_array($user->role, ['Gerencia', 'Directiva']) || $user->departamento === 'Otros', function ($q) {
+            // Gerencia, Directiva, u Otros → sin restricciones
         })
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
-        ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
+        ->orderByRaw('monto - abono ASC')
         ->withCount('detallecxc')
         ->get()
         ->map(function ($cxc) {
-            $cxc->saldo = $cxc->monto - $cxc->abono; // Calcular saldo individual por registro
+            $cxc->saldo = $cxc->monto - $cxc->abono;
             return $cxc;
         });
-    
+        
         // Obtener las CxC con los datos necesarios por cliente
         $saldosPorCliente = CxC::bySaclie($request->client)
         ->when(Auth::user()->departamento == 'Ventas', function ($q) {
