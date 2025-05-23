@@ -96,8 +96,8 @@
                             <td>{{ \Carbon\Carbon::parse($llamada->fecha)->format('d-m-Y') }}</td>
                             <td><span class="badge badge-success">{{ $llamada->tipoDeComunicacion ?? 'N/A' }}</span></td>
                             <td><span class="badge" style="background: {{ $llamada->tipollamada->color ?? '#e9e9e9'  }};">{{ $llamada->tipollamada->nombre ?? 'N/A' }}</span></td>
-                            <td>{{ $llamada->saclie->descrip ?? 'N/A' }}</td>
                             <td>{{ $llamada->contacto}}</td>
+                            <td>{{ $llamada->saclie->descrip ?? 'N/A' }}</td>
                             <td>{{ $llamada->telefono}}</td>
                             <td>{{ $llamada->email}}</td>
                             <td><span class="badge" style="background: {{ $llamada->motivo->color ?? '#e9e9e9'  }};">{{ $llamada->motivo->nombre ?? 'N/A' }}</span></td>
