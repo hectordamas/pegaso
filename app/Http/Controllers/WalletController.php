@@ -243,7 +243,7 @@ class WalletController extends Controller
             return Mail::send('mails.addWallet', ['datos' => $datos], function ($message) use ($asunto, $emaildestino) {
                 $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                 ->subject($asunto)
-                ->to([$emaildestino, 'jfarfan@saintnet.net', 'hectorgabrieldm@hotmail.com']);
+                ->to([$emaildestino, 'jfarfan@saintnet.net']);
             });
         } catch (\Exception $e) {
             return Log::error("Error al enviar correo: " . $e->getMessage()); // Registrar error
