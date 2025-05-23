@@ -145,7 +145,7 @@ class VisitasController extends Controller
         Mail::send('mails.visita', ['visita' => $visita, 'cliente' => $cliente], function ($message) use ($emails, $visita, $pdfOutput) {
             $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                 ->to($emails)
-                ->to([$visita->user->email, 'hectorgabrieldm@hotmail.com'])
+                ->to([$visita->user->email])
                 ->subject('Nueva Visita Creada')
                 ->attachData($pdfOutput, 'orden_servicio.pdf', [
                     'mime' => 'application/pdf',

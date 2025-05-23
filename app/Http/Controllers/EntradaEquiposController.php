@@ -143,7 +143,7 @@ class EntradaEquiposController extends Controller
         try {
             Mail::send($view, ['datos' => $datos, 'cliente' => $cliente], function ($message) use ($asunto, $emaildestino) {
                 $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
-                        ->to([$emaildestino, 'hectorgabrieldm@hotmail.com'])
+                        ->to([$emaildestino])
                         ->subject($asunto);
             });
     
