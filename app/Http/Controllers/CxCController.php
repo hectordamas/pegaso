@@ -59,38 +59,35 @@ class CxCController extends Controller
     {
         $codusuario = Auth::user()->codusuario;
         $codwallet = $request->codwallet;
-        $user = Auth::user();
-
+        
+        //Todas las cxc de este wallet
         $cxcs = CxC::bySaclie($request->client)
-        ->when($user->role == 'Analista' && $user->departamento == 'Ventas', function ($q) use ($user) {
-            // Analista de Ventas → solo sus CxC
-            $q->where('departamento', 'Ventas')
-              ->where('codusuario', $user->codusuario);
-        })
-        ->when($user->role != 'Analista' && $user->departamento == 'Ventas', function ($q) {
-            // Otro usuario de Ventas → todo el dpto
+        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
             $q->where('departamento', 'Ventas');
         })
-        ->when(in_array($user->role, ['Gerencia', 'Directiva']) || $user->departamento === 'Otros', function ($q) {
-            // Gerencia, Directiva, u Otros → sin restricciones
+        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
+            $q->where('codusuario', Auth::user()->codusuario);
+        })
+        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
+            // Sin restricciones
         })
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
-        ->orderByRaw('monto - abono ASC')
+        ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
         ->withCount('detallecxc')
         ->get()
         ->map(function ($cxc) {
-            $cxc->saldo = $cxc->monto - $cxc->abono;
-            return $cxc;
+            $cxc->saldo = $cxc->monto - $cxc->abono; // Calcular saldo individual por registro
+            return $cxc; 
         });
-        
+    
         // Obtener las CxC con los datos necesarios por cliente
         $saldosPorCliente = CxC::bySaclie($request->client)
         ->when(Auth::user()->departamento == 'Ventas', function ($q) {
             $q->where('departamento', 'Ventas');
         })
-        ->when(Auth::user()->role == 'Analista', function ($q) {
+        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
             $q->where('codusuario', Auth::user()->codusuario);
         })
         ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
