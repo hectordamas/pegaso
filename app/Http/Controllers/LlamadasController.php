@@ -39,6 +39,7 @@ class LlamadasController extends Controller
         $cliente = Saclie::where('codclie', $request->requestCliente)->first();
         $consultor = Consultor::where('codconsultor', $request->requestConsultor)->first();
         $users = User::where('inactivo', false)->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->get();
 
         return view('comunicaciones', [
             'llamadas' => $llamadas,
@@ -54,7 +55,8 @@ class LlamadasController extends Controller
 
             'ccliente' => $cliente,
             'cconsultor' => $consultor,
-            'registra' => $this->hasPermissions('registra')
+            'registra' => $this->hasPermissions('registra'),
+            'saclie' =>  $saclie
         ]);
     }
 
@@ -77,6 +79,7 @@ class LlamadasController extends Controller
         $llamada->codusuario = Auth::user()->codusuario;
         $llamada->observacion = $request->observacion;
         $llamada->tipoDeComunicacion = $request->tipoDeComunicacion;
+        $llamada->codclie = $request->codclie;
         $llamada->fecha = now(); // Guarda la fecha actual
 
         // Guardar archivo sin usar Storage

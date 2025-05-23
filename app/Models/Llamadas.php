@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{Consultor, TipoLlamada, Motivo, ChatLlamada, Menciones};
+use App\Models\{Consultor, TipoLlamada, Motivo, ChatLlamada, Menciones, Saclie};
 use Carbon\Carbon;
 
 class Llamadas extends Model
@@ -13,6 +13,10 @@ class Llamadas extends Model
 
     protected $primaryKey = 'codllamada';
     protected $table = 'llamadas';
+
+    public function saclie(){
+        return $this->belongsTo(Saclie::class, 'codclie', 'codclie');
+    }
 
     public function tipollamada(){
         return $this->belongsTo(TipoLlamada::class, 'codtipollamada', 'codtipollamada');

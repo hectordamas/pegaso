@@ -128,6 +128,7 @@ $(document).ready(function(){
 		});
 	})
 
+
 	//Actualizar id al hacer click en modal para actualizar estatus Atencion al cliente
 	window.btnUpdateStatus = function(atencionId){
 		console.log(atencionId)
@@ -241,6 +242,12 @@ $(document).ready(function(){
 			width: '100%',
             dropdownParent: $('#ComunicacionesModalCreate')
         });
+
+		$('#codclie').select2({
+			//theme: 'classic', // Mantiene el estilo Classic
+			width: '100%', // Ocupar todo el ancho disponible
+			dropdownParent: $('#ComunicacionesModalCreate')
+		});
 	})
 
 

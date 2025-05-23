@@ -77,6 +77,7 @@
                             <th>Medio</th>
                             <th>Tipo</th>
                             <th>Contacto</th>
+                            <th>Cliente</th>
                             <th>Teléfono</th>
                             <th>E-Mail</th>
                             <th>Motivo</th>
@@ -95,6 +96,7 @@
                             <td>{{ \Carbon\Carbon::parse($llamada->fecha)->format('d-m-Y') }}</td>
                             <td><span class="badge badge-success">{{ $llamada->tipoDeComunicacion ?? 'N/A' }}</span></td>
                             <td><span class="badge" style="background: {{ $llamada->tipollamada->color ?? '#e9e9e9'  }};">{{ $llamada->tipollamada->nombre ?? 'N/A' }}</span></td>
+                            <td>{{ $llamada->saclie->descrip ?? 'N/A' }}</td>
                             <td>{{ $llamada->contacto}}</td>
                             <td>{{ $llamada->telefono}}</td>
                             <td>{{ $llamada->email}}</td>
@@ -201,6 +203,19 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">Cliente</label>
+                                <select name="codclie" class="form-control js-example-basic-single" id="codclie">
+                                    <option value="" selected="">Elige una Opción</option>
+                                    @foreach($saclie as $saclie)
+                                        <option value="{{ $saclie->codclie }}"> {{ $saclie->rif }} | {{ $saclie->descrip }}</option>  
+                                    @endforeach                                                 
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Teléfono</label>
