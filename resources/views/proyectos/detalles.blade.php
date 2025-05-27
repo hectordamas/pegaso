@@ -8,6 +8,7 @@
                         <th><small>Código</small></th>
                         <th><small>Ubic.</small></th>
                         <th><small>Producto</small></th>
+                        <th><small>Cant</small></th>
                         <th><small>Estatus</small></th>
                     </tr>
                 </thead>
@@ -20,6 +21,7 @@
                         <td>
                             {!! implode('<br>', array_filter([$item->Descrip1, $item->Descrip2, $item->Descrip3, $item->Descrip4, $item->Descrip5])) !!}
                         </td>
+                        <td>{{ $item->Cantidad }}</td>
                         <td class="text-center">
                             <div class="custom-checkbox-wrapper">
                                 <input type="checkbox" class="custom-checkbox update-status"
