@@ -101,6 +101,7 @@ class CalendarioController extends Controller
         $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
         $datos['consultor'] = $event->consultor->nombre;
         $datos['tipo'] = 'asignacion';
+        $datos['interactionType'] = $event->interactionType;
 
         $emailEnviado = $this->mail('Registro de un Evento en Calendario', $userEmail, $datos);
 
@@ -125,6 +126,7 @@ class CalendarioController extends Controller
         $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
         $datos['consultor'] = $event->consultor->nombre;
         $datos['tipo'] = 'modificacion';
+        $datos['interactionType'] = $event->interactionType;
 
 
         $emailEnviado = $this->mail('Modificación de fecha de un Evento en Calendario', $userEmail, $datos);
@@ -147,6 +149,7 @@ class CalendarioController extends Controller
         $datos['fecha']     = $evento->entry_date;
         $datos['cliente']   = $evento->saclie->descrip ?? $evento->lead;
         $datos['consultor'] = $evento->consultor->nombre;
+        $datos['interactionType'] = $evento->interactionType;
         $datos['tipo'] = 'anulacion';
 
         $emailEnviado = $this->mail('Eliminación de Evento en Calendario', $userEmail, $datos);
