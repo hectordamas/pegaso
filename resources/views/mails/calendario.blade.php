@@ -5,17 +5,13 @@
     $tipo = $datos['tipo']; // 'asignacion', 'anulacion' recordatorio o 'modificacion'
     $interactionType = $datos['interactionType'];
 
-    if($tipo == 'recordatorio'){
-        $codconsultor = $datos['codconsultor'];
-        $codclie = $datos['codclie'];
-        $description = $datos['description'];
-        $fechaFinal = $datos['fechaFinal'];
-
-
-        // URLs para los formularios (ajusta según corresponda)
-        $urlVisita = url("visitas?requestAccion=crear&requestFecha={$fecha}&requestFechaFinal={$fechaFinal}&requestCliente={$codclie}&requestConsultor={$codconsultor}&requestDescripcion={$description}");
-        $urlComunicacion = url("comunicaciones?requestAccion=crear&requestFecha={$fecha}&requestFechaFinal={$fechaFinal}&requestCliente={$codclie}&requestConsultor={$codconsultor}&requestDescripcion={$description}");
-    }
+    $codconsultor = $datos['codconsultor'];
+    $codclie = $datos['codclie'];
+    $description = $datos['description'];
+    $fechaFinal = $datos['fechaFinal'];
+    // URLs para los formularios (ajusta según corresponda)
+    $urlVisita = url("visitas?requestAccion=crear&requestFecha={$fecha}&requestFechaFinal={$fechaFinal}&requestCliente={$codclie}&requestConsultor={$codconsultor}&requestDescripcion={$description}");
+    $urlComunicacion = url("comunicaciones?requestAccion=crear&requestFecha={$fecha}&requestFechaFinal={$fechaFinal}&requestCliente={$codclie}&requestConsultor={$codconsultor}&requestDescripcion={$description}");
 
 @endphp
 

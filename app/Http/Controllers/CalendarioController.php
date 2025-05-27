@@ -97,11 +97,16 @@ class CalendarioController extends Controller
         $userEmail = Auth::user()->email;
 
         $datos = [];
-        $datos['fecha']     = $event->entry_date;
+        $datos['title'] = $event->title;
+        $datos['fecha'] = $event->entry_date;
+        $datos['fechaFinal'] = $event->departure_date;
         $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
         $datos['consultor'] = $event->consultor->nombre;
-        $datos['tipo'] = 'asignacion';
+        $datos['codconsultor'] = $event->consultor->codconsultor;
+        $datos['codclie'] = $event->saclie->codclie;
         $datos['interactionType'] = $event->interactionType;
+        $datos['description'] = $event->description;
+        $datos['tipo'] = 'asignacion';
 
         $emailEnviado = $this->mail('Registro de un Evento en Calendario', $userEmail, $datos);
 
@@ -122,12 +127,16 @@ class CalendarioController extends Controller
         $userEmail = Auth::user()->email;
 
         $datos = [];
-        $datos['fecha']     = $event->entry_date;
+        $datos['title'] = $event->title;
+        $datos['fecha'] = $event->entry_date;
+        $datos['fechaFinal'] = $event->departure_date;
         $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
         $datos['consultor'] = $event->consultor->nombre;
-        $datos['tipo'] = 'modificacion';
+        $datos['codconsultor'] = $event->consultor->codconsultor;
+        $datos['codclie'] = $event->saclie->codclie;
         $datos['interactionType'] = $event->interactionType;
-
+        $datos['description'] = $event->description;
+        $datos['tipo'] = 'modificacion';
 
         $emailEnviado = $this->mail('Modificación de fecha de un Evento en Calendario', $userEmail, $datos);
     
@@ -146,10 +155,15 @@ class CalendarioController extends Controller
         $userEmail = Auth::user()->email;
 
         $datos = [];
-        $datos['fecha']     = $evento->entry_date;
-        $datos['cliente']   = $evento->saclie->descrip ?? $evento->lead;
-        $datos['consultor'] = $evento->consultor->nombre;
-        $datos['interactionType'] = $evento->interactionType;
+        $datos['title'] = $event->title;
+        $datos['fecha'] = $event->entry_date;
+        $datos['fechaFinal'] = $event->departure_date;
+        $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
+        $datos['consultor'] = $event->consultor->nombre;
+        $datos['codconsultor'] = $event->consultor->codconsultor;
+        $datos['codclie'] = $event->saclie->codclie;
+        $datos['interactionType'] = $event->interactionType;
+        $datos['description'] = $event->description;
         $datos['tipo'] = 'anulacion';
 
         $emailEnviado = $this->mail('Eliminación de Evento en Calendario', $userEmail, $datos);
