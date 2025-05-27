@@ -112,7 +112,7 @@ class LicenciasAActivarController extends Controller
         ]);
 
         $licencia = LicenciasAActivar::findOrFail($id);
-
+        $licencia->codclie     = $request->codclie;
         $licencia->descripcion = $request->descripcion;
         $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
