@@ -146,6 +146,7 @@ class CxCController extends Controller
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
         ->orderByRaw('monto - abono ASC')
+        ->where('anulado', false)
         ->get()
         ->map(function ($cxc) {
             $cxc->saldo = $cxc->monto - $cxc->abono;
