@@ -155,15 +155,15 @@ class CalendarioController extends Controller
         $userEmail = Auth::user()->email;
 
         $datos = [];
-        $datos['title'] = $event->title;
-        $datos['fecha'] = $event->entry_date;
-        $datos['fechaFinal'] = $event->departure_date;
-        $datos['cliente']   = $event->saclie->descrip ?? $evento->lead;
-        $datos['consultor'] = $event->consultor->nombre;
-        $datos['codconsultor'] = $event->consultor->codconsultor;
-        $datos['codclie'] = $event->saclie->codclie;
-        $datos['interactionType'] = $event->interactionType;
-        $datos['description'] = $event->description;
+        $datos['title'] = $evento->title;
+        $datos['fecha'] = $evento->entry_date;
+        $datos['fechaFinal'] = $evento->departure_date;
+        $datos['cliente']   = $evento->saclie->descrip ?? $evento->lead;
+        $datos['consultor'] = $evento->consultor->nombre;
+        $datos['codconsultor'] = $evento->consultor->codconsultor;
+        $datos['codclie'] = $evento->saclie->codclie;
+        $datos['interactionType'] = $evento->interactionType;
+        $datos['description'] = $evento->description;
         $datos['tipo'] = 'anulacion';
 
         $emailEnviado = $this->mail('Eliminación de Evento en Calendario', $userEmail, $datos);
