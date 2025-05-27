@@ -132,7 +132,7 @@ class VisitasController extends Controller
         $pdfOutput = $pdf->output();
 
         $emails = [];
-
+            
         if (is_array($request->acompanantes) && count($request->acompanantes)) {
             $emails = User::whereIn('codusuario', $request->acompanantes)
                 ->get()
@@ -141,17 +141,23 @@ class VisitasController extends Controller
                 ->unique()
                 ->toArray();
         }
-
+        
+        // Agregar el email del usuario asociado a la visita
+        if (!empty($visita->user->email)) {
+            $emails[] = $visita->user->email;
+        }
+        
+        // Eliminar duplicados por si acaso
+        $emails = array_unique($emails);
+        
         Mail::send('mails.visita', ['visita' => $visita, 'cliente' => $cliente], function ($message) use ($emails, $visita, $pdfOutput) {
             $message->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
                 ->to($emails)
-                ->to([$visita->user->email])
                 ->subject('Nueva Visita Creada')
                 ->attachData($pdfOutput, 'orden_servicio.pdf', [
                     'mime' => 'application/pdf',
                 ]);
         });
-
 
         return redirect('visitas')->with('message', 'Visita Creada con éxito');
     }
