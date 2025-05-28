@@ -80,7 +80,7 @@ public function index()
             $movimiento->cliente = $saclie->descrip ?? null;
             $movimiento->presupuesto = $request->presupuesto[$key] ?? null;
             $movimiento->descripcion = $request->descripcion[$key] ?? null;
-            $movimiento->valor = $request->valor[$key];
+            $movimiento->valor = str_replace(',','.', str_replace('.','', $request->valor[$key]));
             $movimiento->save();  // Guardar cada movimiento
         }
 
@@ -187,7 +187,7 @@ public function index()
             $movimiento->cliente = $saclie->descrip ?? null;
             $movimiento->presupuesto = $request->presupuesto[$key] ?? null;
             $movimiento->descripcion = $request->descripcion[$key] ?? null;
-            $movimiento->valor = $request->valor[$key];
+            $movimiento->valor = str_replace(',','.', str_replace('.','', $request->valor[$key]));
             $movimiento->save();  // Guardar cada movimiento
         }
 
