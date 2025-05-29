@@ -15,8 +15,11 @@
     }
 
     .color-selector.active {
-        /*border: 3px solid #000;*/
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    .color-selector:hover{
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.2s;
     }
 </style>
 @endsection
