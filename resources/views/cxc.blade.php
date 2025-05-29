@@ -4,6 +4,23 @@
     <title>Cuentas Por Cobrar - {{ env('APP_NAME') }}</title>
 @endsection
 
+@section('styles')
+<style>
+    .color-selector {
+        border: 3px solid transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        padding: 10px;
+        transition: all 0.2s;
+    }
+
+    .color-selector.active {
+        border: 3px solid #000;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+</style>
+@endsection
+
 @section('content')
 
 <div class="row">
@@ -51,30 +68,35 @@
                 </div> <!-- /.row -->
 
                 <div class="row">
-                    <div class="col-md-3" align="center">
-                        <div class="form-group label-floating">
-                            <label class="control-label" onclick="listaShow('#00FF00');" style="font-weight:bold !important;font-size:1em !important;">COBRAR</label>
-                            <br><input disabled="" name="color1" id="color1" type="color" value="#00FF00" class="">
+                    <div class="col-md-3 text-center">
+                        <div class="color-selector" data-color="#00FF00">
+                            <label class="control-label fw-bold">COBRAR</label><br>
+
+                            <input type="color" value="#00FF00" disabled style="pointer-events: none;">
                         </div>
                     </div>
-                    <div class="col-md-3" align="center">
-                        <div class="form-group label-floating">
-                            <label class="control-label" onclick="listaShow('#FFA500');" style="font-weight:bold !important;font-size:1em !important;">JULIO FARFAN</label>
-                            <br><input disabled="" name="color2" id="color2" type="color" value="#FFA500" class="">
+
+                    <div class="col-md-3 text-center">
+                        <div class="color-selector" data-color="#FFA500">
+                            <label class="control-label fw-bold">JULIO FARFAN</label><br>
+                            <input type="color" value="#FFA500"  disabled style="pointer-events: none;">
                         </div>
                     </div>
-                    <div class="col-md-3" align="center">
-                        <div class="form-group label-floating">
-                            <label class="control-label" onclick="listaShow('#0000FF');" style="font-weight:bold !important;font-size:1em !important;">DANIEL SOUSA</label>
-                            <br><input disabled="" name="color3" id="color3" type="color" value="#0000FF" class="">
+
+                    <div class="col-md-3 text-center">
+                        <div class="color-selector" data-color="#0000FF">
+                            <label class="control-label fw-bold">DANIEL SOUSA</label><br>
+                            <input type="color" value="#0000FF" disabled style="pointer-events: none;">
                         </div>
                     </div>
-                    <div class="col-md-3" align="center">
-                        <div class="form-group label-floating">
-                            <label class="control-label" onclick="listaShow('#FF0000');" style="font-weight:bold !important;font-size:1em !important;">NO COBRAR</label>
-                            <br><input disabled="" name="color4" id="color4" type="color" value="#FF0000" class="">
+
+                    <div class="col-md-3 text-center">
+                        <div class="color-selector" data-color="#FF0000">
+                            <label class="control-label fw-bold">NO COBRAR</label><br>
+                            <input type="color" value="#FF0000" disabled style="pointer-events: none;">
                         </div>
                     </div>
+
                 </div>
 
             </div> <!-- /.card-body -->
@@ -318,6 +340,8 @@
 </script>
 
 <script>
+
+
     var printJson;
 
     function imprimir() {
@@ -550,15 +574,21 @@
 
 
     $(document).ready(function(){
-        //$('#createCxcModal').modal('show');
 
+        $(document).on('click', '.color-selector', function () {
+            $('.color-selector').removeClass('active');
+            $(this).addClass('active');
+        
+            colorSeleccionado = $(this).data('color');
+            consultaDeCxc(false, false, colorSeleccionado);
+        });
 
         if($('#client').val()){
             $('#cmbcodwallet').val(1);
             consultaDeCxc();
         }
 
-        function consultaDeCxc(eliminado, anulado) {
+        function consultaDeCxc(eliminado, anulado, color = null) {
             var codwallet = $('#cmbcodwallet').val();
             var client = $('#client').val();
             $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
@@ -566,7 +596,8 @@
             $.ajax({
 				data:{
                     "codwallet": codwallet,
-                    'client': client
+                    'client': client,
+                    "color": color // Nuevo
                 },
 				url: "{{ route('cxc.balance') }}",
 				type: 'get',

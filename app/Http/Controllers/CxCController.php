@@ -59,7 +59,8 @@ class CxCController extends Controller
     {
         $codusuario = Auth::user()->codusuario;
         $codwallet = $request->codwallet;
-        
+        $color = $request->color;
+
         //Todas las cxc de este wallet
         $cxcs = CxC::bySaclie($request->client)
         ->when(Auth::user()->departamento == 'Ventas', function ($q) {
@@ -71,6 +72,7 @@ class CxCController extends Controller
         ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
             // Sin restricciones
         })
+        ->when($color, fn($q) => $q->where('color', $color))
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
@@ -93,6 +95,7 @@ class CxCController extends Controller
         ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
             // Sin restricciones
         })
+         ->when($color, fn($q) => $q->where('color', $color))
         ->where('codwallet', $codwallet)
         ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
         ->where('codwallet', $codwallet)
