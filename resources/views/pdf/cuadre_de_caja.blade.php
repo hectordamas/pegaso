@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <title>Arqueo de Caja Diario</title>
     <style>
+        @page {
+            margin: 0cm;
+        }
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 11px;
-            margin: 30px;
+            margin: 0cm;
             color: #333;
         }
 
