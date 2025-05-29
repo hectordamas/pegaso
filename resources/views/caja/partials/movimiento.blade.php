@@ -55,7 +55,7 @@
 
             <div class="form-group col-md-3">
                 <label>Valor</label>
-                <input type="text" step="any" name="valor[]" class="form-control montopcd" value="{{ number_format($movimiento->valor, 2, ',', '.')  ?? '' }}"  onkeyup="convertirmonto(this.form)" required>
+                <input type="text" step="any" name="valor[]" class="form-control montopcd" value="{{ number_format($movimiento->valor ?? 0, 2, ',', '.')  ?? '' }}"  onkeyup="convertirmonto(this.form)" required>
             </div>
 
             <div class="form-group col-md-2 d-flex align-items-end">
