@@ -30,7 +30,7 @@
         $estatusCollection = [
             ['id' => 1, 'name' => 'Pendientes', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-hourglass-half'],
             ['id' => 2, 'name' => 'Aprobados', 'count' => 0, 'color' => 'success', 'icon' => 'fas fa-check-circle'],
-            ['id' => 3, 'name' => 'Proyectos', 'count' => 0, 'color' => 'primary', 'icon' => 'fas fa-project-diagram'],
+            //['id' => 3, 'name' => 'Proyectos', 'count' => 0, 'color' => 'primary', 'icon' => 'fas fa-project-diagram'],
             ['id' => 4, 'name' => 'Completados', 'count' => 0, 'color' => 'dark', 'icon' => 'fas fa-clipboard-check'],
             ['id' => 5, 'name' => 'Rechazados', 'count' => 0, 'color' => 'danger', 'icon' => 'fas fa-times-circle'],
             ['id' => 6, 'name' => 'Descartados', 'count' => 0, 'color' => 'secondary', 'icon' => 'fas fa-trash-alt'],

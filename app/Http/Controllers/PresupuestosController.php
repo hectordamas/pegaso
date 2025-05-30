@@ -32,6 +32,7 @@ class PresupuestosController extends Controller
     {
         $query = Safact::select('id', 'fechae', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
             ->where('tipofac', 'F')
+            ->whereNotIn('codestatus', [3, 7, 8, 9])
             ->byDateRange($request->input('from'), $request->input('until'))
             ->bySavend($request->input('codvend'))
             ->byStatus($request->input('codestatus'))
@@ -45,7 +46,7 @@ class PresupuestosController extends Controller
         // Contadores por estatus
         $pendientes = (clone $query)->where('codestatus', 1)->count();
         $aprobados = (clone $query)->where('codestatus', 2)->count();
-        $proyectos = (clone $query)->whereIn('codestatus', [3, 7, 8, 9])->count();
+        //$proyectos = (clone $query)->whereIn('codestatus', [3, 7, 8, 9])->count();
         $completados = (clone $query)->where('codestatus', 4)->count();
         $rechazados = (clone $query)->where('codestatus', 5)->count();
         $descartados = (clone $query)->where('codestatus', 6)->count();
@@ -91,7 +92,7 @@ class PresupuestosController extends Controller
             'aaData' => $data,
             'pendientes' => $pendientes,
             'aprobados' => $aprobados,
-            'proyectos' => $proyectos,
+            //'proyectos' => $proyectos,
             'completados' => $completados,
             'rechazados' => $rechazados,
             'descartados' => $descartados,
