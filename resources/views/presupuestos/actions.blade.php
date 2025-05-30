@@ -1,4 +1,4 @@
-@if(!($p->codestatus == 3))
+@if(in_array($p->codestatus, [1, 2]))
 <a href="javascript:void(0);" 
     data-bs-toggle="modal" 
     data-bs-target="#PresupuestoModalEdit"
