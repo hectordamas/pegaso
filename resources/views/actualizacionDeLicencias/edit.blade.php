@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="col-sm-3 form-group form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" value="1"> 
+                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" value="1" {{ $licencia->pagada ? 'checked' : ''}}> 
                             <label for="pagada" class="fw-bold mb-2">Pagada</label>
                         </div>
 

@@ -60,13 +60,13 @@
                     <div class="col-md-3 form-group d-flex align-items-center">
 
                         <div class="form-check form-switch" style="margin-right: 30px;">
-                            <input class="form-check-input" type="checkbox" role="switch" name="activada" id="activada" value="1"> 
+                            <input class="form-check-input" type="checkbox" role="switch" name="activada" id="activada" {{ $licencia->activada ? 'checked' : ''}} value="1"> 
                             <label for="activada" class="fw-bold mb-2">Activada</label>
                         </div>
 
 
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" id="pagadaModal" value="1"> 
+                            <input class="form-check-input" type="checkbox" role="switch" name="pagada" id="pagadaModal" {{ $licencia->pagada ? 'checked' : ''}} value="1"> 
                             <label for="pagada" class="fw-bold mb-2">Pagada</label>
                         </div>
 
