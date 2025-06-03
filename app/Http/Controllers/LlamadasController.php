@@ -65,7 +65,6 @@ class LlamadasController extends Controller
         $request->validate([
             'contacto' => 'required|string|max:255',
             'telefono' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
         ]);
     
         // Crear la nueva llamada
