@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos, DetalleCxC, Savend};
+use App\Models\{CxC, Safact, AtencionCliente, Calendario, EntradaEquipos, DetalleCxC, Savend, Visita, Consultor};
 use Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -150,24 +150,59 @@ class HomeController extends Controller
         $ventasVendedorTotales = $ventasPorVendedor->pluck('total');
         $cobrosVendedorTotales = $ventasPorVendedor->pluck('cobros');
     
-        // Consultores con solicitudes
-        $solicitudesPorConsultor = AtencionCliente::whereBetween('fecha', [$desde, $hasta])
-            ->whereNotNull('codconsultor')
-            ->where('codestatus', 3)
-            ->selectRaw('codconsultor, COUNT(*) as cantidad')
-            ->groupBy('codconsultor')
-            ->orderByDesc('cantidad')
-            ->with('consultor:id,codconsultor,nombre')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'consultor' => $item->consultor->nombre ?? 'Sin nombre',
-                    'cantidad' => $item->cantidad,
-                ];
-            });
-    
-        $consultoresLabels = $solicitudesPorConsultor->pluck('consultor');
-        $consultoresCantidades = $solicitudesPorConsultor->pluck('cantidad');
+        // Consultores: solicitudes, eventos, visitas
+        $fuentes = [
+            'solicitudes' => AtencionCliente::whereBetween('fecha', [$desde, $hasta])
+                ->whereNotNull('codconsultor')
+                ->where('codestatus', 3),
+        
+            'eventos' => Calendario::whereBetween('fecha', [$desde, $hasta])
+                ->whereNotNull('codconsultor'),
+        
+            'visitas' => Visita::whereBetween('fecha', [$desde, $hasta])
+                ->whereNotNull('codconsultor'),
+        ];
+
+        // Agrupar conteos por codconsultor
+        $conteos = collect($fuentes)->map(fn($query) =>
+            $query->selectRaw('codconsultor, COUNT(*) as cantidad')
+                  ->groupBy('codconsultor')
+                  ->get()
+                  ->pluck('cantidad', 'codconsultor')
+        );
+
+        // Codigos únicos y nombres
+        $cods = $conteos->flatten()->keys()->unique();
+        $nombres = Consultor::whereIn('codconsultor', $cods)->pluck('nombre', 'codconsultor');
+
+        // Construcción final para el gráfico
+        $consultoresData = [];
+
+        foreach ($cods as $cod) {
+            $sol = $conteos['solicitudes'][$cod] ?? 0;
+            $eve = $conteos['eventos'][$cod] ?? 0;
+            $vis = $conteos['visitas'][$cod] ?? 0;
+
+            // Excluir si todo está en cero
+            if (($sol + $eve + $vis) == 0) continue;
+
+            $consultoresData[] = [
+                'label' => $nombres[$cod] ?? 'Sin nombre',
+                'solicitudes' => $sol,
+                'eventos' => $eve,
+                'visitas' => $vis,
+                'total' => $sol + $eve + $vis
+            ];
+        }
+
+        // Ordenar por total descendente
+        $consultoresData = collect($consultoresData)->sortByDesc('total')->values();
+
+        // Extraer para el gráfico
+        $consultoresLabels = $consultoresData->pluck('label');
+        $consultoresSolicitudes = $consultoresData->pluck('solicitudes');
+        $consultoresEventos = $consultoresData->pluck('eventos');
+        $consultoresVisitas = $consultoresData->pluck('visitas');
     
         return compact(
             'saldoPorCobrar',
@@ -189,7 +224,9 @@ class HomeController extends Controller
             'ventasVendedorTotales',
             'cobrosVendedorTotales',
             'consultoresLabels',
-            'consultoresCantidades',
+            'consultoresSolicitudes',
+            'consultoresEventos',
+            'consultoresVisitas',
         );
     }
 

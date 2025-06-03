@@ -586,31 +586,57 @@
                         });
                     }
                 
-                    if($('#solicitudesPorConsultor').length){
+                    if ($('#solicitudesPorConsultor').length) {
                         if (solicitudesConsultorChartInstance) solicitudesConsultorChartInstance.destroy();
-
+                    
                         solicitudesConsultorChartInstance = new Chart(document.getElementById('solicitudesPorConsultor').getContext('2d'), {
                             type: 'horizontalBar',
                             data: {
                                 labels: res.consultoresLabels,
-                                datasets: [{
-                                    label: 'Solicitudes Atendidas',
-                                    data: res.consultoresCantidades,
-                                    backgroundColor: 'rgba(153, 102, 255, 0.7)', // morado pastel
-                                    borderColor: 'rgba(153, 102, 255, 1)',
-                                    borderWidth: 1
-                                }]
+                                datasets: [
+                                    {
+                                        label: 'Solicitudes',
+                                        data: res.consultoresSolicitudes,
+                                        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+                                        borderColor: 'rgba(153, 102, 255, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Eventos',
+                                        data: res.consultoresEventos,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    },
+                                    {
+                                        label: 'Visitas',
+                                        data: res.consultoresVisitas,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }
+                                ]
                             },
                             options: {
+                                indexAxis: 'y', // horizontal bar
                                 responsive: true,
                                 maintainAspectRatio: false,
                                 scales: {
-                                    xAxes:[{
-                                        beginAtZero: false,
+                                    x: {
+                                        beginAtZero: true,
                                         ticks: {
                                             precision: 0
                                         }
-                                    }] 
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'top'
+                                    },
+                                    tooltip: {
+                                        mode: 'index',
+                                        intersect: false
+                                    }
                                 }
                             }
                         });
