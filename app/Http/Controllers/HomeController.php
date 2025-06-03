@@ -173,7 +173,7 @@ class HomeController extends Controller
 
         // Codigos únicos y nombres
         $cods = $conteos->flatten()->keys()->unique();
-        $nombres = Consultor::whereIn('codconsultor', $cods)->pluck('nombre', 'codconsultor');
+        $nombres = Consultor::whereIn('codconsultor', $cods)->where('inactivo', false)->pluck('nombre', 'codconsultor');
 
         // Construcción final para el gráfico
         $consultoresData = [];
