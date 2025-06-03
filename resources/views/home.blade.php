@@ -229,7 +229,7 @@
                 <div class="col-lg-6">
                     <div class="card shadow" style="height: 95%">
                         <div class="card-header">
-                            <h5>❤️‍🩹 Clientes Atendidos Por Consultor</h5>
+                            <h5>🏆 Clientes Atendidos Por Consultor</h5>
                             <span>Solicitudes Atendidas por consultor</span>
                         </div>
                         <div class="card-block">
