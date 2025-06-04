@@ -71,6 +71,64 @@ function initializeDataTable() {
 			}
 		});
 	}
+
+		if($('#licencias-table').length){
+		tableApp = $('#licencias-table').DataTable({
+			deferRender: true, // Solo renderiza lo visible
+			order: [[0, 'desc']],
+			responsive: true,
+			lengthChange: false,
+			autoWidth: false,
+			lengthMenu: [
+				[50, 100, 150, -1],
+				[50, 100, 150, 'Todos']
+			],
+			dom: 'Bfrtip',
+			buttons: [
+				{
+					extend: 'copy',
+					text: 'Copiar',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
+				},
+				{
+					extend: 'csv',
+					text: 'Exportar CSV',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
+				},
+				{
+					extend: 'excel',
+					text: 'Exportar Excel',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+				},
+				{
+					extend: 'pdf',
+					text: 'Exportar PDF',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+				},
+				{
+					extend: 'print',
+					text: 'Imprimir',
+					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
+				}
+			],	
+			language: {
+				sProcessing: "Procesando...",
+				sLengthMenu: "Mostrar _MENU_ registros",
+				sZeroRecords: "No se encontraron resultados",
+				sEmptyTable: "Ningún dato disponible en esta tabla",
+				sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+				sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+				sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+				sSearch: "Buscar:",
+				oPaginate: {
+					sFirst: "Primero",
+					sLast: "Último",
+					sNext: "Siguiente",
+					sPrevious: "Anterior"
+				},
+			}
+		});
+	}
 }
 
 $(document).ready(function(){
