@@ -126,7 +126,21 @@ function initializeDataTable() {
 					sNext: "Siguiente",
 					sPrevious: "Anterior"
 				},
-			}
+			},
+			columnDefs: [
+        	    {
+        	        targets: [8, 9], // Índices de columnas 'Pagada' y 'Activada'
+        	        orderable: true,
+        	        render: function (data, type, row, meta) {
+        	            if (type === 'sort') {
+        	                // Extraer el valor del checkbox
+        	                let el = $('<div>').html(data).find('input');
+        	                return el.prop('checked') ? 1 : 0;
+        	            }
+        	            return data;
+        	        }
+        	    }
+        	]
 		});
 	}
 }

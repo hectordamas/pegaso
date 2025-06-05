@@ -97,13 +97,16 @@
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
                                                name="pagada" data-id="{{ $item->id }}" value="1" 
+                                                data-value="{{ $item->pagada }}"
+
                                                {{ $item->pagada ? 'checked' : '' }}>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-check form-switch d-flex align-items-center justify-content-center">
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
-                                               name="activada" data-id="{{ $item->id }}" value="1" 
+                                               name="activada" data-id="{{ $item->id }}" value="1"
+                                               data-value="{{ $item->activada }}" 
                                                {{ $item->activada ? 'checked' : '' }}>
                                     </div>
                                 </td>                                
