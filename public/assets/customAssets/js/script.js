@@ -14,8 +14,8 @@ function protegerExportacion(originalAction) {
 }
 
 function initializeDataTable() {
-	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#cuadre-table').length || $('#clientes-table').length){
-		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #cuadre-table, #clientes-table').DataTable({
+	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#cuadre-table').length || $('#clientes-table').length || $('#alicencias-table').length){
+		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #cuadre-table, #clientes-table, #alicencias-table').DataTable({
 			deferRender: true, // Solo renderiza lo visible
 			order: [[0, 'desc']],
 			responsive: true,
@@ -182,11 +182,11 @@ $(document).ready(function(){
 	})
 
 	//Modal Actualizacion de licencias
-	$('#ActualizacionDeLicenciasModalCreate').on('shown.bs.modal', function () {
+	$('#ActualizacionModalCreate').on('shown.bs.modal', function () {
 		$('#codclie').select2({
 			//theme: 'classic', // Mantiene el estilo Classic
 			width: '100%', // Ocupar todo el ancho disponible
-			dropdownParent: $('#ActualizacionDeLicenciasModalCreate')
+			dropdownParent: $('#ActualizacionModalCreate')
 		});
 	})
 	

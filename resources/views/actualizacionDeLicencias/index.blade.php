@@ -101,13 +101,13 @@
                     <span>Licencias actualizadas y pendientes por actualización</span>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#ActualizacionDeLicenciasModalCreate">
+                    <button type="button" class="btn btn-success rounded shadow" data-bs-toggle="modal" data-bs-target="#ActualizacionModalCreate">
                         <i class="fas fa-sync"></i> Registrar Solicitud
                     </button>
                 </div>
             </div>
             <div class="card-block">
-                <table class="table table-striped table-bordered" id="licencias-table">
+                <table class="table table-striped table-bordered" id="alicencias-table">
                     <thead class="table-dark">
                         <tr>
                             <th>#</th>
@@ -176,11 +176,11 @@
 </div>
 
 <!-- Modal Crear Actividades de Soporte -->
-<div class="modal fade ActualizacionDeLicenciasModalCreate" tabindex="-1" id="ActualizacionDeLicenciasModalCreate" aria-labelledby="ActualizacionDeLicenciasModalCreate" aria-hidden="true">
+<div class="modal fade ActualizacionModalCreate" tabindex="-1" id="ActualizacionModalCreate" aria-labelledby="alicModalCreateLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="ActualizacionDeLicenciasModalCreate">Registrar Actualización Homologación</h6>
+                <h6 class="modal-title" id="alicModalCreateLabel">Registrar Actualización Homologación</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
