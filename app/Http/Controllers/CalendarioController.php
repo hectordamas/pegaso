@@ -21,8 +21,11 @@ class CalendarioController extends Controller
 
         // Verificar si el usuario tiene permiso "vertodo" usando el trait
         $puedeVerTodo = $this->hasPermissions('vertodo');
+        $hoy = now();
 
-        $eventosQuery = Calendario::query();
+        $desde = $hoy->copy()->startOfYear();
+        $hasta = $hoy->copy()->endOfYear();
+        $eventosQuery = Calendario::query()->whereBetween('fecha', [$desde, $hasta]);
 
         if (!$puedeVerTodo) {
             // Si no tiene "vertodo", solo puede ver sus propios eventos
