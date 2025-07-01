@@ -4,6 +4,10 @@
 <title>Licencias a Activar - {{ env('APP_NAME') }}</title>
 @endsection
 
+@php
+    $esDirectiva = auth()->user()->role === 'Directiva' || auth()->user()->id === 34;
+@endphp
+
 @section('content')
 <div class="row">
     <div class="col-md-12">
@@ -80,6 +84,9 @@
                             <th>Pagada</th>
                             <th>Activada</th>
                             <th>Acción</th>
+                            @if($esDirectiva)
+                            <th>Verificada</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
@@ -173,6 +180,17 @@
 
 
                                 </td>
+
+                                @if($esDirectiva)
+                                <td>
+                                    <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                        <input class="form-check-input toggle-status" type="checkbox" role="switch" 
+                                               name="verificada" data-id="{{ $item->id }}" value="1"
+                                               data-value="{{ $item->verificada }}" 
+                                               {{ $item->verificada ? 'checked disabled' : '' }}>
+                                    </div>
+                                </td>                            
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
