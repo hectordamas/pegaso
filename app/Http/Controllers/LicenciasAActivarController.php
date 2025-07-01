@@ -137,7 +137,7 @@ class LicenciasAActivarController extends Controller
         $field = $request->input('field');
         $value = $request->input('value');
     
-        if (!in_array($field, ['activada', 'pagada', 'verificada'])) {
+        if (!in_array($field, ['activada', 'pagada', 'verificada', 'pagadads'])) {
             return response()->json(['success' => false, 'message' => 'Campo inválido.']);
         }
     

@@ -81,7 +81,8 @@
                             <th>Fecha de Pago</th>
                             <th>Monto</th>
                             <th>Serial</th>
-                            <th>Pagada</th>
+                            <th>Pago Cliente</th>
+                            <th>Pago a DS</th>
                             <th>Activada</th>
                             <th>Acción</th>
                             @if($esDirectiva)
@@ -107,6 +108,15 @@
                                                 data-value="{{ $item->pagada }}"
 
                                                {{ $item->pagada ? 'checked' : '' }}>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                        <input class="form-check-input toggle-status" type="checkbox" role="switch" 
+                                               name="pagadads" data-id="{{ $item->id }}" value="1" 
+                                                data-value="{{ $item->pagadads }}"
+
+                                               {{ $item->pagadads ? 'checked' : '' }}>
                                     </div>
                                 </td>
                                 <td>
