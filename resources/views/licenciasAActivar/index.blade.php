@@ -106,8 +106,8 @@
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
                                                name="pagada" data-id="{{ $item->id }}" value="1" 
                                                 data-value="{{ $item->pagada }}"
-
-                                               {{ $item->pagada ? 'checked' : '' }}>
+                                                {{ $item->verificada ? 'disabled' : '' }}
+                                               {{ $item->pagada ? 'checked' : '' }} >
                                     </div>
                                 </td>
                                 <td>
@@ -115,7 +115,7 @@
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
                                                name="pagadads" data-id="{{ $item->id }}" value="1" 
                                                 data-value="{{ $item->pagadads }}"
-
+                                                {{ $item->verificada ? 'disabled' : '' }}
                                                {{ $item->pagadads ? 'checked' : '' }}>
                                     </div>
                                 </td>
@@ -124,6 +124,7 @@
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
                                                name="activada" data-id="{{ $item->id }}" value="1"
                                                data-value="{{ $item->activada }}" 
+                                                {{ $item->verificada ? 'disabled' : '' }}
                                                {{ $item->activada ? 'checked' : '' }}>
                                     </div>
                                 </td>                                
@@ -197,7 +198,7 @@
                                         <input class="form-check-input toggle-status" type="checkbox" role="switch" 
                                                name="verificada" data-id="{{ $item->id }}" value="1"
                                                data-value="{{ $item->verificada }}" 
-                                               {{ $item->verificada ? 'checked disabled' : '' }}>
+                                               {{ $item->verificada ? 'checked' : '' }}>
                                     </div>
                                 </td>                            
                                 @endif
@@ -447,7 +448,7 @@
             let licenciaId = $(this).data("id");
             let field = $(this).attr("name");
             let value = $(this).is(":checked") ? 1 : 0;
-            
+            let checkbox = $(this)
             $.ajax({
                 url: `licencias-a-activar/update-status/${licenciaId}`,
                 type: "POST",
@@ -457,13 +458,22 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
+                    if(response.error){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message
+                        });
+                        return checkbox.prop("checked", !value); // Revertir checkbox si hay error
+                    }
+
                     if (!response.success) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
                             text: 'No se pudo actualizar el estado'
                         });
-                        checkbox.prop("checked", !value); // Revertir checkbox si hay error
+                        return checkbox.prop("checked", !value); // Revertir checkbox si hay error
                     }
                 },
                 error: function() {

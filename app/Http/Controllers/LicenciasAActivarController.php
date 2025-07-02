@@ -136,6 +136,19 @@ class LicenciasAActivarController extends Controller
     
         $field = $request->input('field');
         $value = $request->input('value');
+
+        if($licencia->verificada){
+
+            if($field == 'verificada'){
+                $licencia->$field = $value;
+                $licencia->save();
+            }else{
+                return response()->json(['success' => false, 'message' => 'Ya la licencia fue verificada, no se puede modificar.', 'error' => true]);
+            }
+
+        }
+
+
     
         if (!in_array($field, ['activada', 'pagada', 'verificada', 'pagadads'])) {
             return response()->json(['success' => false, 'message' => 'Campo inválido.']);
