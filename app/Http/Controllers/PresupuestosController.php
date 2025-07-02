@@ -114,7 +114,7 @@ class PresupuestosController extends Controller
         
         if($codestatus == 3 || $codestatus == 11){
             if($request->abono){
-                $presupuesto->abono = $request->abono;
+                $presupuesto->abono = str_replace(',','.', str_replace('.','', $request->abono));
 
                 $cxc = new CxC();
                 $cxc->codwallet	= 1;			
@@ -144,7 +144,7 @@ class PresupuestosController extends Controller
                 $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();
                 
                 if($cxc){
-                    $cxc->abono = floatval($cxc->abono ?? 0) + floatval($request->abono ?? 0);
+                    $cxc->abono = str_replace(',','.', str_replace('.','', $request->abono));
                     $cxc->save();
                 }
             }
