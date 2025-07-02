@@ -12,7 +12,7 @@ class CxCController extends Controller
 {
     public function index(Request $request){
 		$wallet = Wallet::where('inactivo', false)->get();  
-		$tipomoneda = TipoMoneda::where('codtipomoneda', 2)->where('inactivo', false)->get();
+		$tipomoneda = TipoMoneda::where('codmoneda', 2)->where('inactivo', false)->get();
 		$saclie = Saclie::orderby('descrip','asc')->get();
         $client = $request->client;
 
