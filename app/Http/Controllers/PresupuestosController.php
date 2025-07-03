@@ -123,7 +123,7 @@ class PresupuestosController extends Controller
                 $cxc->codtipomoneda	= 4;		
                 $cxc->codclie = $presupuesto->saclie->codclie;			
                 $cxc->cliente = $presupuesto->saclie->rif . ' | '. $presupuesto->saclie->descrip;			
-                $cxc->monto	= $presupuesto->mtototal / $presupuesto->factor;			
+                $cxc->monto	= $presupuesto->tgravable / $p->factor;			
                 $cxc->codusuario = Auth::user()->codusuario;	
                 $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod ;
                 $cxc->departamento = 'Ventas';
@@ -144,7 +144,7 @@ class PresupuestosController extends Controller
                 $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();
                 
                 if($cxc){
-                    $cxc->abono = str_replace(',','.', str_replace('.','', $request->abono));
+                    $cxc->abono = $cxc->abono + str_replace(',','.', str_replace('.','', $request->abono));
                     $cxc->save();
                 }
             }

@@ -76,6 +76,7 @@ class CxCController extends Controller
         ->where('codwallet', $codwallet)
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
+        ->whereRaw('ABS(monto - abono) > 0.01')
         ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
         ->withCount('detallecxc')
         ->get()
@@ -102,6 +103,7 @@ class CxCController extends Controller
         ->where('codmoneda', 2)
         ->where('anulado', false)
         ->whereColumn('monto', '>', 'abono')
+        ->whereRaw('ABS(monto - abono) > 0.01')
         ->groupBy('codclie', 'cliente')
         ->orderByRaw('SUM(monto) - SUM(abono) ASC')
         ->get()
@@ -149,6 +151,7 @@ class CxCController extends Controller
         ->where('codmoneda', 2)
         ->whereColumn('monto', '>', 'abono')
         ->orderByRaw('monto - abono ASC')
+        ->whereRaw('ABS(monto - abono) > 0.01')
         ->where('anulado', false)
         ->get()
         ->map(function ($cxc) {
