@@ -258,7 +258,7 @@
 
                     <div class="col-sm-12 form-group">
                         <label for="" class="control-label fw-bold mb-2">Adjuntar Comprobante</label>
-                        <input type="file" id="file" name="file" accept="image/*" class="form-control" required>
+                        <input type="file" id="file" name="file" accept="image/*, application/pdf" class="form-control" required>
                     </div>
 
                     <div class="col-md-12 form-group">
