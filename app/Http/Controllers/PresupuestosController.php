@@ -72,7 +72,7 @@ class PresupuestosController extends Controller
             $row[] = '<p>' . \Carbon\Carbon::parse($p->fechae)->format('d/m/Y h:i a') . '</p>';
             $row[] = $d;
             $row[] = '<p class="text-success fw-bold">PRE - ' . $p->numerod . '</p>';
-            $row[] = '<p>' . ($p->saclie->descrip ?? 'N/A') . '</p>';
+            $row[] = '<p>' . ($p->descrip ?? 'N/A') . '</p>';
             $row[] = '<p>' . number_format($p->texento, 2, ',', '.') . '</p>';
             $row[] = '<p>' . number_format($p->tgravable, 2, ',', '.') . '</p>';
             $row[] = '<p>' . number_format($p->mtotax, 2, ',', '.') . '</p>';

@@ -114,7 +114,7 @@
                 <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid d-none" />
 
                 <!-- PDF -->
-                <iframe id="comprobantePdf" src="" style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
+                <iframe id="comprobantePdf" allow="fullscreen" src="" style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
             </div>
         </div>
     </div>

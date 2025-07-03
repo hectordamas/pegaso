@@ -62,7 +62,7 @@ class ProyectosController extends Controller
             $row[] = '<p>' . $p->id . '</p>';
             $row[] = '<p style="max-width: 70px;">' . \Carbon\Carbon::parse($p->fechae)->format('d/m/Y h:i a') . '</p>';
             $row[] = '<p style="max-width: 70px;" class="text-success fw-bold">PRE - ' . $p->numerod . '</p>';
-            $row[] = '<p>' . ($p->saclie->descrip ?? 'N/A') . '</p>';
+            $row[] = '<p>' . ($p->descrip ?? 'N/A') . '</p>';
             $row[] = '<p>' . number_format($p->texento, 2, ',', '.') . '</p>';
             $row[] = '<p>' . number_format($p->tgravable, 2, ',', '.') . '</p>';
             $row[] = '<p>' . number_format($p->mtotax, 2, ',', '.') . '</p>';
