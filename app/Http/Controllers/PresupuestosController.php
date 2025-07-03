@@ -123,9 +123,9 @@ class PresupuestosController extends Controller
                 $cxc->codtipomoneda	= 4;		
                 $cxc->codclie = $presupuesto->saclie->codclie;			
                 $cxc->cliente = $presupuesto->saclie->rif . ' | '. $presupuesto->saclie->descrip;			
-                $cxc->monto	= $presupuesto->tgravable / $p->factor;			
+                $cxc->monto	= $presupuesto->tgravable / $presupuesto->factor;			
                 $cxc->codusuario = Auth::user()->codusuario;	
-                $cxc->observacion = $codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod ;
+                $cxc->observacion = ($codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod) . ' ' . $request->observacion;
                 $cxc->departamento = 'Ventas';
                 $cxc->safact_id = $presupuesto->id;	
                 $cxc->save();
@@ -135,7 +135,7 @@ class PresupuestosController extends Controller
                 $abono->codtipomoneda = 4;
                 $abono->fecha = date('Y-m-d');			
                 $abono->monto = str_replace(',','.', str_replace('.','', $request->abono));			
-                $abono->descripcion = $codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: '. $presupuesto->numerod;	
+                $abono->descripcion = ($codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: '. $presupuesto->numerod) . ' ' . $request->observacion;	
                 $abono->file = $request->input('file');	
                 $abono->codusuario = Auth::user()->codusuario;	
                 $abono->departamento = 'Ventas';	

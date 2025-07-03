@@ -190,6 +190,11 @@
                             <input type="file" id="file" name="file" accept="image/*" class="form-control" required>
                         </div> 
 
+                        <div class="col-md-6 form-group abonado-container d-none">
+                            <label for="" class="control-label">Observacion</label>
+                            <textarea name="observacion" id="observacion" class="form-control"></textarea>
+                        </div>
+
                         <div class="col-md-6 form-group d-none" id="razon-container">
                             <label for="" class="control-label" id="razonLabel">Motivo</label>
                             <textarea name="razon" id="razon" class="form-control"></textarea>
@@ -377,6 +382,7 @@
         var presupuestoId = $('#presupuestoId').val();
         var razon = $('#razon').val();
         var abono = $('#abono').val();
+        var observacion = $('#observacion').val();
         var fileInput = $("#file")[0].files[0];
         
         if (fileInput) {
@@ -402,7 +408,8 @@
                     presupuestoId: presupuestoId,
                     abono: abono,
                     razon: razon,
-                    file: fileBase64
+                    file: fileBase64,
+                    observacion: observacion
                 },
                 success: function(response) {
                     getPresupuestosData(response.success);
