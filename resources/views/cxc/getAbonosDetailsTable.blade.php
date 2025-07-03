@@ -20,13 +20,16 @@
                 <td>{{ $item->tipomoneda->nombre }}</td>
                 <td>{{ number_format($item->monto, 2, '.', ',') }}</td>
                 <td>
-                    @if($item->file)
-                        <a href="javascript:void(0)" onclick="openComprobanteViewer('{{ $item->file }}')">
-                            <img src="{{ $item->file }}" style="max-width: 80px;"/>
-                        </a>
-                    @else
-                        No disponible
-                    @endif
+                    @php
+                        $isPdf = str_starts_with($item->file, 'data:application/pdf');
+                    @endphp
+                    <button class="btn btn-info" onclick="openComprobanteViewer('{{ $item->file }}')" title="Ver Comprobante">
+                        @if($isPdf)
+                            <i class="fas fa-file-pdf"></i>
+                        @else
+                            <i class="fas fa-file-image"></i>
+                        @endif
+                    </button>
                 </td>
               </tr>
             @empty

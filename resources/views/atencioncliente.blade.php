@@ -192,7 +192,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Solicitud</label>
-                                <input minlength="3" maxlength="120" type="text" class="form-control" id="solicitud" name="solicitud" value="" onkeyup="this.value=this.value.toUpperCase();" required="">
+                                <textarea rows="5" minlength="3" maxlength="120" class="form-control" id="solicitud" name="solicitud" onkeyup="this.value=this.value.toUpperCase();" required=""></textarea>
                             </div>
                         </div>
                         <div class="col-sm-6">
@@ -234,7 +234,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Actividad Realizada</label>
-                                <textarea class="form-control" id="actividad" name="actividad" rows="5" onkeyup="this.value=this.value.toUpperCase();"></textarea>
+                                <textarea class="form-control" id="actividad" name="actividad" onkeyup="this.value=this.value.toUpperCase();"></textarea>
                             </div>
                         </div>
 

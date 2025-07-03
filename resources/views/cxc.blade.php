@@ -313,10 +313,11 @@
           <h5 class="modal-title text-white">Comprobante</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
-        <div class="modal-body d-flex justify-content-center">
-          <div id="comprobanteContent" class="w-100 text-center">
-            <!-- Contenido dinámico: imagen o PDF -->
-          </div>
+        <div class="modal-body text-center">
+            <!-- Imagen -->
+            <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid d-none" />
+            <!-- PDF -->
+            <iframe id="comprobantePdf" src="" allow="fullscreen" style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
         </div>
       </div>
     </div>
@@ -326,19 +327,25 @@
 @section('scripts')
 <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 <script>
-    function openComprobanteViewer(url) {
-        let ext = url.split('.').pop().toLowerCase();
-        let content = '';
+    function openComprobanteViewer(base64) {
+        const mime = base64.substring(5, base64.indexOf(';'));
 
-        if (ext === 'pdf') {
-            content = `<iframe src="${url}" width="100%" height="100%" style="border: none;"></iframe>`;
+        const img = document.getElementById('comprobanteImg');
+        const pdf = document.getElementById('comprobantePdf');
+
+        if (mime === 'application/pdf') {
+            // Mostrar PDF
+            img.classList.add('d-none');
+            pdf.classList.remove('d-none');
+            pdf.src = base64;
         } else {
-            content = `<img src="${url}" style="width: 70%; border-radius: 10px;" />`;
+            // Mostrar imagen
+            pdf.classList.add('d-none');
+            img.classList.remove('d-none');
+            img.src = base64;
         }
 
-        $('#comprobanteContent').html(content);
-        let modal = new bootstrap.Modal(document.getElementById('comprobanteViewerModal'));
-        modal.show();
+        $('#comprobanteViewerModal').modal('show');
     }
 </script>
 
