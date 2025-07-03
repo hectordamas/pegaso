@@ -30,7 +30,7 @@ class ProyectosController extends Controller
 
     public function data(Request $request)
     {
-        $query = Safact::select('id', 'fechae', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
+        $query = Safact::select('id', 'fechae','descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
             ->where('tipofac', 'F')
             ->bySaclie($request->input('codclie'))

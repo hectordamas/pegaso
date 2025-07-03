@@ -30,7 +30,7 @@ class PresupuestosController extends Controller
 
     public function data(Request $request)
     {
-        $query = Safact::select('id', 'fechae', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
+        $query = Safact::select('id', 'fechae', 'descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
             ->where('tipofac', 'F')
             ->whereNotIn('codestatus', [3, 7, 8, 9])
             ->byDateRange($request->input('from'), $request->input('until'))
