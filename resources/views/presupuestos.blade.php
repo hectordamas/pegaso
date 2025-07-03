@@ -187,7 +187,7 @@
                         
                         <div class="col-md-6 form-group abonado-container d-none">
                             <label for="control-label">Subir Comprobante</label>
-                            <input type="file" id="file" name="file" accept="image/*" class="form-control" required>
+                            <input type="file" id="file" name="file"  accept="image/*,application/pdf" class="form-control" required>
                         </div> 
 
                         <div class="col-md-6 form-group abonado-container d-none">
