@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->double('monto');
             $table->string('descripcion', 100);
-            $table->text('file');
+            $table->text('file'); // longText
             $table->integer('codusuario')->default(1);
         });
     }
