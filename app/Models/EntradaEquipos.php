@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\{Saclie, Consultor, Estatus, User, ChatEntrada};
+use Carbon\Carbon;
 
 class EntradaEquipos extends Model
 {
