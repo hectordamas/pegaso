@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('licenciasaactivar', function (Blueprint $table) {
-            $table->boolean('pagadads')->default(false);
+            $table->longText('notasGerencia')->nullable();
         });
     }
 

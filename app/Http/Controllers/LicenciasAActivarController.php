@@ -167,6 +167,14 @@ class LicenciasAActivarController extends Controller
         return view('licenciasAActivar.partials.comprobantes', compact('licencia'));
     }
 
+    public function saveNote($id, Request $request){
+        $item = LicenciasAActivar::findOrFail($id);
+        $item->notasGerencia = $request->notasGerencia;
+        $item->save();
+        
+        return response()->json(['success' => true]);
+    }
+
     public function destroy($id)
     {
         $licencia = LicenciasAActivar::findOrFail($id);

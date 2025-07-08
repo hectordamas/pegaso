@@ -87,6 +87,7 @@
                             <th>Acción</th>
                             @if($esDirectiva)
                             <th>Verificada</th>
+                            <th>Notas Gerencia</th>
                             @endif
                         </tr>
                     </thead>
@@ -200,12 +201,45 @@
                                                data-value="{{ $item->verificada }}" 
                                                {{ $item->verificada ? 'checked' : '' }}>
                                     </div>
-                                </td>                            
+                                </td>   
+                                
+                                <td>
+                                    <a  href="javascript:void(0)"
+                                        class="btn btn-outline-primary notas-gerencia"
+                                        data-id="{{$item->id}}"
+                                        data-notas="{{$item->notasGerencia}}"
+                                        data-toggle="tooltip"
+                                        title="Notas Gerencia">
+                                        <i class="fas fa-pen-fancy"></i>
+                                    </a>
+                                </td>
                                 @endif
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notas gerencia -->
+<div class="modal fade NotasGerencia" tabindex="-1" id="NotasGerencia" aria-labelledby="NotasGerenciaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="NotasGerenciaLabel">Notas de Gerencia</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <textarea id="NotasGerenciaInput" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="GuardarNotaGerencia">Guardar</button>
             </div>
         </div>
     </div>
@@ -498,4 +532,55 @@
     });
 </script>
 
+
+<script>
+    let currentNotaBtn = null;
+
+    $(document).on('click', '.notas-gerencia', function () {
+        var id = $(this).data('id');
+        var notasGerencia = $(this).data('notas');
+
+        currentNotaBtn = $(this); // Referencia al botón que abrió el modal
+        $('#NotasGerenciaInput').val(notasGerencia); // ✅ CORRECTO
+        $('#NotasGerencia').modal('show');
+    });
+
+    $('#GuardarNotaGerencia').on('click', function () {
+        const nuevaNota = $('#NotasGerenciaInput').val();
+        const id = currentNotaBtn.data('id');
+
+        // Enviar vía AJAX (si quieres guardar en la BD)
+        $.ajax({
+            url: '/save-note/' + id, // cámbialo por tu ruta real
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                notasGerencia: nuevaNota,
+            },
+            success: function (response) {
+                // ✅ Actualiza el atributo data
+                currentNotaBtn.data('notas', nuevaNota);
+
+                // Cierra el modal
+                $('#NotasGerencia').modal('hide');
+
+                // Opcional: feedback visual
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Guardado!',
+                    text: 'La nota fue actualizada correctamente',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un problema al guardar la nota'
+                });            
+            }
+        });
+    });
+ </script>
 @endsection

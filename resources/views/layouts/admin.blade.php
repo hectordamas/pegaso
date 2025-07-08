@@ -271,6 +271,8 @@
 
     <input type="hidden" id="exp" value="$bKe02KI@FL1j&GxAJW-">
 
+    
+
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery/dist/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
