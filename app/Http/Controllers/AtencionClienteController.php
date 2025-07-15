@@ -42,7 +42,7 @@ class AtencionClienteController extends Controller
 		$atencionClientes = $atencionClientes->orderBy('id', 'desc')->get();
 
 		if(!$this->hasPermissions('vertodo')){
-			$atencionClientes = $atencionClientes->where('codusuario', Auth::id())->where('codconsultor', Auth::user()->codusuario);
+			$atencionClientes = $atencionClientes->where('codconsultor', Auth::user()->codusuario);
 		}
 	
 		// Obtener datos auxiliares para los selects
