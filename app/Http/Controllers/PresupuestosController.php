@@ -67,9 +67,11 @@ class PresupuestosController extends Controller
             }
 
             $row = [];
+            $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
 
             $row[] = '<p>' . $p->id . '</p>';
-            $row[] = '<p>' . \Carbon\Carbon::parse($p->fechae)->format('d/m/Y h:i a') . '</p>';
+            $row[] = '<p>' . \Carbon\Carbon::parse($p->fechae)->format('d/m/Y h:i a') . '</p>'; // Columna visible
+
             $row[] = $d;
             $row[] = '<p class="text-success fw-bold">PRE - ' . $p->numerod . '</p>';
             $row[] = '<p>' . ($p->descrip ?? 'N/A') . '</p>';

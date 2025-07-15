@@ -58,6 +58,7 @@ class ProyectosController extends Controller
 
         foreach($query as $p){
             $row = [];
+            $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
 
             $row[] = '<p>' . $p->id . '</p>';
             $row[] = '<p style="max-width: 70px;">' . \Carbon\Carbon::parse($p->fechae)->format('d/m/Y h:i a') . '</p>';

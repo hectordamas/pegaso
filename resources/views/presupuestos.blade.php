@@ -107,6 +107,7 @@
                         <table id="presupuestos-table" class="table table-striped table-bordered nowrap table-small">
                             <thead class="table-dark">
                                 <tr>
+                                    <th></th>
                                     <th>#</th>
                                     <th>Fecha</th>
                                     <th>Días</th>
@@ -256,6 +257,24 @@
         let client = $('#client').val();
 
         $('#presupuestos-table').DataTable({
+            columns: [
+                { visible: false },           // columna 0: fecha cruda (oculta, para orden)
+                null,                         // columna 1: ID
+                { orderData: [0] },           // columna 2: fecha formateada, ordena según la columna 0
+                null,                         // columna 3: días
+                null,                         // columna 4: número doc
+                null,                         // columna 5: descripción
+                null,                         // columna 6: exento
+                null,                         // columna 7: gravable
+                null,                         // columna 8: impuesto
+                null,                         // columna 9: factor
+                null,                         // columna 10: total
+                null,                         // columna 11: total / factor
+                null,                         // columna 12: vendedor
+                null,                         // columna 13: estatus
+                null                          // columna 14: acciones
+            ],
+            order: [[0, 'desc']],
             "bDeferRender": true,
             "bProcessing": true,
             "sAjaxSource": "{{ route('presupuestos.data') }}",
@@ -292,7 +311,6 @@
 				aoData.push( { "name": "codestatus", "value": codestatus } );
                 aoData.push( { "name": "client", "value": client } );
             },
-			order: [[0, 'desc']],
             dom: 'Bfrtip',
 			buttons: [
 				{

@@ -130,6 +130,7 @@
                         <table id="entregas-table" class="table table-striped table-bordered nowrap table-small">
                             <thead class="table-dark">
                                 <tr>
+                                    <th></th>
                                     <th>#</th>
                                     <th>Fecha</th>
                                     <th>Documento</th>
@@ -269,6 +270,23 @@
         let codestatus =  id || $('#estatus').val(); // this ahora está correctamente referenciado
 
         $('#entregas-table').DataTable({
+            columns: [
+                { visible: false },           // columna 0: fecha cruda (oculta, para orden)
+                null,                         // columna 1: ID
+                { orderData: [0] },           // columna 2: fecha formateada, ordena según la columna 0
+                null,                         // columna 3: días
+                null,                         // columna 4: número doc
+                null,                         // columna 5: descripción
+                null,                         // columna 6: exento
+                null,                         // columna 7: gravable
+                null,                         // columna 8: impuesto
+                null,                         // columna 9: factor
+                null,                         // columna 10: total
+                null,                         // columna 11: total / factor
+                null,                         // columna 12: vendedor
+                null,                         // columna 13: estatus
+            ],
+            order: [[0, 'desc']],
             "bDeferRender": true,
             "bProcessing": true,
             "sAjaxSource": "{{ route('entregas.data') }}",
@@ -300,7 +318,6 @@
 				aoData.push( { "name": "codvend", "value": codvend } );
 				aoData.push( { "name": "codestatus", "value": codestatus } );
             },
-			order: [[0, 'desc']],
             dom: 'Bfrtip',
 			buttons: [
 				{
