@@ -18,7 +18,7 @@
                 <tbody>
                     @foreach($items as $index => $item)
                     <tr>
-                        <td>{{$index}}</td>
+                        <td>{{$index + 1}}</td>
                         <td>{{$item->CodItem}}</td>
                         <td>{{$item->CodUbic}}</td>
                         <td>
