@@ -117,6 +117,23 @@ class AtencionClienteController extends Controller
 
     public function update(Request $request)
 	{		
+
+		$regla = Validator::make($request->all(),[
+            'codestatus' => 'required',
+            'actividad' => 'required',
+        ],
+		$messages = [
+			'required'	=> 'El campo :attribute es requerido',
+		]);
+		
+		if ($regla->fails()){
+			foreach($regla->errors()->messages() as $error){
+				$mensaje = $error;
+			}            
+			return redirect()->back()->withErrors($mensaje[0]."-4");
+        }
+
+
 		$id	= $request->input('atencionClienteId');
 		$codestatus	= $request->input('codestatus');
 		$actividad	= $request->input('actividad');
