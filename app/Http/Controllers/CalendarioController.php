@@ -106,7 +106,7 @@ class CalendarioController extends Controller
         $datos['cliente']   = $event->saclie->descrip ?? $event->lead;
         $datos['consultor'] = $event->consultor->nombre;
         $datos['codconsultor'] = $event->consultor->codconsultor;
-        $datos['codclie'] = $event->saclie->codclie;
+        $datos['codclie'] = $event->saclie->codclie ?? $event->lead;
         $datos['interactionType'] = $event->interactionType;
         $datos['description'] = $event->description;
         $datos['tipo'] = 'asignacion';
