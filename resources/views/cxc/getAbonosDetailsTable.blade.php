@@ -5,6 +5,7 @@
             <tr>
                 <th>#</th>
                 <th>Fecha</th>
+                <th>Fecha de Abono</th>
                 <th>Descripción</th>
                 <th>Método de Pago</th>
                 <th>Monto</th>
@@ -16,6 +17,7 @@
               <tr>
                 <td>{{ $item->id }}</td>
                 <td>{{ \Carbon\Carbon::parse($item->fecha)->format('d-m-Y') }}</td>
+                <td>{{ $item->fechaDePago ? \Carbon\Carbon::parse($item->fechaDePago)->format('d-m-Y') : 'N/R' }}</td>
                 <td>{{ $item->descripcion }}</td>
                 <td>{{ $item->tipomoneda->nombre }}</td>
                 <td>{{ number_format($item->monto, 2, '.', ',') }}</td>

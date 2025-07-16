@@ -35,7 +35,7 @@ class CxCController extends Controller
 		$fecha = $nfecha->format('Y-m-d H:i:s');
 		$monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
 		$observacion = $request->input('observacion');
-		
+
         $saclie = Saclie::where('codclie', $codclie)->first();
 								
 		$reg = new CxC();
@@ -182,7 +182,8 @@ class CxCController extends Controller
 		$descripcion = $request->get('descripcionabono');
 		$montoabono = str_replace(',','.',str_replace('.','',$request->get('montoabono')));
         $file = $request->input('file');
-				
+		$fechaDePago = $request->get('fechaDePago');
+
 		if($montoabono > $montodeuda){
 			$response = ["success" => false, "data" => ''];
 		}else{
@@ -194,6 +195,7 @@ class CxCController extends Controller
 			$reg->descripcion = $descripcion;	
 			$reg->file = $file;	
 			$reg->codusuario = $codusuario;	
+            $reg->fechaDePago = $fechaDePago;	
 			$reg->save();
 			
 			$cxc = Cxc::where('codcxc','=',$codcxc)->first();

@@ -141,6 +141,7 @@ class PresupuestosController extends Controller
                 $abono->file = $request->input('file');	
                 $abono->codusuario = Auth::user()->codusuario;	
                 $abono->departamento = 'Ventas';	
+                $abono->fechaDePago = $request->fechaDePago;
                 $abono->save();
                 
                 $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();

@@ -242,6 +242,11 @@
                 <input id="inputcxc" type="hidden">
 
                 <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label for="fechaDePago">Fecha de Abono</label>
+                        <input type="date" class="form-control" name="fechaDePago" id="fechaDePago" value="{{ date('Y-m-d') }}" required>
+                    </div>
+
                     <div class="col-sm-6 form-group">
                         <label class="control-label fw-bold">Forma de Pago</label>
                         <select class="form-control" name="cmbcodtipomonedaabono" id="cmbcodtipomonedaabono" required>
@@ -256,7 +261,7 @@
                         <input name="montoabono" id="montoabono" type="text" class="montopcd form-control" onkeyup="convertirmonto(this.form)" required>
                     </div>
 
-                    <div class="col-sm-12 form-group">
+                    <div class="col-sm-6 form-group">
                         <label for="" class="control-label fw-bold mb-2">Adjuntar Comprobante</label>
                         <input type="file" id="file" name="file" accept="image/*, application/pdf" class="form-control" required>
                     </div>
@@ -732,6 +737,8 @@
 			var cmbcodtipomonedaabono = $('#cmbcodtipomonedaabono').val();
 			var descripcionabono = $('#descripcionabono').val();
 			var codwallet = $('#cmbcodwallet').val();
+            var fechaDePago = $('#fechaDePago').val();
+
 			var datos='';
 			
 			let deudaf = parseFloat(montodeuda).toFixed(2);
@@ -751,7 +758,8 @@
 			    	    "montoabono": montoabono,
 			    	    "cmbcodtipomonedaabono": cmbcodtipomonedaabono,
 			    	    "descripcionabono": descripcionabono,
-                        "file": base64File // Se envía el archivo con prefijo
+                        "file": base64File, // Se envía el archivo con prefijo
+                        "fechaDePago": fechaDePago,
 			        },
 			    	url: "{{ url('registrarCxcAbono') }}",
 			    	type: 'post',

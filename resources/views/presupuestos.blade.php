@@ -187,6 +187,11 @@
                         </div>
                         
                         <div class="col-md-6 form-group abonado-container d-none">
+                            <label for="fechaDePago">Fecha de Abono</label>
+                            <input type="date" class="form-control" name="fechaDePago" id="fechaDePago" value="{{ date('Y-m-d') }}" required>
+                        </div>
+
+                        <div class="col-md-6 form-group abonado-container d-none">
                             <label for="control-label">Subir Comprobante</label>
                             <input type="file" id="file" name="file"  accept="image/*,application/pdf" class="form-control" required>
                         </div> 
@@ -402,7 +407,7 @@
         var abono = $('#abono').val();
         var observacion = $('#observacion').val();
         var fileInput = $("#file")[0].files[0];
-        
+        var fechaDePago = $('#fechaDePago').val();
         if (fileInput) {
             let reader = new FileReader();
             reader.onload = function (e) {
@@ -426,6 +431,7 @@
                     presupuestoId: presupuestoId,
                     abono: abono,
                     razon: razon,
+                    fechaDePago: fechaDePago,
                     file: fileBase64,
                     observacion: observacion
                 },
