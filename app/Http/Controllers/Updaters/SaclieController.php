@@ -15,8 +15,6 @@ class SaclieController extends Controller
 		$data = Array();
 		$datosReq = $request->all(); 
 	        
-	  //dd($datosReq);
-      
 		for ($i = 0; $i < count($datosReq); $i++) 
 		{
 			$data['codclie'][$i] = @$datosReq[$i]['CodClie'];
@@ -74,7 +72,8 @@ class SaclieController extends Controller
 		$codclie = $request->get('CodClie');
 		$descrip = $request->get('Descrip');
 		$rif = $request->get('Rif');
-	  
+	  	$activo = $request->get('Activo');
+
 		$pgConsulSQL = Saclie::where('codclie','=',$codclie)->first();
 		
 		$descrip = str_replace("'", "", $descrip);
@@ -86,11 +85,14 @@ class SaclieController extends Controller
 			$pgSQL->descrip=@$descrip;
 			$pgSQL->rif=@$rif;
 			$pgSQL->fechaupdate= date('Y-m-d H:i:s');
+			$pgSQL->activo=@$activo;
     		$pgSQL->save();	
 		}else{
 			$pgConsulSQL->descrip=@$descrip;
 			$pgConsulSQL->rif=@$rif;
 			$pgConsulSQL->fechaupdate= date('Y-m-d H:i:s');
+			$pgConsulSQL->activo=@$activo;
+
 			$pgConsulSQL->save();
 			
 			$cxc = CxC::where('codclie','=',$codclie)->update([ 'cliente' => @$rif." | ".@$descrip ]);
