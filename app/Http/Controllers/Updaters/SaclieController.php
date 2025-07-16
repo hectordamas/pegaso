@@ -57,7 +57,7 @@ class SaclieController extends Controller
     				$pgConsulSQL->fechaupdate= date('Y-m-d H:i:s');
 					$pgConsulSQL->email=@$data['email'][$i];
 					$pgConsulSQL->telef=@$data['telef'][$i];
-					$pgSQL->activo=@$data['activo'][$i];
+					$pgConsulSQL->activo=@$data['activo'][$i];
     				$pgConsulSQL->save();
     		
     			    $cxc = CxC::where('codclie','=',$data['codclie'][$i])->update([ 'cliente' => @$data['rif'][$i]." | ".@$data['descrip'][$i] ]);
