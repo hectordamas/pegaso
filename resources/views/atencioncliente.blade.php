@@ -301,7 +301,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Actividad Realizada</label>
-                                <textarea class="form-control" id="actividad" name="actividad" rows="5" onkeyup="this.value=this.value.toUpperCase();"></textarea>
+                                <textarea required class="form-control" id="actividad" name="actividad" rows="5" onkeyup="this.value=this.value.toUpperCase();"></textarea>
                             </div>
                         </div>
                     </div>
