@@ -39,7 +39,7 @@ class LlamadasController extends Controller
         $cliente = Saclie::where('codclie', $request->requestCliente)->first();
         $consultor = Consultor::where('codconsultor', $request->requestConsultor)->first();
         $users = User::where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('comunicaciones', [
             'llamadas' => $llamadas,

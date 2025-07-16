@@ -8,7 +8,7 @@ use App\Models\{Saclie, AtencionCliente, Calendario, CxC, EntradaEquipos, Visita
 class ClientesController extends Controller
 {
     public function index(Request $request){
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
         $client = $request->client;
 
         return view('clientes', [

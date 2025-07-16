@@ -17,7 +17,7 @@ class CalendarioController extends Controller
     public function index(Request $request)
     {
         $consultors = Consultor::where('inactivo', false)->get();
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         // Verificar si el usuario tiene permiso "vertodo" usando el trait
         $puedeVerTodo = $this->hasPermissions('vertodo');

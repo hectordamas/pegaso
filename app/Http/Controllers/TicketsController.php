@@ -16,7 +16,7 @@ class TicketsController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
     
-        $saclie = Saclie::orderBy('descrip', 'asc')->get();
+        $saclie = Saclie::orderBy('descrip', 'asc')->where('activo', true)->get();
     
         return view('tickets.index', [
             'saclie' => $saclie,
@@ -44,7 +44,7 @@ class TicketsController extends Controller
 
     public function edit($id){
         $ticket = Ticket::find($id);
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('tickets.edit', [
             'saclie' => $saclie,

@@ -24,7 +24,7 @@ class VisitasController extends Controller
         // Obtener listas de datos auxiliares
         $consultores = Consultor::where('inactivo', false)->get();
         $users = User::where('inactivo', false)->get();
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         // Construcción de la consulta de visitas
         $visitasQuery = Visita::byDateRange($request->from, $request->until)

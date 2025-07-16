@@ -51,7 +51,7 @@ class EntradaEquiposController extends Controller
 
         $consultors = Consultor::where('inactivo', false)->get();
         $estatus = Estatus::where('inactivo', false)->get();
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('entradaequipos', [
             'entradaequipos' => $entradaequipos,

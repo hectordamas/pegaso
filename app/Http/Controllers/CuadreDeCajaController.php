@@ -31,7 +31,7 @@ public function index()
 }
 
     public function create(){
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('cuadreDeCaja.create', [
             'saclie' => $saclie
@@ -140,7 +140,7 @@ public function index()
     
     public function edit($id){
         $cuadre = CuadreDeCaja::findOrFail($id);
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('cuadreDeCaja.edit', compact('cuadre', 'saclie'));
     }

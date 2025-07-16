@@ -17,7 +17,7 @@ class EntregasController extends Controller
         ->whereIn('id', [11, 12, 13])
         ->get();   
 
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
         $client = $request->client;
 
         return view('entregas', [

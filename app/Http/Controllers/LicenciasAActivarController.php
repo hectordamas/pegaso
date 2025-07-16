@@ -19,7 +19,7 @@ class LicenciasAActivarController extends Controller
         ->byPagada($request->input('pagada'))
         ->get();
 
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         return view('licenciasAActivar.index', [
             'saclie' => $saclie,
@@ -99,8 +99,8 @@ class LicenciasAActivarController extends Controller
     public function edit($id)
     {
         $licencia = LicenciasAActivar::with('saclie')->findOrFail($id);
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
-
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
+        
         return view('licenciasAActivar.edit', compact('licencia', 'saclie'));
     }
 

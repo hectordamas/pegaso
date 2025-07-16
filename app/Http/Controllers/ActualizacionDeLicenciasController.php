@@ -8,7 +8,7 @@ use App\Models\{ActualizacionDeLicencias, Saclie};
 class ActualizacionDeLicenciasController extends Controller
 {
     public function index(Request $request){
-        $saclie = Saclie::orderby('descrip', 'asc')->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
         $actualizacionDeLicencias = ActualizacionDeLicencias::bySaclie($request->codclie)
         ->byStatus($request->status)

@@ -13,7 +13,7 @@ class CxCController extends Controller
     public function index(Request $request){
 		$wallet = Wallet::where('inactivo', false)->get();  
 		$tipomoneda = TipoMoneda::where('codmoneda', 2)->where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip','asc')->get();
+		$saclie = Saclie::orderby('descrip','asc')->where('activo', true)->get();
         $client = $request->client;
 
         return view('cxc', [
@@ -243,7 +243,7 @@ class CxCController extends Controller
 
     public function reportes(Request $request)
     {
-        $saclie = Saclie::orderBy('descrip', 'asc')->get();
+        $saclie = Saclie::orderBy('descrip', 'asc')->where('activo', true)->get();
         $abonos = DetalleCxC::byDateRange($request->from, $request->until)
         ->bySaclie($request->codclie)
         ->orderBy('codcxc', 'desc')

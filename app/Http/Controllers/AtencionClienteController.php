@@ -46,7 +46,7 @@ class AtencionClienteController extends Controller
 		}
 	
 		// Obtener datos auxiliares para los selects
-		$saclie = Saclie::orderby('descrip', 'asc')->get();
+		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 		$consultors = Consultor::where('inactivo', false)->get();
 		$estatusAt = EstatusAt::where('inactivo', false)->get();
 	

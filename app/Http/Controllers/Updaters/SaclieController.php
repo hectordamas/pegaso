@@ -24,7 +24,9 @@ class SaclieController extends Controller
 			$data['rif'][$i]     = @$datosReq[$i]['Rif'];
 			$data['evento'][$i]     = @$datosReq[$i]['Evento'];
 			$data['email'][$i]     = @$datosReq[$i]['Email'];
-			$data['telef'][$i]     = @$datosReq[$i]['Telef'];
+			$data['telef'][$i]     = @$datosReq[$i]['Telef'];			
+			$data['activo'][$i]     = @$datosReq[$i]['Activo'];
+
 		}
 		
 		//return $data;
@@ -46,6 +48,7 @@ class SaclieController extends Controller
     				$pgSQL->rif=@$data['rif'][$i];
 					$pgSQL->email=@$data['email'][$i];
 					$pgSQL->telef=@$data['telef'][$i];
+					$pgSQL->activo=@$data['activo'][$i];
     				$pgSQL->fechaupdate= date('Y-m-d H:i:s');
     	    		$pgSQL->save();	
     			}else{
@@ -54,6 +57,7 @@ class SaclieController extends Controller
     				$pgConsulSQL->fechaupdate= date('Y-m-d H:i:s');
 					$pgConsulSQL->email=@$data['email'][$i];
 					$pgConsulSQL->telef=@$data['telef'][$i];
+					$pgSQL->activo=@$data['activo'][$i];
     				$pgConsulSQL->save();
     		
     			    $cxc = CxC::where('codclie','=',$data['codclie'][$i])->update([ 'cliente' => @$data['rif'][$i]." | ".@$data['descrip'][$i] ]);
