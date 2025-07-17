@@ -55,6 +55,7 @@
                         <tr>
                             <th>#</th>
                             <th>Fecha</th>
+                            <th>Fecha de Abono</th>
                             <th>Cliente</th>
                             <th>Observación</th>
                             <th>Descripción</th>
@@ -70,6 +71,7 @@
                         <tr>
                             <td><p>{{$reg->codcxc}}</p></td>
                             <td><p>{{date('d/m/Y', strtotime($reg->fecha))}}</p></td>
+                            <td>{{ $reg->fechaDePago ? \Carbon\Carbon::parse($item->fechaDePago)->format('d-m-Y') : 'N/R' }}</td>
                             <td><p>{{$reg->cxc->cliente ?? 'N/A'}}</p></td>
                             <td><p>{{$reg->observacion}}</p></td>
                             <td><p>{{$reg->descripcion}}</p></td>
