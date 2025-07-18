@@ -55,7 +55,7 @@
                         <tr>
                             <th>#</th>
                             <th>Fecha</th>
-                            <th>Fecha de Abono</th>
+                            <th>Fecha de Pago</th>
                             <th>Cliente</th>
                             <th>Observación</th>
                             <th>Descripción</th>

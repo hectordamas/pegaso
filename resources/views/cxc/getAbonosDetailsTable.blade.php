@@ -5,7 +5,7 @@
             <tr>
                 <th>#</th>
                 <th>Fecha</th>
-                <th>Fecha de Abono</th>
+                <th>Fecha de Pago</th>
                 <th>Descripción</th>
                 <th>Método de Pago</th>
                 <th>Monto</th>

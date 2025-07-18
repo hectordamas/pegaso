@@ -243,7 +243,7 @@
 
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label for="fechaDePago">Fecha de Abono</label>
+                        <label for="fechaDePago">Fecha de Pago</label>
                         <input type="date" class="form-control" name="fechaDePago" id="fechaDePago" value="{{ date('Y-m-d') }}" required>
                     </div>
 
