@@ -4,6 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>Fecha</th>
+                <th>Fecha de Emisión</th>
                 <th>Cliente</th>
                 <th>Observación</th>
                 <th>Moneda</th>
@@ -17,6 +18,7 @@
             <tr>
                 <td><p>{{ $cxc->codcxc }}</p></td>
                 <td><p>{{ \Carbon\Carbon::parse($cxc->fecha)->format('d-m-Y') }}</p></td>
+                <td><p>{{ $cxc->fecha_emision ? \Carbon\Carbon::parse($cxc->fecha_emision)->format('d-m-Y') : 'N/R' }}</p></td>
                 <td><p>{{ $cxc->cliente }}</p></td>
                 <td><p>{{ $cxc->observacion }}</p></td>
                 <td><p>{{ $cxc->moneda->nombre }}</p></td>
