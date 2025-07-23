@@ -120,7 +120,8 @@ class PresupuestosController extends Controller
 
                 $cxc = new CxC();
                 $cxc->codwallet	= 1;			
-                $cxc->fecha	= date('Y-m-d');			
+                $cxc->fecha	= date('Y-m-d');
+                $cxc->fecha_emision	= $presupuesto->fechae;						
                 $cxc->codmoneda	= 2;			
                 $cxc->codtipomoneda	= 4;		
                 $cxc->codclie = $presupuesto->saclie->codclie;			

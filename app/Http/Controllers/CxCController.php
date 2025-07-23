@@ -40,7 +40,8 @@ class CxCController extends Controller
 								
 		$reg = new CxC();
 		$reg->codwallet	= $codwallet;			
-		$reg->fecha	= date('Y-m-d');			
+		$reg->fecha	= date('Y-m-d');	
+        $reg->fecha_emision = $request->fecha;		
 		$reg->codmoneda	= $codmoneda;			
 		$reg->codtipomoneda	= $codtipomoneda;		
 		$reg->codclie = $codclie;			
