@@ -160,11 +160,9 @@
                             @foreach ($agrupadoPorResponsable as $responsable => $items)
                                 @foreach ($items as $index => $item)
                                     <tr>
-                                        @if ($index === 0)
-                                            <td rowspan="{{ count($items) }}" class="align-middle text-uppercase">
-                                                Saldo - {{ $responsable }} - {{ strtoupper($item['tipo_pago']) }}
-                                            </td>
-                                        @endif
+                                        <td class="align-middle text-uppercase">
+                                            Saldo - {{ $responsable }} - {{ strtoupper($item['tipo_pago']) }}
+                                        </td>
                                         <td>${{ number_format($item['saldo'], 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach
