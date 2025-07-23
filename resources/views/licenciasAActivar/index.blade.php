@@ -98,7 +98,19 @@
                                 <td>{{ $item->saclie->rif }}</td>
                                 <td>{{ $item->saclie->descrip }}</td>
                                 <td>{{ $item->descripcion }}</td>
-                                <td>{{ $item->licencias }}</td>
+                                <td>
+                                    @if($item->licenciasRelacionadas && $item->licenciasRelacionadas->count())
+                                        <ul style="list-style-type: disc; padding-left: 1.2rem; margin: 0;">
+                                            @foreach ($item->licenciasRelacionadas as $lic)
+                                                <li>{{ $lic->nombre }}@if($lic->duracion) ({{ $lic->duracion }})@endif</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <ul style="list-style-type: disc; padding-left: 1.2rem; margin: 0;">
+                                            <li>{{ $item->licencias }}</li>
+                                        </ul>
+                                    @endif
+                                </td>                               
                                 <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
                                 <td class="text-success fw-bold">$ {{ number_format($item->monto, 2, '.', ',') }}</td>
                                 <td>{{ $item->serial ?? 'N/R' }}</td>
@@ -278,11 +290,16 @@
                             <label class="control-label">Descripción</label>
                             <input type="text" class="form-control" id="descripcion" name="descripcion">
                         </div>
-
                         
                         <div class="col-md-6 form-group">
                             <label class="control-label">Licencias</label>
-                            <input type="text" class="form-control" id="licencias" name="licencias" required>
+                            <select class="form-control js-example-basic-single" id="licencias" name="licencias[]" multiple="multiple" required>
+                                @foreach ($licencias as $licencia)
+                                    <option value="{{ $licencia->id }}" {{ in_array($licencia->id, old('licencias', $licenciasSeleccionadas ?? [])) ? 'selected' : '' }}>
+                                        {{ $licencia->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="col-md-6 form-group">

@@ -33,8 +33,15 @@
                     </div>
                 
                     <div class="form-group col-md-3">
-                        <label for="licencias">Cantidad de Licencias</label>
-                        <input type="text" class="form-control" name="licencias" value="{{ $licencia->licencias }}" required>
+                        <label for="licencias">Licencias</label>
+                        <select name="licencias[]" id="licencias" class="form-control js-example-basic-single" multiple required>
+                            @foreach ($licencias as $l)
+                                <option value="{{ $l->id }}" 
+                                    {{ in_array($l->id, old('licencias', $licenciasSeleccionadas ?? [])) ? 'selected' : '' }}>
+                                    {{ $l->nombre }}@if($l->duracion) ({{ $l->duracion }})@endif
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 
                     <div class="form-group col-md-3">

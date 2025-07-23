@@ -419,6 +419,10 @@ $(document).ready(function(){
 			width: '100%', // Ocupar todo el ancho disponible
 			dropdownParent: $('#LicenciasModalCreate')
 		});
+		$('#licencias').select2({
+			width: '100%', // Ocupar todo el ancho disponible
+			dropdownParent: $('#LicenciasModalCreate')
+		});
 	})
 	
 })

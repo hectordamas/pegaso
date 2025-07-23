@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Traits\VerifyPermissions;
-use App\Models\{LicenciasAActivar, Saclie, ComprobanteLicencia};
+use App\Models\{LicenciasAActivar, Saclie, ComprobanteLicencia, Licencia};
 
 class LicenciasAActivarController extends Controller
 {
@@ -21,9 +21,12 @@ class LicenciasAActivarController extends Controller
 
 		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
+        $licencias = Licencia::all();
+
         return view('licenciasAActivar.index', [
             'saclie' => $saclie,
-            'licenciasAActivar' => $licenciasAActivar
+            'licenciasAActivar' => $licenciasAActivar,
+            'licencias' => $licencias
         ]);
     }
 
@@ -33,7 +36,6 @@ class LicenciasAActivarController extends Controller
         $request->validate([
             'codclie'     => 'required|exists:saclie,codclie',
             'descripcion' => 'required|string|max:255',
-            'licencias'   => 'required|string|max:100',
             'fechadepago' => 'required|date',
             'monto'       => 'required',
             'activada'    => 'nullable|boolean',
@@ -45,7 +47,6 @@ class LicenciasAActivarController extends Controller
         $licencia->codclie     = $request->codclie;
         $licencia->serial     = $request->serial;
         $licencia->descripcion = $request->descripcion;
-        $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
 		$licencia->monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
         $licencia->notas       = $request->notas;
@@ -66,9 +67,10 @@ class LicenciasAActivarController extends Controller
                 $comprobante->save();
             }
         }
-        
         $licencia->save();
-    
+        
+        $licencia->licenciasRelacionadas()->sync($request->input('licencias')); // array de IDs
+
         return redirect()->back()->with('message', 'Licencia registrada exitosamente.');
     }
 
@@ -98,29 +100,32 @@ class LicenciasAActivarController extends Controller
 
     public function edit($id)
     {
-        $licencia = LicenciasAActivar::with('saclie')->findOrFail($id);
-		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
-        
-        return view('licenciasAActivar.edit', compact('licencia', 'saclie'));
+        $licencia = LicenciasAActivar::with(['saclie', 'licenciasRelacionadas'])->findOrFail($id);
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
+        $licenciasSeleccionadas = $licencia->licenciasRelacionadas->pluck('id')->toArray();
+        $licencias = Licencia::all();
+
+        return view('licenciasAActivar.edit', compact('licencia', 'saclie', 'licencias', 'licenciasSeleccionadas'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'licencias'   => 'required|string|max:100',
             'notas'       => 'nullable|string',
         ]);
 
         $licencia = LicenciasAActivar::findOrFail($id);
         $licencia->codclie     = $request->codclie;
         $licencia->descripcion = $request->descripcion;
-        $licencia->licencias   = $request->licencias;
         $licencia->fechadepago = $request->fechadepago;
 		$licencia->monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada');
         $licencia->pagada      = $request->has('pagada');
         $licencia->serial     = $request->serial;
+
+        $licencia->licenciasRelacionadas()->sync($request->input('licencias')); // array de IDs
+
         $licencia->save();
 
         return redirect('licencias-a-activar')->with('message', 'Licencia actualizada exitosamente.');

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{Saclie, ComprobanteLicencia};
+use App\Models\{Saclie, ComprobanteLicencia, Licencia};
 use Carbon\Carbon;
 
 class LicenciasAActivar extends Model
@@ -19,6 +19,11 @@ class LicenciasAActivar extends Model
 
     public function comprobantes(){
         return $this->hasMany(ComprobanteLicencia::class, 'licencia_id', 'id');
+    }
+
+    public function licenciasRelacionadas()
+    {
+        return $this->belongsToMany(Licencia::class, 'licencia_licenciasaactivar', 'licenciasaactivar_id', 'licencia_id');
     }
 
     public function scopeByDateRange($query, $from, $until){
