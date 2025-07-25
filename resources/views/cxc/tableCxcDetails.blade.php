@@ -30,7 +30,7 @@
         </tbody>
         <tfoot class="table-dark">
             <tr>
-                <th colspan="5">
+                <th colspan="6">
                     Totales
                 </th>
                 <th>{{ number_format($cxcs->sum('monto'), 2, '.', ',') }}</th>
