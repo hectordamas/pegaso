@@ -112,8 +112,8 @@
                                         </ul>
                                     @endif
                                 </td>                               
-                                <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
+                                <td>{{ $item->fechadepago ? \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') : 'N/R' }}</td>
+                                <td>{{ $item->created_at ? \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') : 'N/R'}}</td>
                                 <td class="text-success fw-bold">$ {{ number_format($item->monto, 2, '.', ',') }}</td>
                                 <td>{{ $item->serial ?? 'N/R' }}</td>
                                 <td>
