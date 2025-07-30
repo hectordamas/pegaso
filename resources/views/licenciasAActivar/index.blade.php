@@ -79,6 +79,7 @@
                             <th>Descripción</th>
                             <th>Licencias</th>
                             <th>Fecha de Pago</th>
+                            <th>Fecha de Registro</th>
                             <th>Monto</th>
                             <th>Serial</th>
                             <th>Pago Cliente</th>
@@ -112,6 +113,7 @@
                                     @endif
                                 </td>                               
                                 <td>{{ \Carbon\Carbon::parse($item->fechadepago)->format('d-m-Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y') }}</td>
                                 <td class="text-success fw-bold">$ {{ number_format($item->monto, 2, '.', ',') }}</td>
                                 <td>{{ $item->serial ?? 'N/R' }}</td>
                                 <td>
