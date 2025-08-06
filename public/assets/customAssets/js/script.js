@@ -224,7 +224,7 @@ $(document).ready(function(){
 
 	//--------------------------Atencion al Cliente------------------------------------------------------------
 
-    $("#direccionconex, #telefonoComunicaciones, #telefonocel").inputmask(); // Aplica el formato IP automáticamente
+    $("#telefonoComunicaciones, #telefonocel").inputmask(); // Aplica el formato IP automáticamente
 
     $(function () {
         $("[data-toggle='tooltip']").tooltip(); //Tooltip
