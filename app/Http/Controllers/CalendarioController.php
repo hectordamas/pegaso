@@ -62,7 +62,7 @@ class CalendarioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'codconsultor' => 'required|exists:consultor,id',
+            'codconsultor' => 'required',
             'desde' => 'required|date',
             'title' => 'required|string|max:255',
             'eventType' => 'required|string',
