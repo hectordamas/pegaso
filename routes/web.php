@@ -48,7 +48,7 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('getHomeData', [HomeController::class, 'getHomeData'])->name('getHomeData');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
 
     //Modulo de Atencion al Cliente
     Route::controller(AtencionClienteController::class)->group(function() {

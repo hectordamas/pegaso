@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'menu.permission' => \App\Http\Middleware\MenuPermissionMiddleware::class,
+        'prevent.duplicate' => \App\Http\Middleware\PreventDuplicateSubmission::class,
 
     ];
 }

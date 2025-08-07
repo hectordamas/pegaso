@@ -370,7 +370,11 @@
     </script>
     @endforeach
 
-
+<script>
+    $('form').on('submit', function() {
+        $(this).find('button[type=submit]').prop('disabled', true).text('Procesando...');
+    });
+</script>
 
 
 </body>
