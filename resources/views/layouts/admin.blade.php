@@ -372,7 +372,12 @@
 
 <script>
     $('form').on('submit', function() {
-        $(this).find('button[type=submit]').prop('disabled', true).text('Procesando...');
+        const $btn = $(this).find('button[type=submit]');
+        $btn.prop('disabled', true).text('Procesando...');
+
+        setTimeout(() => {
+            $btn.prop('disabled', false).text('Guardar');
+        }, 5000); // 5 segundos para poder enviar otra vez
     });
 </script>
 
