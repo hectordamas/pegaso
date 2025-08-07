@@ -371,19 +371,39 @@
     @endforeach
 
 <script>
-    $('form').on('submit', function() {
+    // Desactiva botón submit en formularios
+    $('form').on('submit', function () {
         const $btn = $(this).find('button[type=submit]');
-        $btn.prop('disabled', true);
-
+        $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
     });
 
-    $(document).ajaxComplete(function(event, xhr, settings) {
-        $('form').each(function() {
-            $(this).find('button[type=submit]').prop('disabled', false);
+    // Desactiva botones individuales (fuera de <form>)
+    $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').on('click', function () {
+        const $btn = $(this);
+        $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
+    });
+
+    // Al finalizar cualquier AJAX, reactivamos todos los botones
+    $(document).ajaxComplete(function () {
+        // Reactivar botones de formularios
+        $('form').each(function () {
+            const $btn = $(this).find('button[type=submit]');
+            $btn.prop('disabled', false);
+            if ($btn.data('original-text')) {
+                $btn.text($btn.data('original-text'));
+            }
+        });
+
+        // Reactivar los botones individuales
+        $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').each(function () {
+            const $btn = $(this);
+            $btn.prop('disabled', false);
+            if ($btn.data('original-text')) {
+                $btn.text($btn.data('original-text'));
+            }
         });
     });
 </script>
-
 
 </body>
 
