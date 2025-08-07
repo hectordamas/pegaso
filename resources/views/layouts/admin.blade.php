@@ -373,11 +373,14 @@
 <script>
     $('form').on('submit', function() {
         const $btn = $(this).find('button[type=submit]');
-        $btn.prop('disabled', true).text('Procesando...');
+        $btn.prop('disabled', true);
 
-        setTimeout(() => {
-            $btn.prop('disabled', false).text('Registrar');
-        }, 5000); // 5 segundos para poder enviar otra vez
+    });
+
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        $('form').each(function() {
+            $(this).find('button[type=submit]').prop('disabled', false);
+        });
     });
 </script>
 
