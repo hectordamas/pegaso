@@ -376,7 +376,7 @@
         $btn.prop('disabled', true).text('Procesando...');
 
         setTimeout(() => {
-            $btn.prop('disabled', false).text('Guardar');
+            $btn.prop('disabled', false).text('Registrar');
         }, 5000); // 5 segundos para poder enviar otra vez
     });
 </script>
