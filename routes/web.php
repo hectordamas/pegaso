@@ -95,8 +95,17 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::get('proyectosData', 'data')->name('proyectos.data');
         Route::post('proyectos/update', 'update')->name('proyectos.update');
         Route::post('proyectos/ver-detalles/{id}', 'verDetalles');
-
+        Route::get('/proyectos/{id}/informe', 'getInforme');
+        Route::get('/proyectos/{id}/informe/edit', 'editarInforme')->name('proyectos.informe.edit')->middleware('menu.permission:135');
+        Route::put('/proyectos/{id}/informe', 'updateInforme');
         Route::post('/actualizar-saitemfac', 'actualizarEstado')->name('actualizar.saitemfac');
+    });
+    Route::get('/proyectos/{id}/informe/pdf', [ProyectosController::class, 'exportarPDF'])->name('proyectos.informe.pdf');
+    Route::get('/proyectos/{id}/informe', function ($id) {
+        $proyecto = \App\Models\Safact::findOrFail($id);
+        return response()->json([
+            'informe' => $proyecto->informe
+        ]);
     });
 
     Route::controller(ChatProyectoController::class)->group(function() {

@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Safact, Savend, EstatusPre, Saclie, saitemfac, SafactEstatusHistorial};
 use Carbon\Carbon;
+use App\Traits\VerifyPermissions;
+use Pdf;
 
 class ProyectosController extends Controller
 {
+    use VerifyPermissions;
+
     public function index(Request $request){
         $clientes = Saclie::all();
         $savend = Savend::where('activo', true)->get();
@@ -18,18 +22,22 @@ class ProyectosController extends Controller
 
 		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
         $client = $request->client;
+        $registra = $this->hasPermissions('registra');
 
         return view('proyectos', [
             'estatusPre' => $estatusPre, 
             'clientes' => $clientes,
             'savend' => $savend,
             'saclie' => $saclie,
-            'client' => $client
+            'client' => $client,
+            'registra' => $registra
         ]);
     }
 
     public function data(Request $request)
     {
+        $registra = $request->registra;
+
         $query = Safact::select('id', 'fechae','descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
             ->where('tipofac', 'F')
@@ -56,6 +64,7 @@ class ProyectosController extends Controller
 
         $data = [];
 
+
         foreach($query as $p){
             $row = [];
             $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
@@ -72,7 +81,7 @@ class ProyectosController extends Controller
             $row[] = '<p>' . ($p->factor ? number_format($p->mtototal / $p->factor, 2, ',', '.') : number_format(0, 2, ',', '.')) . '</p>';
             $row[] = '<p>' . ($p->savend->descrip ?? 'N/A') . '</p>';
             $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">'. ($p->estatusPre->nombre ?? "N/A"). '</span>';
-            $row[] = view('proyectos.actions', compact('p'))->render();
+            $row[] = view('proyectos.actions', compact('p', 'registra'))->render();
             $data[] = $row;
         }
     
@@ -143,6 +152,35 @@ class ProyectosController extends Controller
         return response()->json([
             'success' => true
         ]);
+    }
+
+    public function editarInforme($id)
+    {
+        $proyecto = Safact::findOrFail($id);
+        return view('proyectos.informe', compact('proyecto'));
+    }
+
+    public function getInforme($id)
+    {
+        $proyecto = Safact::findOrFail($id);
+        return response()->json(['informe' => $proyecto->informe]);
+    }
+
+    public function exportarPDF($id)
+    {
+        $proyecto = Safact::with(['savend', 'estatusPre'])->findOrFail($id);
+
+        $pdf = Pdf::loadView('proyectos.pdf', compact('proyecto'));
+        return $pdf->stream('informe_proyecto_'.$proyecto->id.'.pdf');
+    }
+    
+    public function updateInforme(Request $request, $id)
+    {
+        $proyecto = Safact::findOrFail($id);
+        $proyecto->informe = $request->informe;
+        $proyecto->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function verDetalles($id){

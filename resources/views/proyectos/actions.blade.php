@@ -13,7 +13,8 @@
     </span>
     @endif
 </a>
-@if(!in_array($p->codestatus, [4, 5, 6]))
+
+@if(!in_array($p->codestatus, [4, 5, 6]) && $registra)
 <a href="javascript:void(0);" 
     data-bs-toggle="modal" 
     data-bs-target="#ProyectoModalEdit"
@@ -22,6 +23,14 @@
     <i class="fas fa-edit"></i> Actualizar Estatus
 </a>
 @endif
+
+@if($registra)
+<a href="{{ route('proyectos.informe.edit', ['id' => $p->id]) }}" 
+   class="btn btn-danger">
+    <i class="fas fa-project-diagram"></i> Gestión de Proyectos
+</a>
+@endif
+
 <a href="javascript:void(0);" 
     onclick="proyectoDetalles({{ $p->id }})"
     class="btn btn-warning">

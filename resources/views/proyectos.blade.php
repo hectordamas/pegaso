@@ -32,6 +32,15 @@
     .status-card:active {
         transform: scale(0.95);
     }
+/* Fondo oscuro de CKEditor (detrás del diálogo) */
+.cke_dialog_background_cover {
+    z-index: 100000000000 !important; /* más alto que tu modal */
+}
+
+/* Diálogo de CKEditor */
+.cke_dialog {
+    z-index: 100000000001 !important; /* encima del fondo */
+}
 </style>
 @endsection
 
@@ -51,7 +60,7 @@
                 ['id' => 10, 'name' => 'Control de Calidad', 'count' => 0, 'color' => 'dark', 'icon' => 'fas fa-check-double'],
             ];
         @endphp
-
+        <input type="hidden" name="registra" value="{{ $registra }}" id="registra">
 
         {{-- Consultar Presupuestos por Estatus --}}
         <div class="owl-carousel owl-theme d-none d-md-block">
@@ -313,7 +322,7 @@
         let codclie = $('#client').val();
         let codvend = $('#codvend').val();
         let codestatus =  id || $('#estatus').val(); // this ahora está correctamente referenciado
-
+        let registra = $('#registra').val();
         $('#proyectos-table').DataTable({
             columns: [
                 { visible: false },           // columna 0: fecha cruda (oculta, para orden)
@@ -369,6 +378,7 @@
 				aoData.push( { "name": "codclie", "value": codclie } );
 				aoData.push( { "name": "codvend", "value": codvend } );
 				aoData.push( { "name": "codestatus", "value": codestatus } );
+                aoData.push( { "name": "registra", "value": registra } );
             },
             dom: 'Bfrtip',
 			buttons: [
