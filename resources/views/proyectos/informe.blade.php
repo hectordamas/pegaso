@@ -82,7 +82,7 @@
         $(function() {
             // Inicializar CKEditor
             editorInstance = CKEDITOR.replace('editorInforme', {
-                height: 400
+                height: 300
             });
 
             // Guardar informe

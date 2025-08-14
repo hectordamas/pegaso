@@ -148,6 +148,15 @@
             <p><strong>Razón: </strong> {{ $proyecto->razon }}</p>
         </div>
     @endif
+
+    @if($proyecto->informe)
+        <div class="col-md-12 mt-3">
+            <h6>Informe de Gestión de Proyecto</h6>
+        </div>
+        <div class="col-md-12 mt-3">
+            {!! $proyecto->informe !!}
+        </div>
+    @endif
 </div>
 
 
