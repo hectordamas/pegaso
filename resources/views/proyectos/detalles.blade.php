@@ -158,7 +158,7 @@
                 <div class="historial-mensaje">
                     <div class="historial-header">
                         <strong>{{ \App\Models\User::find($h->user_id)->name ?? 'Usuario' }}</strong>
-                        <small>{{ $h->created_at->format('d/m/Y H:i') }}</small>
+                        <small>{{ $h->created_at->format('d/m/Y H:i a') }}</small>
                     </div>
                     <div class="historial-body">
                         {!! $h->informe !!}

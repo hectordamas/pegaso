@@ -111,7 +111,7 @@
                 <span>RIF J-40163202-5</span>
             </td>
             <td width="30%" align="right">
-                <strong>Fecha: {{ \Carbon\Carbon::parse($proyecto->fechae)->format('d/m/Y h:i a') }}</strong>
+                <strong>Fecha: {{ \Carbon\Carbon::parse(now())->format('d/m/Y h:i a') }}</strong>
             </td>
         </tr>
     </table>
@@ -140,7 +140,7 @@
         <div id="informe-contenedor">
             @foreach($proyecto->historyitems as $h)
                 <div class="history-item">
-                    <div class="user">{{ \App\Models\User::find($h->user_id)->name ?? 'Usuario' }} - {{ $h->created_at->format('d/m/Y H:i') }}</div>
+                    <div class="user">{{ \App\Models\User::find($h->user_id)->name ?? 'Usuario' }} - {{ $h->created_at->format('d/m/Y H:i a') }}</div>
                     <div class="content">{!! $h->informe !!}</div>
                 </div>
             @endforeach
