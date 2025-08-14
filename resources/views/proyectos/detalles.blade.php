@@ -151,7 +151,7 @@
 
     @if($proyecto->historyitems->isNotEmpty())
         <div class="col-md-12 mt-3">
-            <strong>Informe de Gestión de Proyecto</strong>
+            <strong>Bitácora de Gestión de Proyecto</strong>
         </div>
         <div class="col-md-12 mt-3 historial-chat">
             @foreach($proyecto->historyitems as $h)
