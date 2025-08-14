@@ -457,6 +457,7 @@
                 
                     editorInstance.on('instanceReady', function () {
                         document.querySelector('.cke_top').style.display = 'none';
+                        document.querySelector('.cke_bottom').style.display = 'none';
                     });
                 }
   
