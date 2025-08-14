@@ -286,6 +286,8 @@
 @endsection
 
 @section('scripts')
+<script src="{{ asset('assets/adminty/assets/pages/ckeditor/ckeditor.js') }}"></script>
+
 <script>
     function convertirmonto(input){
 		$(".montopcd").on({
@@ -446,6 +448,17 @@
                 $("#ProyectoModalView").modal("show")
 				$('#productosProyecto').html(response.items);  
                 $("#loadingSpinner").css("display", "none");
+
+                let informeEl = document.querySelector('#informeProyecto');
+                if (informeEl) {
+                    editorInstance = CKEDITOR.replace(informeEl, {
+                        readOnly: true
+                    });
+                
+                    editorInstance.on('instanceReady', function () {
+                        document.querySelector('.cke_top').style.display = 'none';
+                    });
+                }
   
 			},
 			error: function(response){

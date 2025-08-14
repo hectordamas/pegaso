@@ -151,12 +151,12 @@
 
     @if($proyecto->informe)
         <div class="col-md-12 mt-3">
-            <h6>Informe de Gestión de Proyecto</h6>
+            <strong>Informe de Gestión de Proyecto</strong>
         </div>
-        <div class="col-md-12 mt-3 informe-contenedor">
-            <div class="informe-html">
-                {!! $proyecto->informe !!}
-            </div>
+        <div class="col-md-12 mt-3">
+            <textarea id="informeProyecto">
+            {!! $proyecto->informe !!}
+            </textarea>
         </div>
     @endif
 </div>
@@ -218,40 +218,4 @@
     .custom-checkbox:disabled::before {
         background: #e0e0e0;
     }
-
-    .informe-contenedor {
-    max-height: 400px; /* Ajusta según lo que necesites */
-    overflow: auto;    /* Scroll si se pasa del alto */
-    border: 1px solid #ddd;
-    padding: 10px;
-    background: #fff;
-}
-
-/* Aislar estilos para que no se mezclen con Bootstrap */
-.informe-html {
-    all: initial; /* Quita todos los estilos globales */
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-}
-
-/* Rehabilitar las etiquetas comunes de CKEditor */
-.informe-html h1,
-.informe-html h2,
-.informe-html h3,
-.informe-html h4,
-.informe-html h5,
-.informe-html h6,
-.informe-html p,
-.informe-html ul,
-.informe-html ol,
-.informe-html li,
-.informe-html table,
-.informe-html th,
-.informe-html td,
-.informe-html strong,
-.informe-html em {
-    all: unset; /* Resetea herencias no deseadas */
-    font-family: Arial, sans-serif;
-    line-height: 1.4;
-}
 </style>
