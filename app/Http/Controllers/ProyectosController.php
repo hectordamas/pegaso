@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Safact, Savend, EstatusPre, Saclie, saitemfac, SafactEstatusHistorial};
+use App\Models\{Safact, Savend, EstatusPre, Saclie, saitemfac, SafactEstatusHistorial, HistoryItem};
 use Carbon\Carbon;
 use App\Traits\VerifyPermissions;
 use Pdf;
@@ -168,19 +168,26 @@ class ProyectosController extends Controller
 
     public function exportarPDF($id)
     {
-        $proyecto = Safact::with(['savend', 'estatusPre'])->findOrFail($id);
+        $proyecto = Safact::with(['savend', 'estatusPre', 'historyitems'])->findOrFail($id);
 
         $pdf = Pdf::loadView('proyectos.pdf', compact('proyecto'));
-        return $pdf->stream('informe_proyecto_'.$proyecto->id.'.pdf');
+        return $pdf->stream('informe_'. $proyecto->descrip . '_' . $proyecto->numerod . '.pdf');
     }
     
     public function updateInforme(Request $request, $id)
     {
-        $proyecto = Safact::findOrFail($id);
-        $proyecto->informe = $request->informe;
-        $proyecto->save();
+        $request->validate([
+            'informe' => 'required|string',
+        ]);
 
-        return response()->json(['success' => true]);
+        // Crear nuevo registro de historial
+        HistoryItem::create([
+            'safact_id' => $id,
+            'user_id' => auth()->id(),
+            'informe' => $request->informe,
+        ]);
+
+        return redirect()->back()->with('message', 'Historial guardado correctamente.');
     }
 
     public function verDetalles($id){

@@ -448,18 +448,6 @@
                 $("#ProyectoModalView").modal("show")
 				$('#productosProyecto').html(response.items);  
                 $("#loadingSpinner").css("display", "none");
-
-                let informeEl = document.querySelector('#informeProyecto');
-                if (informeEl) {
-                    editorInstance = CKEDITOR.replace(informeEl, {
-                        readOnly: true
-                    });
-                
-                    editorInstance.on('instanceReady', function () {
-                        document.querySelector('.cke_top').style.display = 'none';
-                        document.querySelector('.cke_bottom').style.display = 'none';
-                    });
-                }
   
 			},
 			error: function(response){

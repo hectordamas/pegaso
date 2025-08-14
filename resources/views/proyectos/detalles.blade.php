@@ -149,14 +149,22 @@
         </div>
     @endif
 
-    @if($proyecto->informe)
+    @if($proyecto->historyitems->isNotEmpty())
         <div class="col-md-12 mt-3">
             <strong>Informe de Gestión de Proyecto</strong>
         </div>
-        <div class="col-md-12 mt-3">
-            <textarea id="informeProyecto">
-            {!! $proyecto->informe !!}
-            </textarea>
+        <div class="col-md-12 mt-3 historial-chat">
+            @foreach($proyecto->historyitems as $h)
+                <div class="historial-mensaje">
+                    <div class="historial-header">
+                        <strong>{{ \App\Models\User::find($h->user_id)->name ?? 'Usuario' }}</strong>
+                        <small>{{ $h->created_at->format('d/m/Y H:i') }}</small>
+                    </div>
+                    <div class="historial-body">
+                        {!! $h->informe !!}
+                    </div>
+                </div>
+            @endforeach
         </div>
     @endif
 </div>
@@ -218,4 +226,34 @@
     .custom-checkbox:disabled::before {
         background: #e0e0e0;
     }
+
+
+
+    .historial-chat {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.historial-mensaje {
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #e1f5fe; /* burbuja clara */
+}
+
+.historial-header {
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.historial-body {
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
 </style>

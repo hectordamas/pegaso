@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{EstatusPre, Savend, Saclie, ChatProyecto, ChatEntrega, saitemfac, SafactEstatusHistorial, CxC};
+use App\Models\{EstatusPre, Savend, Saclie, ChatProyecto, ChatEntrega, saitemfac, SafactEstatusHistorial, CxC, HistoryItem};
 use Carbon\Carbon;
 
-class Safact extends Model
-{
+class Safact extends Model {
+
     use HasFactory;
 
     protected $table = 'safact';
@@ -36,6 +36,11 @@ class Safact extends Model
     public function scopeByStatus($query, $codeStatus){
         if($codeStatus)
             return $query->whereIn('codestatus', [$codeStatus]);
+    }
+
+    public function historyItems()
+    {
+        return $this->hasMany(HistoryItem::class);
     }
 
     public function chatproyecto(){
