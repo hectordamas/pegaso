@@ -277,7 +277,17 @@ $(document).ready(function(){
 	window.btnViewDetails = function(button){
 		let modal = document.getElementById("SoporteModalView");
 		console.log(button)
-
+		// Mapeo de valor numérico a texto
+		const conexionMap = {
+		    1: 'AnyDesk',
+		    2: 'RustDesk',
+		    3: 'Team Viewer',
+		    4: 'Escritorio Remoto',
+		    5: 'Otros'
+		};
+		
+		// Obtener el número del atributo
+		let conexionNumero = button.getAttribute("data-conexion");
 		// Llenar el modal con los datos del botón
 		modal.querySelector(".modal-body").innerHTML = `
 			<p><strong>ID:</strong> ${button.getAttribute("data-id")}</p>
@@ -290,6 +300,8 @@ $(document).ready(function(){
 			</p>
 			<p><strong>Solicitud:</strong> ${button.getAttribute("data-solicitud")}</p>
 			<p><strong>Actividad:</strong> ${button.getAttribute("data-actividad")}</p>
+			<p><strong>Tipo de Conexión:</strong> ${conexionMap[conexionNumero] || ''}</p>
+			<p><strong>IP / ID:</strong> ${button.getAttribute("data-direccionconex")}</p>
 			<p><strong>Consultor:</strong> ${button.getAttribute("data-consultor")}</p>
 		`;
 	}

@@ -141,6 +141,8 @@
                                         data-color="{{ $item->estatusAt->color }}"
                                         data-solicitud="{{ $item->solicitud }}"
                                         data-actividad="{{ $item->actividad }}"
+                                        data-conexion="{{ $item->conexion }}"
+                                        data-direccionconex="{{ $item->direccionconex }}"
                                         data-consultor="{{ $item->consultor->nombre ?? '' }}"
                                         data-bs-target="#SoporteModalView"
                                         class="btn btn-warning">
