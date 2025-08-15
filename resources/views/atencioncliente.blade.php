@@ -117,8 +117,8 @@
                                         data-toggle="tooltip" 
                                         data-placement="top"
                                         title="Actualizar Estatus"
-                                        onclick="btnUpdateStatus({{ $item->id }});"
-
+                                       {{-- onclick="btnUpdateStatus({{ $item->id }}, '{{ $item->actividad }}');"--}}
+                                        data-actividad="{{ $item->actividad }}"
                                         class="btn btn-success btn-update-status" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#SoporteModalEdit"
@@ -301,7 +301,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label class="control-label">Actividad Realizada</label>
-                                <textarea required class="form-control" id="actividad" name="actividad" rows="5" onkeyup="this.value=this.value.toUpperCase();"></textarea>
+                                <textarea required class="form-control" id="actividadUpdate" name="actividad" rows="5" onkeyup="this.value=this.value.toUpperCase();"></textarea>
                             </div>
                         </div>
                     </div>
@@ -323,3 +323,17 @@
 </div>
 @endsection
 
+@section('scripts')
+<script>
+    // Al abrir el modal, llenar los campos
+$('#SoporteModalEdit').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget); // Botón que abrió el modal
+    let atencionId = button.data('id');
+    let actividad = button.data('actividad');
+
+    console.log(actividad)
+    $('#atencionClienteId').val(atencionId);
+    $('#actividadUpdate').val(actividad);
+});
+</script>
+@endsection

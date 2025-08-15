@@ -273,11 +273,6 @@ $(document).ready(function(){
 	})
 
 
-	//Actualizar id al hacer click en modal para actualizar estatus Atencion al cliente
-	window.btnUpdateStatus = function(atencionId){
-		console.log(atencionId)
-		$('#atencionClienteId').val(atencionId); // Asignar el valor al input oculto
-	}
 
 	window.btnViewDetails = function(button){
 		let modal = document.getElementById("SoporteModalView");
