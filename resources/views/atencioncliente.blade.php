@@ -186,8 +186,10 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label class="control-label">Estatus</label>
-                                <select name="codestatus" class="form-control" id="codestatus" readonly required>
-                                    <option value="1">PENDIENTE</option>                                                                                                                                                                                                                                                                                                                                 
+                                <select name="codestatus" class="form-control" id="codestatus" required>
+                                    @foreach($estatusAt as $estatus)
+                                        <option value="{{ $estatus->codestatus }}">{{ $estatus->nombre }}</option>
+                                    @endforeach                                                                                                                                                                                                                                                                                                               
                                 </select>
                             </div>
                         </div>
