@@ -100,7 +100,7 @@
                             @foreach ($atencionClientes as $item)
                             <tr>
                                 <td>{{ $item->id }}</td>
-                                <td><p class="fecha">{{ \Carbon\Carbon::parse($item->fecha)->format('d-m-Y g:i A') }}</p></td>
+                                <td><p class="fecha">{{ $item->created_at->format('d-m-Y g:i A') }}</p></td>
                                 <td><p>{{ $item->saclie->descrip ?? 'N/A' }}</p></td>
                                 <td>
                                     <span class="badge" style="background: {{$item->estatusAt->color}};">
