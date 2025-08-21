@@ -19,7 +19,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('eventos.store') }}" method="POST">
+                <form id="eventoForm" action="{{ route('eventos.store') }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-sm-6">
@@ -428,4 +428,35 @@
 	    });
 
     </script>
+
+<script>
+$(document).ready(function () {
+    $('form').on('submit', function (e) {
+        const $form = $(this);
+        const $btn = $form.find('button[type=submit]');
+
+        // --- Desactivar botón mientras procesa ---
+        $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
+
+        // --- Validación de fecha ---
+        if ($form.attr('id') === 'eventoForm') {
+            let fechaEvento = new Date($('#desde').val());
+            let ahora = new Date();
+
+            if (fechaEvento < ahora) {
+                e.preventDefault(); // Detiene el envío
+
+                alert("⚠️ La fecha programada no puede ser menor a la actual.");
+
+                $('#desde').focus();
+
+                // --- Reactivar botón ---
+                $btn.prop('disabled', false).text("Guardar");
+
+                return false;
+            }
+        }
+    });
+});
+</script>
 @endsection
