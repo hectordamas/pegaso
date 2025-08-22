@@ -206,6 +206,12 @@
 	                center: 'title',
 	                right: 'month,  listMonth, listDay'
 	            },
+                buttonText: {
+                    today:    'Hoy',
+                    month:    'Mes',
+                    listMonth:'Agenda',
+                    listDay:  'Hoy' // 🔹 aquí cambias el texto
+                },
                 eventBackgroundColor: '#f0f0f0',
                 locale: 'es',
 	            defaultDate: '{{ date("Y-m-d") }}',
