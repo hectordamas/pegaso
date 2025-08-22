@@ -202,9 +202,9 @@
 	    $(document).ready(function() {
 	        $('#calendar').fullCalendar({
 	            header: {
-	                left: 'prev,next today',
+	                left: 'prev,next',
 	                center: 'title',
-	                right: 'month,  listMonth'
+	                right: 'month,  listMonth, agendaDay'
 	            },
                 eventBackgroundColor: '#f0f0f0',
                 locale: 'es',
