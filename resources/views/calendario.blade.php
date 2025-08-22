@@ -204,7 +204,7 @@
 	            header: {
 	                left: 'prev,next',
 	                center: 'title',
-	                right: 'month,  listMonth, agendaDay'
+	                right: 'month,  listMonth, listDay'
 	            },
                 eventBackgroundColor: '#f0f0f0',
                 locale: 'es',
