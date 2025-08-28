@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $titulo }} DE EQUIPO</title>
     <style>
-        body { font-family: 'Courier', sans-serif; font-size: 10px; }
-        .title { text-align: left; font-weight: bold; font-size: 20px; margin-top: 10px; }
-        .sub-title { text-align: left; font-size: 10px; }
-        .info { text-align: justify; font-size: 10px; margin-top: 10px; }
-        .signature { text-align: justify; font-size: 10px; margin-top: 20px; }
+        body { 
+            font-family: Arial, Helvetica, sans-serif; 
+            font-size: 11px; 
+            line-height: 1.4;
+            color: #000;
+        }
+        .title { font-size: 22px; font-weight: bold; }
+        .sub-title { font-size: 11px; }
+        .info, .signature { font-size: 11px; text-align: left; }
     </style>
 </head>
 <body>
