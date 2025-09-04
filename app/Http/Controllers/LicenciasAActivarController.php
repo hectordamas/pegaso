@@ -52,6 +52,7 @@ class LicenciasAActivarController extends Controller
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada') ? true : false;
         $licencia->pagada      = $request->has('pagada') ? true : false;
+        $licencia->save();
 
         if ($request->hasFile('comprobantes')) {
             foreach ($request->file('comprobantes') as $archivo) {
@@ -67,7 +68,6 @@ class LicenciasAActivarController extends Controller
                 $comprobante->save();
             }
         }
-        $licencia->save();
         
         $licencia->licenciasRelacionadas()->sync($request->input('licencias')); // array de IDs
 
