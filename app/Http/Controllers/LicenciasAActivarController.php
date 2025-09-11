@@ -95,7 +95,6 @@ class LicenciasAActivarController extends Controller
         $licencia->save();
 
         return redirect()->back()->with('message', 'Comprobantes cargados con éxito!.');
-
     }
 
     public function edit($id)
@@ -118,7 +117,7 @@ class LicenciasAActivarController extends Controller
         $licencia->codclie     = $request->codclie;
         $licencia->descripcion = $request->descripcion;
         $licencia->fechadepago = $request->fechadepago;
-		$licencia->monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
+		$licencia->monto = str_replace(',','.',str_replace('.', '', $request->input('monto')));
         $licencia->notas       = $request->notas;
         $licencia->activada    = $request->has('activada');
         $licencia->pagada      = $request->has('pagada');
@@ -164,7 +163,6 @@ class LicenciasAActivarController extends Controller
     
         return response()->json(['success' => true, 'message' => 'Estado actualizado correctamente.']);
     }
-
 
     public function comprobantes($id)
     {

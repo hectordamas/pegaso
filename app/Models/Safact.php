@@ -85,5 +85,72 @@ class Safact extends Model {
         
     }
 
+    //Comisiones
+
+    // Total presupuestado (bruto)
+    public function getTotalPresupuestadoAttribute()
+    {
+        $factor = $this->factor ?: 1;
+        return $this->saitemfac->sum(fn($i) => $i->TotalItem / $factor);
+    }
+
+    public function getMontoTotalProductosAttribute(){
+        $items = $this->saitemfac;
+        $factor = $this->factor ?: 1;
+    
+        $productoTotal = $items->where('EsServ', false)->sum(fn($item) => $item->TotalItem / $factor);
+
+        return $productoTotal;
+    }
+
+    public function getMontoTotalServiciosAttribute(){
+        $items = $this->saitemfac;
+        $factor = $this->factor ?: 1;
+    
+        $servicioTotal = $items->where('EsServ', true)->sum(fn($item) => $item->TotalItem / $factor);
+
+        return $servicioTotal;
+    }
+
+    // Total abonado acumulado
+    public function getTotalAbonadoAttribute()
+    {
+        return $this->cxc?->detallecxc()->sum('monto') ?? 0;
+    }
+
+    // Total abonado en un mes específico
+    public function totalAbonadoMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+        return $this->cxc?->detallecxc()
+            ->whereMonth('fechaDePago', $mes)
+            ->whereYear('fechaDePago', $year)
+            ->sum('monto') ?? 0;
+    }
+
+    // Pendiente por cobrar
+    public function getPendienteAttribute()
+    {
+        return max(0, $this->total_presupuestado - $this->total_abonado);
+    }
+
+    // Total abonado a productos en un mes específico
+    public function totalAbonadoProductosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+        $abonadoMes = $this->totalAbonadoMes($mes, $year);
+    
+        return min($abonadoMes, $this->monto_total_productos);
+    }
+    
+    // Total abonado a servicios en un mes específico
+    public function totalAbonadoServiciosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+        $abonadoMes = $this->totalAbonadoMes($mes, $year);
+    
+        // Lo que sobra después de cubrir productos se va a servicios
+        return min(max(0, $abonadoMes - $this->monto_total_productos), $this->monto_total_servicios);
+    }
 
 }

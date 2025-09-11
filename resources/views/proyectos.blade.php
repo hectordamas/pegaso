@@ -171,6 +171,7 @@
                                     <th>Total Bs.</th>
                                     <th>Total USD.</th>
                                     <th>Vendedor</th>
+                                    <th>Abonado</th>
                                     <th>Estatus</th>
                                     <th>Acción</th>
                                 </tr>
@@ -341,6 +342,7 @@
                 null,                         // columna 11: total / factor
                 null,                         // columna 12: vendedor
                 null,                         // columna 13: estatus
+                null
             ],
             order: [[0, 'desc']],
             "bDeferRender": true,

@@ -171,6 +171,7 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::get('comisiones', 'index')->name('comisiones.index')->middleware('menu.permission:137');
         Route::get('comisiones/set/{id}', 'set')->name('comisiones.set')->middleware('menu.permission:137');
         Route::get('comisiones/vendedor/{id}', 'vendedor')->name('comisiones.vendedor')->middleware('menu.permission:137');
+        Route::get('comisiones/detalles/{id}', 'vendedor')->name('comisiones.detalles.vendedor')->middleware('menu.permission:137');
         Route::get('comisiones/balance', 'balance')->name('comisiones.balance')->middleware('menu.permission:137');
     });
 

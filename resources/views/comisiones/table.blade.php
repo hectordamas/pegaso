@@ -13,7 +13,7 @@
                     <th>Monto Servicio</th>
                     <th>Monto Gerencia</th>
                     <th>Gerente</th>
-                    <th>Configuración</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,6 +38,9 @@
                     <td>
                         <a href="{{ url('comisiones/vendedor/' . $c->id) }}" class="btn btn-inverse"  data-toggle="tooltip" data-placement="top" title="Configurar">
                             <i class="fas fa-cog"></i> 
+                        </a>
+                        <a href="{{ url('comisiones/detalles/' . $c->id) }}" class="btn btn-warning"  data-toggle="tooltip" data-placement="top" title="Detalles">
+                            <i class="fas fa-list"></i> 
                         </a>
                     </td>
                 </tr>

@@ -66,6 +66,11 @@ class ProyectosController extends Controller
 
 
         foreach($query as $p){
+            //Abonado
+            $total = ($p->tgravable / $p->factor);
+            $abono = $p->cxc?->abono ?? 0;
+            $porcentaje = $total > 0 ? ($abono * 100) / $total: 0;
+
             $row = [];
             $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
 
@@ -80,6 +85,7 @@ class ProyectosController extends Controller
             $row[] = '<p>' . number_format($p->mtototal, 2, ',', '.') . '</p>';
             $row[] = '<p>' . ($p->factor ? number_format($p->mtototal / $p->factor, 2, ',', '.') : number_format(0, 2, ',', '.')) . '</p>';
             $row[] = '<p>' . ($p->savend->descrip ?? 'N/A') . '</p>';
+            $row[] = '<p>' . number_format($porcentaje, 2, ',', '.') . '%</p>';
             $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">'. ($p->estatusPre->nombre ?? "N/A"). '</span>';
             $row[] = view('proyectos.actions', compact('p', 'registra'))->render();
             $data[] = $row;
