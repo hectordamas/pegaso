@@ -41,4 +41,11 @@ class CxC extends Model
     public function safact(){
         return $this->belongsTo(Safact::class, 'safact_id', 'id');
     }
+
+    public function ultimoPago()
+    {
+        return $this->hasOne(Detallecxc::class, 'codcxc')->latest('fechaDePago');
+    }
+
 }
+

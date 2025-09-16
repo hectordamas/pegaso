@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Savend, saitemfac};
+use App\Models\{Savend, saitemfac, Safact, DetalleCxC};
+use Carbon\Carbon;
 
 class ComisionesController extends Controller
 {
@@ -13,7 +14,7 @@ class ComisionesController extends Controller
 
     public function balance(Request $request)
     {
-        $vendedores = Savend::with(['safact.cxc', 'safact.saitemfac'])->where('activo', true)->get();
+        $vendedores = Savend::with(['safact.cxc', 'safact.saitemfac'])->where('activo', true)->whereIn('descrip', ['Dayana Velázquez', 'NATHACHA HERNANDEZ'])->get();
         $comisiones = [];
         $mes = $request->mes;
         $totalVentasDepartamento = 0;
@@ -102,4 +103,44 @@ class ComisionesController extends Controller
 
         return redirect("comisiones/vendedor/{$id}")->with('message', 'Configuración guardada con éxito');
     }
+    
+    public function detalles_vendedor($id){
+        $year = $year ?? date('Y');
+        $mes  = $mes ?? date('m');
+        $startOfMonth = Carbon::createFromDate($year, $mes, 1)->startOfDay();
+        $endOfMonth   = Carbon::createFromDate($year, $mes, 1)->endOfMonth()->endOfDay();
+
+        $savend = Savend::findOrFail($id);
+
+        $safacts = Safact::with([
+            'cxc.detallecxc', // aquí cargas todos los pagos
+            'savend'
+        ])
+        ->whereHas('cxc.detallecxc', function($q) use ($startOfMonth, $endOfMonth) {
+            $q->whereNotNull('fechaDePago');
+              /*->whereBetween('fechaDePago', [
+                  $startOfMonth->toDateString(), 
+                  $endOfMonth->toDateString()
+              ]);*/
+        })
+        ->where('codvend', $savend->codvend)
+        ->get();
+
+        return view('comisiones.detalle', [
+            'savend'  => $savend,
+            'safacts' => $safacts
+        ]);
+    }
+
+    public function comprobantes($safactId){
+        $safact = Safact::find($safactId);
+        $detallecxc = $safact->cxc->detallecxc;
+
+        $html = view('comisiones.partials.detallecxc', compact('detallecxc'))->render();
+
+        return response()->json([
+            'html' => $html
+        ]);
+    }
+
 }

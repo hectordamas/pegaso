@@ -453,8 +453,8 @@
         } else {
             alert("Clave incorrecta. No se eliminó la licencia.");
         }
-    });
- </script>
+    }); 
+</script>
 
 <script>
     function convertirmonto(input){

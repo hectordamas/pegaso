@@ -23,7 +23,21 @@ class Savend extends Model
     /* =======================================================
      * 1. Totales abonados en un mes (base para las comisiones)
      * ======================================================= 
+     * 
      * */
+
+    public function totalAbonadoProductos()
+    {
+        $year = $year ?? date('Y');
+        return $this->safact->sum(fn($f) => $f->totalAbonadoProductosMes($mes, $year));
+    }
+
+    public function totalAbonadoServicios()
+    {
+        $year = $year ?? date('Y');
+        return $this->safact->sum(fn($f) => $f->totalAbonadoServiciosMes($mes, $year));
+    }
+
 
     public function totalAbonadoProductosMes(int $mes, int $year = null)
     {
