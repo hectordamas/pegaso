@@ -9,9 +9,9 @@
                 <tr>
                     <th>#</th>
                     <th>Vendedor</th>
-                    <th>Monto Producto</th>
-                    <th>Monto Servicio</th>
-                    <th>Monto Gerencia</th>
+                    <th>Comisión Producto</th>
+                    <th>Comisión Servicio</th>
+                    <th>Comisión Gerencia</th>
                     <th>Total</th>
                     <th>Acciones</th>
                 </tr>
