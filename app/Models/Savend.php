@@ -20,7 +20,6 @@ class Savend extends Model
         return $this->hasMany(Saitemfac::class, 'CodVend', 'codvend');
     }
 
-
     //Comision gerencial 
     public function getComisionGerencial(int $mes, int $year = null)
     {

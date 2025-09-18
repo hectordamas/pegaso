@@ -192,13 +192,7 @@
     $(document).ready(function(){
         getComisionData(); // Ejecutar al iniciar la vista
 
-        $(document).on('change', 'input[type="checkbox"], #mes', function() {
-            getComisionData();
-        });
 
-        $(document).on('click', '.update-comisiones, #filtrar', function() {
-            getComisionData();
-        });
     });
 </script>
 @endsection

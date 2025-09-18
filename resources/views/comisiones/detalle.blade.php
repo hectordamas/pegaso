@@ -184,18 +184,23 @@
                                         <th class="bg-dark text-light">Comisión Gerencial (%)</th>
                                         <td>{{ $savend->comision_gerencia ? $savend->comision_gerencia .'%': 'N/A' }}</td>
                                     </tr>
-                                    @if($savend->comision_gerencia)
+                                </table>
+                            </div>
+
+                            <div class="mt-4">
+                                @if($savend->comision_gerencia)
+                                <table class="table table-bordered ">
                                     <tr>
                                         <th class="bg-dark text-light">Comisión Gerencial</th>
                                         <td colspan="5">
                                             ${{ number_format($savend->getComisionGerencial(8, 2025), 2, '.', ',') }}
-                                            <small class="text-muted">
+                                            <span class="text-muted">
                                                 ({{ $savend->comision_gerencia }}% sobre todo el departamento)
-                                            </small>
+                                            </span>
                                         </td>
                                     </tr>
-                                    @endif
                                 </table>
+                                @endif
                             </div>
 
 

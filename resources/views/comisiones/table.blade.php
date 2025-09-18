@@ -12,34 +12,36 @@
                     <th>Monto Producto</th>
                     <th>Monto Servicio</th>
                     <th>Monto Gerencia</th>
-                    <th>Gerente</th>
+                    <th>Total</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($comisiones as $c)
-                <tr class="comisiones-row" data-id="{{ $c->id }}">
-                    <td>{{ $c->id }}</td>
-                    <td>{{ $c->vendedor }}</td>
+                @foreach($data as $v)
+                <tr class="comisiones-row">
+                    <td>{{ $v->id }}</td>
+                    <td>{{ $v->nombre }}</td>
                     <td class="monto-producto">
-                        $ {{ number_format($c->comision_producto, 2, '.', ',') }}
+                        $ {{ number_format($v->comisionProducto, 2, '.', ',') }} (%{{$v->comision_producto}})
                     </td>
                     <td class="monto-servicio">
-                        $ {{ number_format($c->comision_servicio, 2, '.', ',') }}
+                        $ {{ number_format($v->comisionServicio, 2, '.', ',') }} (%{{$v->comision_servicio}})
                     </td>
                     <td class="monto-gerencia">
-                        $ {{ number_format($c->comision_gerencial, 2, '.', ',') }}
-                    </td>
-                    <td>
-                        @if($c->es_gerente) 
-                            <i class="fas fa-check fa-2x"></i>
+                        @if($v->comision_gerencia)
+                            $ {{ number_format($v->comisionGerencia, 2, '.', ',') }} (%{{$v->comision_gerencia}})
+                        @else
+                            N\A
                         @endif
                     </td>
                     <td>
-                        <a href="{{ url('comisiones/vendedor/' . $c->id) }}" class="btn btn-inverse"  data-toggle="tooltip" data-placement="top" title="Configurar">
+                        $ {{ number_format($v->totalConGerencia, 2, '.', ',') }}
+                    </td>
+                    <td>
+                        <a href="{{ url('comisiones/vendedor/' . $v->id) }}" class="btn btn-inverse" data-toggle="tooltip" data-placement="top" title="Configurar">
                             <i class="fas fa-cog"></i> 
                         </a>
-                        <a href="{{ url('comisiones/detalles/' . $c->id) }}" class="btn btn-warning"  data-toggle="tooltip" data-placement="top" title="Detalles">
+                        <a href="{{ url('comisiones/detalles/' . $v->id) }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Detalles">
                             <i class="fas fa-list"></i> 
                         </a>
                     </td>
