@@ -131,7 +131,7 @@
                                                     <a href="javascript:void(0);" 
                                                         onclick="presupuestoDetalles({{ $safact->id }})"
                                                         class="btn btn-warning">
-                                                        <i class="fas fa-list"></i> Ver Detalles
+                                                        <i class="fas fa-list"></i>
                                                     </a>
                                                 </td>
                                             </tr>
