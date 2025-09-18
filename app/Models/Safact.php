@@ -16,12 +16,6 @@ class Safact extends Model
 
     protected $table = 'safact';
 
-    /*
-    |--------------------------------------------------------------------------
-    | SCOPES
-    |--------------------------------------------------------------------------
-    */
-
     public function scopeByDateRange($query, $from, $until)
     {
         if ($from && $until) {
@@ -122,20 +116,69 @@ class Safact extends Model
         return $this->hasOne(Detallecxc::class, 'cxc_id')->latest('fechaDePago');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | MÉTODOS DE NEGOCIO / ACCESSORS
-    |--------------------------------------------------------------------------
-    */
 
-    // Total presupuestado (bruto)
-    public function getTotalPresupuestadoAttribute()
-    {
+    /* Datos de Proyectos */
+
+    //Base Imponible
+    public function base_imponible(){
         $factor = $this->factor ?: 1;
+
         return $this->tgravable / $factor;
     }
 
-    public function getMontoTotalProductosAttribute()
+    public function getAbonosMesesAnteriores(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->cxc?->detallecxc()->where(function ($q) use ($mes, $year) {
+                $q->whereYear('fechaDePago', '<', $year)->orWhere(function ($q2) use ($mes, $year) {
+                      $q2->whereYear('fechaDePago', $year)->whereMonth('fechaDePago', '<', $mes);
+                  });
+            })
+            ->sum('monto') ?? 0;
+    }
+
+    public function getAbonosMesActual(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->cxc?->detallecxc()->whereYear('fechaDePago', $year)->whereMonth('fechaDePago', $mes)
+        ->sum('monto') ?? 0;
+    }
+
+    public function abonadoPorcentaje(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return ($this->getAbonosMesActual($mes, $year) * 100) / ($this->getBaseImponibleRestante($mes, $year) ?: 1);
+    }
+
+    //Base imponible menos los abonos de meses anteriores
+    public function getBaseImponibleRestante(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        $acumulado = $this->getAbonosMesesAnteriores($mes, $year);
+
+        return $this->base_imponible() - $acumulado;
+    }
+
+    //Pendiente
+    public function pendiente(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->getBaseImponibleRestante($mes, $year) - $this->getAbonosMesActual($mes, $year);
+    }
+
+    //Pendiente Porcentaje
+    public function pendientePorcentaje(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+    
+        $restante = $this->getBaseImponibleRestante($mes, $year);
+        $pendiente = $this->pendiente($mes, $year);
+    
+        return ($pendiente * 100) / ($restante ?: 1);
+    }
+
+
+    /**  * Productos y Servicios * */
+    public function montoTotalProductos()
     {
         $factor = $this->factor ?: 1;
         return $this->saitemfac
@@ -143,7 +186,7 @@ class Safact extends Model
             ->sum(fn($i) => $i->TotalItem / $factor);
     }
 
-    public function getMontoTotalServiciosAttribute()
+    public function montoTotalServicios()
     {
         $factor = $this->factor ?: 1;
         return $this->saitemfac
@@ -151,101 +194,116 @@ class Safact extends Model
             ->sum(fn($i) => $i->TotalItem / $factor);
     }
 
-    // Total abonado acumulado
-    public function getTotalAbonadoAttribute()
+    public function totalAbonado()
     {
         return $this->cxc?->detallecxc()->sum('monto') ?? 0;
     }
 
-    // Total abonado en un mes específico
-    public function totalAbonadoMes(int $mes, int $year = null)
-    {
-        $year = $year ?? date('Y');
-        return $this->cxc?->detallecxc()
-            ->whereMonth('fechaDePago', $mes)
-            ->whereYear('fechaDePago', $year)
-            ->sum('monto') ?? 0;
-    }
-
-    // Pendiente por cobrar
-    public function getPendienteAttribute()
-    {
-        return max(0, $this->total_presupuestado - $this->total_abonado);
-    }
-
-    public function getPorcentajePendienteAttribute()
-    {
-        $total = $this->total_presupuestado;
-
-        if ($total <= 0) {
-            return 0; // evita división por cero
-        }
-
-        return round(($this->pendiente / $total) * 100, 2);
-    }
-
-    // Total abonado a productos en un mes específico
-    public function totalAbonadoProductosMes(int $mes, int $year = null)
-    {
-        $year = $year ?? date('Y');
-        $abonadoMes = $this->totalAbonadoMes($mes, $year);
-
-        return min($abonadoMes, $this->monto_total_productos);
-    }
-
-    // Total abonado a servicios en un mes específico
-    public function totalAbonadoServiciosMes(int $mes, int $year = null)
-    {
-        $year = $year ?? date('Y');
-        $abonadoMes = $this->totalAbonadoMes($mes, $year);
-
-        return min(
-            max(0, $abonadoMes - $this->monto_total_productos),
-            $this->monto_total_servicios
-        );
-    }
-
     // Total abonado a productos acumulado
-    public function getTotalAbonadoProductosAttribute()
+    public function totalAbonadoProductos()
     {
-        $abonado = $this->total_abonado;
+        $abonado = $this->totalAbonado();
 
         // Si no hay productos, no se asigna nada
-        if ($this->monto_total_productos <= 0) {
+        if ($this->montoTotalProductos() <= 0) {
             return 0;
         }
 
-        return min($abonado, $this->monto_total_productos);
+        return min($abonado, $this->montoTotalProductos());
     }
 
     // Total abonado a servicios acumulado
-    public function getTotalAbonadoServiciosAttribute()
+    public function totalAbonadoServicios()
     {
-        $abonado = $this->total_abonado;
+        $abonado = $this->totalAbonado();
 
         // Si no hay productos, todo el abonado se asigna a servicios
-        if ($this->monto_total_productos <= 0) {
-            return min($abonado, $this->monto_total_servicios);
+        if ($this->montoTotalProductos() <= 0) {
+            return min($abonado, $this->montoTotalServicios());
         }
 
         return min(
-            max(0, $abonado - $this->monto_total_productos),
-            $this->monto_total_servicios
+            max(0, $abonado - $this->montoTotalProductos()),
+            $this->montoTotalServicios()
         );
     }
 
-    //Comision Producto
-    public function getTotalComisionProductosAttribute(){
-        return $this->total_abonado_productos * ($this->savend->comision_producto / 100);
+    // Pendiente de productos este mes
+    public function pendienteProductosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+        $abonadoAnterior = $this->getAbonosMesesAnteriores($mes, $year);
+    
+        // Si abonado anterior cubre parte de productos
+        $restante = max(0, $this->montoTotalProductos() - $abonadoAnterior);
+    
+        return $restante;
+    }
+    
+    // Pendiente de servicios este mes
+    public function pendienteServiciosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+        $abonadoAnterior = $this->getAbonosMesesAnteriores($mes, $year);
+    
+        // Primero cubrimos productos con lo abonado
+        $restanteAbonos = max(0, $abonadoAnterior - $this->montoTotalProductos());
+    
+        // Lo pendiente de servicios es lo total menos lo cubierto
+        $restante = max(0, $this->montoTotalServicios() - $restanteAbonos);
+    
+        return $restante;
     }
 
-    //Comision Servicios
-    public function getTotalComisionServiciosAttribute(){
-        return $this->total_abonado_servicios * ($this->savend->comision_servicio / 100);
+    // Abonado a productos en este mes
+    public function abonadoProductosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+
+        $abonadoAnterior = $this->getAbonosMesesAnteriores($mes, $year);
+        $abonadoMes = $this->getAbonosMesActual($mes, $year);
+
+        $pendienteProductos = max(0, $this->montoTotalProductos() - $abonadoAnterior);
+
+        // Lo abonado este mes a productos es lo que alcance del pendiente
+        return min($abonadoMes, $pendienteProductos);
     }
 
-    //Total Comision
-    public function getTotalComisionesAttribute(){
-        return $this->total_comision_productos + $this->total_comision_servicios;
+    // Abonado a servicios en este mes
+    public function abonadoServiciosMes(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+
+        $abonadoAnterior = $this->getAbonosMesesAnteriores($mes, $year);
+        $abonadoMes = $this->getAbonosMesActual($mes, $year);
+
+        $pendienteProductos = max(0, $this->montoTotalProductos() - $abonadoAnterior);
+
+        // Primero se descuenta lo que va a productos
+        $abonadoProductosMes = min($abonadoMes, $pendienteProductos);
+
+        // Lo que sobra del abono del mes se va a servicios
+        return max(0, $abonadoMes - $abonadoProductosMes);
+    }
+
+
+
+    //Comisiones
+    public function totalComisionProducto(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->abonadoProductosMes($mes, $year) * ($this->savend->comision_producto / 100);
+    }
+
+    public function totalComisionServicio(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->abonadoServiciosMes($mes, $year) * ($this->savend->comision_servicio / 100);
+    }
+
+    public function totalComision(int $mes, int $year = null){
+        $year = $year ?? date('Y');
+
+        return $this->totalComisionProducto($mes, $year) + $this->totalComisionServicio($mes, $year);
     }
 }

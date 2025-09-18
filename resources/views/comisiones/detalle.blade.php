@@ -39,58 +39,91 @@
                     <div class="tab-pane fade show active" id="thismonth" role="tabpanel">
                         <div class="row">
                             <div class="col-md-12 table-responsive dt-responsive">
-                                <table class="table table-striped" id="atencion-clientes-table">
+                                <table id="ventasTable" class="table table-striped table-bordered nowrap">
                                     <thead class="table-dark">
-                                        <th>#</th>
-                                        <th>Presupuesto</th>
-                                        <th>Fecha Presupuesto</th>
-                                        <th>Último Pago</th>
-                                        <th>Tasa (Bs.)</th>
-                                        <th>Cliente</th>
-                                        <th>Base Imponible ($)</th>
-                                        <th>Total Productos ($)</th>
-                                        <th>Total Servicios ($)</th>
-                                        <th>Total Abonado ($)</th>
-                                        <th>Total Abonado Productos ($)</th>
-                                        <th>Total Abonado Servicios ($)</th>
-                                        <th>Comisión Productos ($)</th>
-                                        <th>Comisión Servicios ($)</th>
-                                        <th>Total Comisiones ($)</th>
-                                        <th>Pendiente Por Cobrar ($)</th>
-                                        <th>% Pendiente Por Cobrar ($)</th>
-                                        <th>Detalle Pagos</th>
+                                        <tr>
+                                            <th>#</th> 
+                                            <th>Presupuesto</th> 
+                                            <th>Fecha Presupuesto</th> 
+                                            <th>Último Pago</th> 
+                                            <th>Tasa (Bs.)</th> 
+                                            <th>Cliente</th> 
+                                            <th>Base Imponible ($)</th> 
+                                            <th>Total Productos</th> 
+                                            <th>Total Servicios</th> 
+                                            <th>Cobrado Productos ($)</th> 
+                                            <th>Cobrado Servicios ($)</th> 
+                                            <th>Total Cobrado ($)</th> 
+                                            <th>Cobrado (%)</th> 
+                                            <th>Comisión Producto ($)</th> 
+                                            <th>Comisión Servicio ($)</th> 
+                                            <th>Total Comisión ($)</th> 
+                                            <th>Pendiente Por Cobrar ($)</th> 
+                                            <th>Pendiente (%)</th> 
+                                            <th>Detalle Pagos</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $totalBaseImponible = 0;
+                                            $totalPendienteProductos = 0;
+                                            $totalPendienteServicios = 0;
+                                            $totalAbonadoProductos = 0;
+                                            $totalAbonadoServicios = 0;
+                                            $totalAbonosMes = 0;
+                                            $totalComisionProductos = 0;
+                                            $totalComisionServicios = 0;
+                                            $totalComision = 0;
+                                            $totalPendiente = 0;
+                                        @endphp
+                            
                                         @foreach ($safacts as $safact)
+                                            @php
+                                                $totalBaseImponible += $safact->getBaseImponibleRestante(8, 2025);
+                                                $totalPendienteProductos += $safact->pendienteProductosMes(8, 2025);
+                                                $totalPendienteServicios += $safact->pendienteServiciosMes(8, 2025);
+                                                $totalAbonadoProductos += $safact->abonadoProductosMes(8, 2025);
+                                                $totalAbonadoServicios += $safact->abonadoServiciosMes(8, 2025);
+                                                $totalAbonosMes += $safact->getAbonosMesActual(8, 2025);
+                                                $totalComisionProductos += $safact->totalComisionProducto(8, 2025);
+                                                $totalComisionServicios += $safact->totalComisionServicio(8, 2025);
+                                                $totalComision += $safact->totalComision(8, 2025);
+                                                $totalPendiente += $safact->pendiente(8, 2025);
+                                            @endphp
+                            
                                             <tr>
                                                 <td>{{ $safact->id }}</td>
                                                 <td>{{ $safact->numerod }}</td>
-                                                <td>{{ Carbon\Carbon::parse($safact->fechae)->format('d-m-Y') }}</td>
-                                                <td>{{ Carbon\Carbon::parse(optional($safact->cxc->ultimoPago)->fechaDePago)->format('d-m-Y')  }}</td>
-                                                <td>{{ $safact->factor }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($safact->fechae)->format('d-m-Y') }}</td>
+                                                <td>
+                                                    {{ optional(optional($safact->cxc)->ultimoPago)->fechaDePago
+                                                        ? \Carbon\Carbon::parse($safact->cxc->ultimoPago->fechaDePago)->format('d-m-Y')
+                                                        : '-' }}
+                                                </td>
+                                                <td>{{ number_format($safact->factor, 2) }}</td>
                                                 <td>{{ $safact->descrip }}</td>
-                                                <td>{{ number_format($safact->tgravable / ($safact->factor ?  $safact->factor : 1), 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->monto_total_productos, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->monto_total_servicios, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_abonado, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_abonado_productos, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_abonado_servicios, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_comision_productos, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_comision_servicios, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->total_comisiones, 2, ',', '.') }}</td>
-                                                <td>{{ number_format($safact->pendiente, 2, ',', '.') }}</td>
-                                                <td>{{ $safact->porcentaje_pendiente }}%</td>
-                                                <td> 
+                                                <td>{{ number_format($safact->getBaseImponibleRestante(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->pendienteProductosMes(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->pendienteServiciosMes(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->abonadoProductosMes(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->abonadoServiciosMes(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->getAbonosMesActual(8, 2025), 2, '.', ',')  }}</td>
+                                                <td>{{ round($safact->abonadoPorcentaje(8, 2025))  }}%</td>
+                                            
+                                                <td>{{ number_format($safact->totalComisionProducto(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->totalComisionServicio(8, 2025), 2, '.', ',') }}</td>
+                                                <td>{{ number_format($safact->totalComision(8, 2025), 2, '.', ',') }}</td>
+                                            
+                                                <td>{{ number_format($safact->pendiente(8, 2025), 2, '.', ',')  }}</td>
+                                                <td>{{ round($safact->pendientePorcentaje(8, 2025))  }}%</td>
+                                                <td>
                                                     <a 
-                                                        data-toggle="tooltip"
-                                                        data-placement="top"
-                                                        title="Ver Comprobantes"
-                                                        href="javascript:void(0);"
-                                                        class="btn btn-outline-info"
-                                                        onclick="cargarComprobantes({{ $safact->id }})"
+                                                        href="javascript:void(0)" 
+                                                        onclick="cargarComprobantes({{$safact->id}})" 
+                                                        class="btn btn-info"
                                                         data-bs-toggle="offcanvas"
                                                         data-bs-target="#filesOffCanvas">
-                                                        <i class="fas fa-file-invoice"></i>                                     
+                                                        <i class="fas fa-file-invoice"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -98,6 +131,73 @@
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            {{-- Tabla totalizadora aparte --}}
+                            <div class="mt-4">
+                                <h5>Totales</h5>
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <th class="bg-dark text-light">Base Imponible</th>
+                                        <td>${{ number_format($totalBaseImponible, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Total Productos</th>
+                                        <td>${{ number_format($totalPendienteProductos, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Total Servicios</th>
+                                        <td>${{ number_format($totalPendienteServicios, 2, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-dark text-light">Cobrado Productos.</th>
+                                        <td>${{ number_format($totalAbonadoProductos, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Cobrado Servicios.</th>
+                                        <td>${{ number_format($totalAbonadoServicios, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Total Cobrado</th>
+                                        <td>${{ number_format($totalAbonosMes, 2, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-dark text-light">Comisión Productos</th>
+                                        <td>${{ number_format($totalComisionProductos, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Comisión Servicio</th>
+                                        <td>${{ number_format($totalComisionServicios, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">Total Comisión</th>
+                                        <td>${{ number_format($totalComision, 2, '.', ',') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-dark text-light">Total Pendiente</th>
+                                        <td>${{ number_format($totalPendiente, 2, '.', ',') }}</td>
+                                        <th class="bg-dark text-light">% Cobrado</th>
+                                        <td>
+                                            {{ $totalBaseImponible > 0 
+                                                ? round((($totalAbonadoProductos + $totalAbonadoServicios) / $totalBaseImponible) * 100) 
+                                                : 0 }}%
+                                        </td>
+                                        <th class="bg-dark text-light">% Pendiente</th>
+                                        <td>
+                                            {{ $totalBaseImponible > 0 
+                                                ? round(($totalPendiente / $totalBaseImponible) * 100) 
+                                                : 0 }}%
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="bg-dark text-light">Comisión Productos (%)</th>
+                                        <td>{{ $savend->comision_producto }}%</td>
+                                        <th class="bg-dark text-light">Comisión Servicio (%)</th>
+                                        <td>{{ $savend->comision_servicio }}%</td>
+                                        <th class="bg-dark text-light">Comisión Gerencial (%)</th>
+                                        <td>{{ $savend->comision_gerencia ? $savend->comision_gerencia .'%': 'N/A' }}</td>
+                                    </tr>
+                                    @if($savend->comision_gerencia)
+                                    <tr>
+                                        <th class="bg-dark text-light">Comisión Gerencial</th>
+                                        <td colspan="5">
+                                            ${{ number_format($savend->getComisionGerencial(8, 2025), 2, '.', ',') }}
+                                            <small class="text-muted">
+                                                ({{ $savend->comision_gerencia }}% sobre todo el departamento)
+                                            </small>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                </table>
+                            </div>
+
 
                         </div>
                     </div>
