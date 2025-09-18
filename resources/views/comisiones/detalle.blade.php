@@ -61,6 +61,7 @@
                                             <th>Pendiente Por Cobrar ($)</th> 
                                             <th>Pendiente (%)</th> 
                                             <th>Detalle Pagos</th>
+                                            <th>Detalle Presupuesto</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -124,6 +125,13 @@
                                                         data-bs-toggle="offcanvas"
                                                         data-bs-target="#filesOffCanvas">
                                                         <i class="fas fa-file-invoice"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" 
+                                                        onclick="presupuestoDetalles({{ $safact->id }})"
+                                                        class="btn btn-warning">
+                                                        <i class="fas fa-list"></i> Ver Detalles
                                                     </a>
                                                 </td>
                                             </tr>
@@ -248,6 +256,26 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Para ver detalles de Presupuesto -->
+<div class="modal fade PresupuestoModalView" tabindex="-1" id="PresupuestoModalView" aria-labelledby="PresupuestoModalViewLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="PresupuestoModalViewLabel">Detalles del Presupuesto #<span class="presupuestoId"></span></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="productosPresupuesto">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    <i class="far fa-times-circle"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -281,5 +309,28 @@
 
         $('#comprobanteModal').modal('show');
     }
+
+    function presupuestoDetalles (presupuestoId){
+        $("#loadingSpinner").css("display", "flex");
+
+		$.ajax({
+			url: '{{ url("presupuestos/ver-detalles") }}' + '/' + presupuestoId, // Asegúrate de que esta ruta sea correcta
+			method: 'POST',
+			data: {
+				_token: '{{ csrf_token() }}'  // CSRF Token para seguridad
+			},
+			success: function(response) {
+                $('.presupuestoId').html(presupuestoId);
+                $("#PresupuestoModalView").modal("show")
+				$('#productosPresupuesto').html(response.items);  
+                $("#loadingSpinner").css("display", "none");
+  
+			},
+			error: function(response){
+				alert('Error de Conexión')
+				$("#loadingSpinner").css("display", "none");
+			}
+		});
+	}
 </script>
 @endsection
