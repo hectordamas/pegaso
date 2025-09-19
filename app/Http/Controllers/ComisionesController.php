@@ -25,7 +25,7 @@ class ComisionesController extends Controller
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
             ->with('cxc.detallecxc'); // precarga los pagos
         }])
-        ->whereIn('id', [24, 29])
+        ->where('activo', true)
         ->get();      
 
         $data = [];
