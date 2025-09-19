@@ -21,72 +21,41 @@
                 </a>
             </div>
             <div class="card-block">
-                <ul class="nav nav-tabs md-tabs mb-4" id="settingsTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link fw-bold active" id="thismonth-tab" data-bs-toggle="tab" href="#thismonth" type="button" role="tab">
-                            💸 Abonado Este Mes
-                        </a>
-                        <div class="slide"></div>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link fw-bold" id="info-tab" data-bs-toggle="tab" href="#info" type="button" role="tab">
-                            🧾 Por cobrar (Meses Anteriores)
-                        </a>
-                        <div class="slide"></div>
-                    </li>
-
-                </ul>   
-                
-                <div class="tab-content" id="settingsTabContent">
-                
-                    <!-- Abonado Este Mes -->
-                    <div class="tab-pane fade show active" id="thismonth" role="tabpanel">
-                        <div class="row">
-                            <div class="col-md-12 table-responsive dt-responsive">
-                                <table id="ventasTable" class="table table-striped table-bordered nowrap">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>#</th> 
-                                            <th>Presupuesto</th> 
-                                            <th>Fecha Presupuesto</th> 
-                                            <th>Último Pago</th> 
-                                            <th>Tasa (Bs.)</th> 
-                                            <th>Cliente</th> 
-                                            <th>Base Imponible ($)</th> 
-                                            <th>Total Productos</th> 
-                                            <th>Total Servicios</th> 
+                <div class="row">
+                    <div class="col-md-12 table-responsive dt-responsive">
+                        <table id="ventasTable" class="table table-striped table-bordered nowrap">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th> 
+                                    <th>Presupuesto</th> 
+                                    <th>Fecha Presupuesto</th> 
+                                    <th>Último Pago</th> 
+                                    <th>Tasa (Bs.)</th> 
+                                    <th>Cliente</th> 
+                                    <th>Base Imponible ($)</th> 
+                                    <th>Total Productos</th> 
+                                    <th>Total Servicios</th> 
                                             <th>Cobrado Productos ($)</th> 
                                             <th>Cobrado Servicios ($)</th> 
                                             <th>Total Cobrado ($)</th> 
                                             <th>Cobrado (%)</th> 
                                             <th>Comisión Producto ($)</th> 
-                                            <th>Comisión Servicio ($)</th> 
-                                            <th>Total Comisión ($)</th> 
-                                            <th>Pendiente Por Cobrar ($)</th> 
-                                            <th>Pendiente (%)</th> 
-                                            <th>Detalle Pagos</th>
-                                            <th>Detalle Presupuesto</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            {{-- Tabla totalizadora aparte --}}
-                            <div id="totalesComisiones">
-
-                            </div>
-
-                        </div>
+                                    <th>Comisión Servicio ($)</th> 
+                                    <th>Total Comisión ($)</th> 
+                                    <th>Pendiente Por Cobrar ($)</th> 
+                                    <th>Pendiente (%)</th> 
+                                    <th>Detalle Pagos</th>
+                                    <th>Detalle Presupuesto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                
-                    <!-- Por cobrar meses anteriores -->
-                    <div class="tab-pane fade" id="info" role="tabpanel">
-
+                    
+                    {{-- Tabla totalizadora aparte --}}
+                    <div id="totalesComisiones">
                     </div>
-
- 
                 </div>
             </div>
         </div>
