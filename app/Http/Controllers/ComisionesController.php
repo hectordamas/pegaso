@@ -22,7 +22,7 @@ class ComisionesController extends Controller
                   $endOfMonth->toDateString()
                 ]);
             })
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
             ->with('cxc.detallecxc'); // precarga los pagos
         }])
         ->whereIn('id', [24, 29])
@@ -106,7 +106,7 @@ class ComisionesController extends Controller
                   $endOfMonth->toDateString()
               ]);
         })
-        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
+        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
         ->where('codvend', $savend->codvend)
         ->get();
 

@@ -74,7 +74,7 @@
                             </div>
                             
                             {{-- Tabla totalizadora aparte --}}
-                            <div class="mt-4" id="totalesComisiones">
+                            <div id="totalesComisiones">
 
                             </div>
 
