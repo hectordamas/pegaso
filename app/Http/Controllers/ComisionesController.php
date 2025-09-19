@@ -91,28 +91,10 @@ class ComisionesController extends Controller
         $year = $year ?? date('Y');
         $mes  = $mes ?? date('m');
 
-        $startOfMonth = Carbon::createFromDate($year, $mes, 1)->startOfDay();
-        $endOfMonth   = Carbon::createFromDate($year, $mes, 1)->endOfMonth()->endOfDay();
-
         $savend = Savend::findOrFail($id);
-
-        $safacts = Safact::with([
-            'cxc.detallecxc', // aquí cargas todos los pagos
-            'savend'
-        ])
-        ->whereHas('cxc.detallecxc', function($q) use ($startOfMonth, $endOfMonth) {
-            $q->whereNotNull('fechaDePago')->whereBetween('fechaDePago', [
-                  $startOfMonth->toDateString(), 
-                  $endOfMonth->toDateString()
-              ]);
-        })
-        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-        ->where('codvend', $savend->codvend)
-        ->get();
 
         return view('comisiones.detalle', [
             'savend'  => $savend,
-            'safacts' => $safacts,
             'mes' => $mes,
             'id' => $id
         ]);
@@ -138,7 +120,7 @@ class ComisionesController extends Controller
                   $endOfMonth->toDateString()
               ]);
         })
-        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
+        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
         ->where('codvend', $savend->codvend)
         ->get();
 
