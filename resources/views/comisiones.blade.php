@@ -6,18 +6,18 @@
 
 @php
     $meses = collect([
-        ['numero' => 1, 'nombre' => 'Enero'],
-        ['numero' => 2, 'nombre' => 'Febrero'],
-        ['numero' => 3, 'nombre' => 'Marzo'],
-        ['numero' => 4, 'nombre' => 'Abril'],
-        ['numero' => 5, 'nombre' => 'Mayo'],
-        ['numero' => 6, 'nombre' => 'Junio'],
-        ['numero' => 7, 'nombre' => 'Julio'],
-        ['numero' => 8, 'nombre' => 'Agosto'],
-        ['numero' => 9, 'nombre' => 'Septiembre'],
-        ['numero' => 10, 'nombre' => 'Octubre'],
-        ['numero' => 11, 'nombre' => 'Noviembre'],
-        ['numero' => 12, 'nombre' => 'Diciembre'],
+        ['numero' => '01', 'nombre' => 'Enero'],
+        ['numero' => '02', 'nombre' => 'Febrero'],
+        ['numero' => '03', 'nombre' => 'Marzo'],
+        ['numero' => '04', 'nombre' => 'Abril'],
+        ['numero' => '05', 'nombre' => 'Mayo'],
+        ['numero' => '06', 'nombre' => 'Junio'],
+        ['numero' => '07', 'nombre' => 'Julio'],
+        ['numero' => '08', 'nombre' => 'Agosto'],
+        ['numero' => '09', 'nombre' => 'Septiembre'],
+        ['numero' => '10', 'nombre' => 'Octubre'],
+        ['numero' => '11', 'nombre' => 'Noviembre'],
+        ['numero' => '12', 'nombre' => 'Diciembre'],
     ])->map(fn($mes) => (object) $mes);
 @endphp
 
@@ -35,7 +35,7 @@
                         <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
                         <select name="mes" id="mes" class="form-control">
                             @foreach($meses as $m)
-                                <option {{ $m->numero == date('n') ? 'selected' : '' }} value="{{ $m->numero }}">
+                                <option {{ $m->numero == $mes ? 'selected' : '' }} value="{{ $m->numero }}">
                                     {{ $m->nombre }}
                                 </option>
                             @endforeach
