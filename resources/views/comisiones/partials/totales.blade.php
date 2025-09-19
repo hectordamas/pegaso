@@ -52,7 +52,7 @@
 
 <div class="mt-4">
     @if($savend->comision_gerencia)
-    <table class="table table-bordered ">
+    <table class="table table-bordered border-dark shadow">
         <tr>
             <th class="bg-dark text-light">Comisión Gerencial</th>
             <td colspan="5">
@@ -60,6 +60,12 @@
                 <span class="text-muted">
                     ({{ $savend->comision_gerencia }}% sobre todo el departamento)
                 </span>
+            </td>
+        </tr>
+        <tr>
+            <th class="bg-dark text-light">Total</th>
+            <td colspan="5">
+                ${{ number_format(($savend->getComisionGerencial($mes, $year) + $totalComision), 2, '.', ',') }}
             </td>
         </tr>
     </table>
