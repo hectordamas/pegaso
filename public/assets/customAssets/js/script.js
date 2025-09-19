@@ -14,8 +14,8 @@ function protegerExportacion(originalAction) {
 }
 
 function initializeDataTable() {
-	if($('#ventasTable').length || $('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#cuadre-table').length || $('#clientes-table').length){
-		tableApp = $('#ventasTable, #atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #cuadre-table, #clientes-table').DataTable({
+	if($('#atencion-clientes-table').length || $('#entrada-equipos-table').length || $('#comunicaciones-table').length || $('#visita-table').length || $('#cxc-report-table').length || $('#users-table').length || $('#cuadre-table').length || $('#clientes-table').length){
+		tableApp = $('#atencion-clientes-table, #entrada-equipos-table, #comunicaciones-table, #visita-table, #cxc-report-table, #users-table, #cuadre-table, #clientes-table').DataTable({
 			deferRender: true, // Solo renderiza lo visible
 			order: [[0, 'desc']],
 			responsive: true,

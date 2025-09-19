@@ -30,170 +30,89 @@
                 <span>Filtra y analiza las comisiones del equipo de ventas</span>
             </div>
             <div class="card-block">
-                <div class="row">    
+                <form class="row" action="{{ url('comisiones') }}">    
                     <div class="col-md-6 form-group">
                         <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
                         <select name="mes" id="mes" class="form-control">
-                            @foreach($meses as $mes)
-                                <option {{ $mes->numero == date('n') ? 'selected' : '' }} value="{{ $mes->numero }}">
-                                    {{ $mes->nombre }}
+                            @foreach($meses as $m)
+                                <option {{ $m->numero == date('n') ? 'selected' : '' }} value="{{ $m->numero }}">
+                                    {{ $m->nombre }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
     
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-primary" id="filtrar">
+                        <button type="submit" class="btn btn-primary" id="filtrar">
                             <i class="fas fa-search"></i> Filtrar
                         </button>
                     </div>
     
-                </div>
+                </form>
             </div>
         </div>
     </div>
     
-    <div class="col-md-12" id="comisionesContainer">
-
+    <div class="col-md-10" id="comisionesContainer">
+        <div class="card">
+            <div class="card-header">
+                <h5>Equipo de Ventas</h5>
+                <span class="text-muted">Administración de comisiones y gerencia</span>
+            </div>
+            <div class="card-block dt-responsive table-responsive">
+                <table class="table table-striped table-bordered" id="comisiones-table">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Vendedor</th>
+                            <th>Comisión Producto</th>
+                            <th>Comisión Servicio</th>
+                            <th>Comisión Gerencia</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data as $v)
+                        <tr>
+                            <td>{{ $v->nombre }}</td>
+                            <td class="monto-producto">
+                                $ {{ number_format($v->comisionProducto, 2, '.', ',') }} ({{$v->comision_producto}}%)
+                            </td>
+                            <td class="monto-servicio">
+                                $ {{ number_format($v->comisionServicio, 2, '.', ',') }} ({{$v->comision_servicio}}%)
+                            </td>
+                            <td class="monto-gerencia">
+                                @if($v->comision_gerencia)
+                                    $ {{ number_format($v->comisionGerencia, 2, '.', ',') }} ({{$v->comision_gerencia}}%)
+                                @else
+                                    N\A
+                                @endif
+                            </td>
+                            <td>
+                                $ {{ number_format($v->totalConGerencia, 2, '.', ',') }}
+                            </td>
+                            <td>
+                                <a href="{{ url('comisiones/vendedor/' . $v->id) }}" class="btn btn-inverse" data-toggle="tooltip" data-placement="top" title="Configurar">
+                                    <i class="fas fa-cog"></i> 
+                                </a>
+                                <a href="{{ url('comisiones/detalles/' . $v->id . '/' . $mes) }}" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Detalles">
+                                    <i class="fas fa-list"></i> 
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
 @endsection
 
 @section('scripts')
-<script>    
-    var comisionesTable;
+<script>
 
-    function initializeComisionesTable(){
-        const exp = $('#exp').val();
-
-        if ($.fn.DataTable.isDataTable('#comisiones-table')) {
-            $('#comisiones-table').dataTable().fnClearTable();
-            $('#comisiones-table').dataTable().fnDestroy();
-        } 
-
-        $('#comisiones-table').DataTable({
-            deferRender: true,
-            order: [[0, 'desc']],
-            responsive: true,
-            lengthChange: false,
-            autoWidth: false,
-            lengthMenu: [
-                [10, 50, 100, 150, -1],
-                [10, 50, 100, 150, 'Todos']
-            ],
-            pageLength: -1,
-            dom: 'Bfrtip',
-			buttons: [
-				{
-					extend: 'copy',
-					text: 'Copiar',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
-				},
-				{
-					extend: 'csv',
-					text: 'Exportar CSV',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
-				},
-				{
-					extend: 'excel',
-					text: 'Exportar Excel',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
-				},
-				{
-					extend: 'pdf',
-					text: 'Exportar PDF',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
-				},
-				{
-					extend: 'print',
-					text: 'Imprimir',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
-				}
-			],	          
-            language: {
-                sProcessing: "Procesando...",
-                sLengthMenu: "Mostrar _MENU_ registros",
-                sZeroRecords: "No se encontraron resultados",
-                sEmptyTable: "Ningún dato disponible en esta tabla",
-                sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-                sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-                sSearch: "Buscar:",
-                oPaginate: {
-                    sFirst: "Primero",
-                    sLast: "Último",
-                    sNext: "Siguiente",
-                    sPrevious: "Anterior"
-                },
-                buttons: {
-                    pageLength: {
-                        _: "Ver %d Registros",
-                        '-1': "Todos"
-                    },
-                    colvis: "Columnas",
-                    copy: "Copiar",
-                    print: "Imprimir"
-                }
-            }
-        });
-    }
-
-    function getComisionData(){
-        $("#loadingSpinner").css("display", "flex"); 
-
-        let formData = {
-            mes: $('#mes').val(),
-            comisiones: []
-        };
-
-        // Recorrer la tabla y capturar los valores de los inputs
-        if($('#comisiones-table tbody .comisiones-row').length){
-            $('#comisiones-table tbody .comisiones-row').each(function() {
-                let row = $(this);
-
-                let data = {
-                    id: row.data('id'),  // Asumimos que cada fila tiene un atributo data-id con el ID de la comisión
-                    servicio: row.find('.servicio').val(),
-                    producto: row.find('.producto').val(),
-                    gerencia: row.find('.gerencia').val(),
-                    es_gerente: row.find('.es_gerente').is(':checked') ? 1 : 0
-                };
-
-                formData.comisiones.push(data);
-            });
-        }
-
-        $.ajax({
-            url: "{{ route('comisiones.balance') }}",
-            type: "GET",
-            data: formData,
-            success: function (response) {
-                console.log(response)
-
-                $("#loadingSpinner").css("display", "none"); 
-                $('#comisionesContainer').html(response.html);
-                $("[data-toggle='tooltip']").tooltip(); //Tooltip
-                initializeComisionesTable();
-            },
-            error: function (err) {
-                console.log(err)
-                $("#loadingSpinner").css("display", "none"); 
-                Swal.fire({
-                    title: "Error",
-                    text: "Ocurrió un problema al intentar actualizar los datos.",
-                    icon: "error",
-                    confirmButtonText: "Entendido"
-                });
-            }
-        });
-    }
-
-    $(document).ready(function(){
-        getComisionData(); // Ejecutar al iniciar la vista
-
-
-    });
 </script>
 @endsection
 
