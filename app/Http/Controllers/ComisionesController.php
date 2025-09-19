@@ -57,6 +57,8 @@ class ComisionesController extends Controller
             ];
         }
 
+        $data = collect($data)->sortByDesc('totalConGerencia')->values()->all();
+        
         return view('comisiones', [
             'data' => $data, 
             'mes' => $mes
