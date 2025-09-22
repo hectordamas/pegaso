@@ -53,8 +53,8 @@
         <td>{{ $clientesRecurrentes }}</td>
         <th class="bg-dark text-light">Clientes Nuevos</th>
         <td>{{ $clientesNuevos }}</td>
-        <th class="bg-dark"></th>
-        <td></td>
+        <th class="bg-dark">Cobro Pendiente</th>
+        <td>{{ $cobroPendiente }}</td>
     </tr>
 </table>
 

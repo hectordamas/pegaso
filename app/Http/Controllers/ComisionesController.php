@@ -143,6 +143,7 @@ class ComisionesController extends Controller
         $totalPendiente = 0;
         $clientesNuevos = 0;
         $clientesRecurrentes = 0;
+        $cobroPendiente = 0;
 
         foreach ($query as $safact) {
 
@@ -158,6 +159,7 @@ class ComisionesController extends Controller
             $totalPendiente += $safact->pendiente($mes, $year);
             $clientesNuevos += $safact->esClienteNuevo() ? 1 : 0;
             $clientesRecurrentes += !$safact->esClienteNuevo() ? 1 : 0;
+            $cobroPendiente += $safact->pendiente($mes, $year) > 1 ? 1 : 0;
 
             $row = [];
         
@@ -214,6 +216,7 @@ class ComisionesController extends Controller
             'totalPendiente',
             'clientesNuevos',
             'clientesRecurrentes',
+            'cobroPendiente',
             'savend',
             'mes', 
             'year'
