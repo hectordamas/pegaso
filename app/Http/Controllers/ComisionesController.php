@@ -141,6 +141,8 @@ class ComisionesController extends Controller
         $totalComisionServicios = 0;
         $totalComision = 0;
         $totalPendiente = 0;
+        $clientesNuevos = 0;
+        $clientesRecurrentes = 0;
 
         foreach ($query as $safact) {
 
@@ -154,6 +156,8 @@ class ComisionesController extends Controller
             $totalComisionServicios += $safact->totalComisionServicio($mes, $year);
             $totalComision += $safact->totalComision($mes, $year);
             $totalPendiente += $safact->pendiente($mes, $year);
+            $clientesNuevos += $safact->esClienteNuevo() ? 1 : 0;
+            $clientesRecurrentes += !$safact->esClienteNuevo() ? 1 : 0;
 
             $row = [];
         
@@ -166,6 +170,7 @@ class ComisionesController extends Controller
             $row[] = number_format($safact->factor, 2);
             $row[] = optional(optional($safact->cxc)->ultimoPago)->bank?->nombre ?: '-';
             $row[] = $safact->descrip;
+            $row[] = $safact->esClienteNuevo() ? 'Nuevo' : 'Viejo';
             $row[] = $safact->cxc->observacion;
         
             $row[] = number_format($safact->getBaseImponibleRestante($mes, $year), 2, '.', ',');
@@ -207,6 +212,8 @@ class ComisionesController extends Controller
             'totalComisionServicios',
             'totalComision',
             'totalPendiente',
+            'clientesNuevos',
+            'clientesRecurrentes',
             'savend',
             'mes', 
             'year'

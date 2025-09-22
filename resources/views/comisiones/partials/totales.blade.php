@@ -48,6 +48,14 @@
         <th class="bg-dark text-light">Comisión Gerencial (%)</th>
         <td>{{ $savend->comision_gerencia ? $savend->comision_gerencia .'%': 'N/A' }}</td>
     </tr>
+    <tr>
+        <th class="bg-dark text-light">Clientes Recurrentes</th>
+        <td>{{ $clientesRecurrentes }}</td>
+        <th class="bg-dark text-light">Clientes Nuevos</th>
+        <td>{{ $clientesNuevos }}</td>
+        <th class="bg-dark"></th>
+        <td></td>
+    </tr>
 </table>
 
 <div class="mt-4">

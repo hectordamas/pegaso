@@ -33,6 +33,7 @@
                                     <th>Tasa (Bs.)</th> 
                                     <th>Banco</th>
                                     <th>Cliente</th> 
+                                    <th>Estado</th>
                                     <th>Descripción Corta</th>
                                     <th>Base Imponible ($)</th> 
                                     <th>Total Productos</th> 

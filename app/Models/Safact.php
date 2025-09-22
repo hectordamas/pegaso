@@ -116,6 +116,19 @@ class Safact extends Model
         return $this->hasOne(Detallecxc::class, 'cxc_id')->latest('fechaDePago');
     }
 
+    public function esClienteNuevo(): bool
+    {
+        if (!$this->saclie) {
+            return true; // sin cliente asociado, lo tratamos como nuevo
+        }
+
+        return !$this->saclie->safact()
+            ->where('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+            ->where('id', '<', $this->id) // solo anteriores
+            ->where('id', '!=', $this->id) // excluir el proyecto actual
+            ->exists();
+    }
+
 
     /* Datos de Proyectos */
 
