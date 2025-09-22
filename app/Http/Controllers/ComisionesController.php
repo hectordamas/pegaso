@@ -164,7 +164,9 @@ class ComisionesController extends Controller
                 ? \Carbon\Carbon::parse($safact->cxc->ultimoPago->fechaDePago)->format('d-m-Y')
                 : '-';
             $row[] = number_format($safact->factor, 2);
+            $row[] = optional(optional($safact->cxc)->ultimoPago)->bank?->nombre ?: '-';
             $row[] = $safact->descrip;
+            $row[] = $safact->cxc->observacion;
         
             $row[] = number_format($safact->getBaseImponibleRestante($mes, $year), 2, '.', ',');
             $row[] = number_format($safact->pendienteProductosMes($mes, $year), 2, '.', ',');
@@ -187,6 +189,9 @@ class ComisionesController extends Controller
             $row[] = '<a href="javascript:void(0)" onclick="presupuestoDetalles('.$safact->id.')" class="btn btn-warning">
                         <i class="fas fa-list"></i>
                       </a>';
+
+            $row[] = '';
+            $row[] = '';
         
             $data[] = $row;
         }

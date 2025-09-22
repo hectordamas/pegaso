@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC};
+use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC, Bank};
 use App\Mail\ProyectoAprobadoMail;
 use Carbon\Carbon;
 use Auth;
@@ -21,10 +21,13 @@ class PresupuestosController extends Controller
 
         $client = $request->client;
 
+        $banks = Bank::all();
+
         return view('presupuestos', [
             'estatus' => $estatus, 
             'vendedores' => $vendedores,
-            'client' => $client
+            'client' => $client,
+            'banks' => $banks
         ]);
     }
 
@@ -143,6 +146,7 @@ class PresupuestosController extends Controller
                 $abono->codusuario = Auth::user()->codusuario;	
                 $abono->departamento = 'Ventas';	
                 $abono->fechaDePago = $request->fechaDePago;
+                $abono->bank_id = $request->bank_id;
                 $abono->save();
                 
                 $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();

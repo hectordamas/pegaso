@@ -47,5 +47,10 @@ class CxC extends Model
         return $this->hasOne(Detallecxc::class, 'codcxc')->latest('fechaDePago');
     }
 
+    public function banco(){
+        return $this->hasOne(Detallecxc::class, 'codcxc')->latest('fechaDePago');
+
+    }
+
 }
 

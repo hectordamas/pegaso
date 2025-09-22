@@ -29,9 +29,11 @@
                                     <th>#</th> 
                                     <th>Presupuesto</th> 
                                     <th>Fecha Presupuesto</th> 
-                                    <th>Último Pago</th> 
+                                    <th>Último Pago</th>
                                     <th>Tasa (Bs.)</th> 
+                                    <th>Banco</th>
                                     <th>Cliente</th> 
+                                    <th>Descripción Corta</th>
                                     <th>Base Imponible ($)</th> 
                                     <th>Total Productos</th> 
                                     <th>Total Servicios</th> 
@@ -46,6 +48,8 @@
                                     <th>Pendiente (%)</th> 
                                     <th>Detalle Pagos</th>
                                     <th>Detalle Presupuesto</th>
+                                    <th>Verificado Administración</th>
+                                    <th>Verificado Gerencia</th>
                                 </tr>
                             </thead>
                             <tbody>

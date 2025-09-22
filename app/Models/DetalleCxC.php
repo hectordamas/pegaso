@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{TipoMoneda, CxC, User, Moneda};
+use App\Models\{TipoMoneda, CxC, User, Moneda, Bank};
 use Carbon\Carbon;
 
 class DetalleCxC extends Model
@@ -20,6 +20,11 @@ class DetalleCxC extends Model
     public function cxc(){
         return $this->belongsTo(CxC::class, 'codcxc', 'codcxc');
     }
+
+    public function bank(){
+        return $this->belongsTo(Bank::class, 'bank_id', 'id');
+    }
+
     public function user(){
         return $this->belongsTo(User::class, 'codusuario', 'codusuario');
     }

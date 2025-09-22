@@ -192,6 +192,16 @@
                         </div>
 
                         <div class="col-md-6 form-group abonado-container d-none">
+                            <label for="" class="control-label">Banco</label>
+                            <select name="bank_id"  id="bank_id" class="form-control" required>
+                                <option value="">Selecciona un Banco</option>
+                                @foreach($banks as $b)
+                                    <option value="{{ $b->id }}">{{ $b->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 form-group abonado-container d-none">
                             <label for="control-label">Subir Comprobante</label>
                             <input type="file" id="file" name="file"  accept="image/*,application/pdf" class="form-control" required>
                         </div> 
@@ -200,6 +210,8 @@
                             <label for="" class="control-label">Observacion</label>
                             <textarea name="observacion" id="observacion" class="form-control"></textarea>
                         </div>
+
+
 
                         <div class="col-md-6 form-group d-none" id="razon-container">
                             <label for="" class="control-label" id="razonLabel">Motivo</label>
@@ -408,6 +420,7 @@
         var observacion = $('#observacion').val();
         var fileInput = $("#file")[0].files[0];
         var fechaDePago = $('#fechaDePago').val();
+        var bankId = $('#bank_id').val();
         if (fileInput) {
             let reader = new FileReader();
             reader.onload = function (e) {
@@ -433,7 +446,8 @@
                     razon: razon,
                     fechaDePago: fechaDePago,
                     file: fileBase64,
-                    observacion: observacion
+                    observacion: observacion,
+                    bank_id: bankId
                 },
                 success: function(response) {
                     getPresupuestosData(response.success);
