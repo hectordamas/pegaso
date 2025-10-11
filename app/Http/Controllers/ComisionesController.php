@@ -197,9 +197,8 @@ class ComisionesController extends Controller
                         <i class="fas fa-list"></i>
                       </a>';
 
-            $row[] = '';
-            $row[] = '';
-        
+            $row[] = '<input type="checkbox" class="check-admin" data-id="'.$safact->id.'" '.($safact->check_admin ? 'checked' : '').' '.($safact->check_manager ? 'disabled' : '').'>';
+            $row[] = '<input type="checkbox" class="check-manager" data-id="'.$safact->id.'" '.($safact->check_manager ? 'checked' : '').' '.($safact->check_manager ? 'disabled' : '').'>';
             $data[] = $row;
         }
 
@@ -242,4 +241,28 @@ class ComisionesController extends Controller
         ]);
     }
 
+    public function updateCheck(Request $request, $id)
+    {
+        $safact = Safact::findOrFail($id);
+
+        if ($request->has('check_admin')) {
+            $safact->check_admin = $request->check_admin;
+        }
+        if ($request->has('check_manager')) {
+            $safact->check_manager = $request->check_manager;
+        }
+
+        // Si ambos están verificados → guardar comisiones
+        if ($safact->check_admin && $safact->check_manager) {
+
+            $safact->porcentajeComisionProducto = $safact->comision_producto;
+            $safact->porcentajeComisionServicio = $safact->comision_servicio;
+            $safact->porcentajeComisionGerencia = $safact->comision_gerencia;
+
+        }
+
+        $safact->save();
+
+        return response()->json(['success' => true]);
+    }
 }

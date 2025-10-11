@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\{
     EstatusPre, Savend, Saclie, ChatProyecto, ChatEntrega,
-    saitemfac, SafactEstatusHistorial, CxC, HistoryItem, Detallecxc
+    saitemfac, SafactEstatusHistorial, CxC, HistoryItem, Detallecxc, CobranzasOrigen
 };
 use Carbon\Carbon;
 
@@ -305,11 +305,19 @@ class Safact extends Model
     public function totalComisionProducto(int $mes, int $year = null){
         $year = $year ?? date('Y');
 
+        if ($this->check_admin && $this->check_manager) {
+            return $this->abonadoProductosMes($mes, $year) * ($this->porcentajeComisionProducto / 100);
+        }
+        
         return $this->abonadoProductosMes($mes, $year) * ($this->savend->comision_producto / 100);
     }
 
     public function totalComisionServicio(int $mes, int $year = null){
         $year = $year ?? date('Y');
+
+        if ($this->check_admin && $this->check_manager) {
+            return $this->abonadoServiciosMes($mes, $year) * ($this->porcentajeComisionServicio / 100);
+        }
 
         return $this->abonadoServiciosMes($mes, $year) * ($this->savend->comision_servicio / 100);
     }
@@ -319,4 +327,99 @@ class Safact extends Model
 
         return $this->totalComisionProducto($mes, $year) + $this->totalComisionServicio($mes, $year);
     }
+
+
+
+   /* // Comisiones Cobranzas
+    public function montoAPagarHasta($detalleId)
+    {
+        $base = $this->base_imponible() ?? 0;
+        $detalle = DetalleCxC::find($detalleId);
+        if (!$detalle) return $base;
+
+        // Obtener todos los pagos anteriores al actual (no inclusive)
+        $pagosPrevios = DetalleCxC::whereHas('cxc', function ($q) {
+                $q->where('safact_id', $this->id);
+            })
+            ->where(function ($q) use ($detalle) {
+                $q->where('fechaDePago', '<', $detalle->fechaDePago)
+                  ->orWhere(function ($q2) use ($detalle) {
+                      $q2->where('fechaDePago', $detalle->fechaDePago)
+                         ->where('id', '<', $detalle->id);
+                  });
+            })
+            ->orderBy('fechaDePago')
+            ->orderBy('id')
+            ->get();
+
+        $totalAbonadoPrevio = $pagosPrevios->sum('monto');
+
+        // Este es el monto que queda pendiente justo antes de este abono
+        return max($base - $totalAbonadoPrevio, 0);
+    }
+
+    public function quedaPendiente($detalleId)
+    {
+        $base = $this->base_imponible() ?? 0;
+        $detalle = DetalleCxC::find($detalleId);
+        if (!$detalle) return $base;
+
+        // Obtener todos los pagos hasta e incluyendo el actual
+        $pagos = DetalleCxC::whereHas('cxc', function ($q) {
+                $q->where('safact_id', $this->id);
+            })
+            ->where(function ($q) use ($detalle) {
+                $q->where('fechaDePago', '<', $detalle->fechaDePago)
+                  ->orWhere(function ($q2) use ($detalle) {
+                      $q2->where('fechaDePago', $detalle->fechaDePago)
+                         ->where('id', '<=', $detalle->id);
+                  });
+            })
+            ->orderBy('fechaDePago')
+            ->orderBy('id')
+            ->get();
+
+        $totalAbonado = $pagos->sum('monto');
+
+        // Este es el saldo pendiente después del abono actual
+        return max($base - $totalAbonado, 0);
+    }
+
+    public function porcentajeAPagarHasta($detalleId)
+    {
+        $base = $this->base_imponible() ?? 0;
+        if ($base == 0) return 0;
+
+        $montoPendienteAntes = $this->montoAPagarHasta($detalleId);
+
+        // Cuánto representa el saldo antes del pago respecto a la base
+        return round(($montoPendienteAntes / $base) * 100, 2);
+    }
+
+    public function porcentajePendiente($detalleId)
+    {
+        $base = $this->base_imponible() ?? 0;
+        if ($base == 0) return 0;
+
+        $saldoPendiente = $this->quedaPendiente($detalleId);
+
+        // Cuánto representa el saldo después del pago respecto a la base
+        return round(($saldoPendiente / $base) * 100, 2);
+    }
+
+    public function porcentajePagado($detalleId)
+    {
+        $base = $this->base_imponible() ?? 0;
+        if ($base == 0) return 0;
+
+        $detalle = DetalleCxC::find($detalleId);
+        if (!$detalle) return 0;
+
+        $montoPagado = $detalle->monto;
+
+        // Cuánto representa este pago respecto a la base
+        return round(($montoPagado / $base) * 100, 2);
+    }
+*/
+
 }

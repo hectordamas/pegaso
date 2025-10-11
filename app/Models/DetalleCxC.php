@@ -13,26 +13,36 @@ class DetalleCxC extends Model
 
     protected $table = 'detallecxc';
 
-    public function tipomoneda() {
+    public function tipomoneda()
+    {
         return $this->belongsTo(TipoMoneda::class, 'codtipomoneda', 'codtipomoneda');
     }
 
-    public function cxc(){
+    public function cxc()
+    {
         return $this->belongsTo(CxC::class, 'codcxc', 'codcxc');
     }
 
-    public function bank(){
+    
+    public function bank()
+    {
         return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
+    
+    public function cobranzasOrigen(){
+        return $this->belongsTo(CobranzasOrigen::class, 'origen_id', 'id');
+    }
 
-    public function user(){
+
+    public function user()
+    {
         return $this->belongsTo(User::class, 'codusuario', 'codusuario');
     }
 
     public function scopeByDateRange($query, $from = null, $until = null)
     {
         if ($from && $until) {
-            return $query->whereBetween('fecha', [ Carbon::parse($from), Carbon::parse($until) ]);
+            return $query->whereBetween('fecha', [Carbon::parse($from), Carbon::parse($until)]);
         } elseif ($from) {
             return $query->where('fecha', '>=', Carbon::parse($from));
         } elseif ($until) {
@@ -49,7 +59,7 @@ class DetalleCxC extends Model
                 $q->where('codclie', $codclie);
             });
         }
-    
+
         return $query;
     }
 

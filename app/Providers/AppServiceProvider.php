@@ -26,8 +26,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.admin', function ($view) {
             if (Auth::check()) {
                 $userId = Auth::id();
-                
-                // Obtener los menús desde menupermiso
+            
                 $menus = DB::table('menupermiso')
                     ->select('menus.*')
                     ->join('menus', 'menupermiso.codmenu', '=', 'menus.codmenu')
@@ -35,11 +34,32 @@ class AppServiceProvider extends ServiceProvider
                     ->where('menus.inactivo', false)
                     ->orderBy('menus.position', 'asc')
                     ->get();
-
-                
-                // Pasar los menús a todas las vistas
-                $view->with('globalMenus', $menus);
+            
+                // Agrupamos los menús
+                $groupedMenus = [
+                    'inicio'      => [],
+                    'cxc'         => [],
+                    'comisiones'  => [],
+                    'config'      => [],
+                    'otros'       => [],
+                ];
+            
+                foreach ($menus as $menu) {
+                    if (in_array($menu->codmenu, [3, 14])) {
+                        $groupedMenus['cxc'][] = $menu;
+                    } elseif (in_array($menu->codmenu, [143, 144, 145])) {
+                        $groupedMenus['comisiones'][] = $menu;
+                    } elseif (in_array($menu->codmenu, [9, 10, 11])) {
+                        $groupedMenus['config'][] = $menu;
+                    } else {
+                        $groupedMenus['otros'][] = $menu;
+                    }
+                }
+            
+                $view->with('groupedMenus', $groupedMenus);
             }
         });
     }
+
+
 }

@@ -5,7 +5,54 @@
 @endsection
 
 @section('content')
+@php
+    $meses = collect([
+        ['numero' => '01', 'nombre' => 'Enero'],
+        ['numero' => '02', 'nombre' => 'Febrero'],
+        ['numero' => '03', 'nombre' => 'Marzo'],
+        ['numero' => '04', 'nombre' => 'Abril'],
+        ['numero' => '05', 'nombre' => 'Mayo'],
+        ['numero' => '06', 'nombre' => 'Junio'],
+        ['numero' => '07', 'nombre' => 'Julio'],
+        ['numero' => '08', 'nombre' => 'Agosto'],
+        ['numero' => '09', 'nombre' => 'Septiembre'],
+        ['numero' => '10', 'nombre' => 'Octubre'],
+        ['numero' => '11', 'nombre' => 'Noviembre'],
+        ['numero' => '12', 'nombre' => 'Diciembre'],
+    ])->map(fn($mes) => (object) $mes);
+@endphp
+
 <div class="row">
+       <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Reporte de Comisiones 💰</h5>
+                <span>Filtra y analiza las comisiones del equipo de ventas</span>
+            </div>
+            <div class="card-block">
+                <form class="row" action="{{ url('comisiones') }}">    
+                    <div class="col-md-6 form-group">
+                        <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
+                        <select name="mes" id="mes" class="form-control">
+                            @foreach($meses as $m)
+                                <option {{ $m->numero == $mes ? 'selected' : '' }} value="{{ $m->numero }}">
+                                    {{ $m->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+    
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary" id="filtrar">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                    </div>
+    
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between">
@@ -66,12 +113,12 @@
 
 @section('scripts')
 <script>
-        $(document).on('change', '#es_gerente', function() {
-            if($('#es_gerente').is(':checked')){
-                $('#comision_gerencia').prop('disabled', false)
-            }else{
-                $('#comision_gerencia').prop('disabled', true)
-            }
-        });
+    $(document).on('change', '#es_gerente', function() {
+        if($('#es_gerente').is(':checked')){
+            $('#comision_gerencia').prop('disabled', false)
+        }else{
+            $('#comision_gerencia').prop('disabled', true)
+        }
+    });
 </script>
 @endsection

@@ -14,25 +14,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Required Fremwork -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
     <!-- radial chart.css -->
-    <link rel="stylesheet" href="{{ asset('assets/adminty/assets/pages/chart/radial/css/radial.css') }}" type="text/css" media="all">
+    <link rel="stylesheet" href="{{ asset('assets/adminty/assets/pages/chart/radial/css/radial.css') }}" type="text/css"
+        media="all">
     <!-- feather Awesome -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/icon/feather/css/feather.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <!-- Style.css -->
     @yield('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/pages/data-table/css/buttons.dataTables.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/css/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/assets/pages/data-table/css/buttons.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/css/buttons.dataTables.min.css') }}">
 
     <!-- Select2 CSS -->
     <link rel="stylesheet" href="{{ asset('assets/adminty/bower_components/select2/dist/css/select2.min.css') }}" />
 
     <!-- Multi Select CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/bootstrap-multiselect/dist/css/bootstrap-multiselect.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/bower_components/multiselect/css/multi-select.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/bower_components/bootstrap-multiselect/dist/css/bootstrap-multiselect.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('assets/adminty/bower_components/multiselect/css/multi-select.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/adminty/assets/css/jquery.mCustomScrollbar.css') }}">
@@ -59,9 +67,10 @@
     </div>
     <!-- Pre-loader end -->
 
-    
+
     <!-- Spinner de carga para Ajax -->
-    <div id="loadingSpinner" style="
+    <div id="loadingSpinner"
+        style="
         display: none;
         position: fixed;
         top: 0;
@@ -90,7 +99,8 @@
                             <i class="feather icon-menu"></i>
                         </a>
                         <a href="{{ url('/') }}">
-                            <img class="img-fluid" src="{{ asset('assets/adminty/assets/images/logo-pegaso.png') }}" alt="Theme-Logo" />
+                            <img class="img-fluid" src="{{ asset('assets/adminty/assets/images/logo-pegaso.png') }}"
+                                alt="Theme-Logo" />
                         </a>
                         <a class="mobile-options">
                             <i class="feather icon-more-horizontal"></i>
@@ -101,9 +111,10 @@
                         <ul class="nav-left">
 
                             <li>
-                                <a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
-                                <i class="full-screen feather icon-maximize"></i>
-                            </a>
+                                <a href="#!" onclick="javascript:toggleFullScreen()"
+                                    class="waves-effect waves-light">
+                                    <i class="full-screen feather icon-maximize"></i>
+                                </a>
                             </li>
                         </ul>
                         <ul class="nav-right">
@@ -112,8 +123,8 @@
                             <li class="user-profile header-notification">
                                 <div class="dropdown-primary dropdown">
                                     <div class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <img src="{{ Auth::user()->photo ?? asset('assets/customAssets/img/user_default.jpg') }}" class="img-radius"
-                                            alt="{{ Auth::user()->name }} Foto de Perfil">
+                                        <img src="{{ Auth::user()->photo ?? asset('assets/customAssets/img/user_default.jpg') }}"
+                                            class="img-radius" alt="{{ Auth::user()->name }} Foto de Perfil">
                                         <span>{{ Auth::user()->name }}</span>
                                         <i class="feather icon-chevron-down"></i>
                                     </div>
@@ -125,15 +136,16 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('logout') }}" 
-                                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <a href="{{ route('logout') }}"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                                 <i class="feather icon-log-out"></i> Cerrar Sesión
                                             </a>
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
                                                 @csrf
                                             </form>
                                         </li>
-                                        
+
                                     </ul>
 
                                 </div>
@@ -151,92 +163,92 @@
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="pcoded-navigatio-lavel">Menú Principal</div>
                             <ul class="pcoded-item pcoded-left-item">
-                            <!-- Renderizar el menú normal -->
-                            <li class="{{ Request::is('home*') ? 'active' : '' }}">
-                                <a href="{{ url('home') }}">
-                                    <span class="pcoded-micon">
-                                        <i class="fas fa-home"></i>                                    
-                                    </span>
-                                    <span class="pcoded-mtext">Inicio</span>
-                                </a>
-                            </li>
-                            @php
-                                $submenuCXC = [];
-                                $submenuConfig = [];
-                            @endphp
-                        
-                            @foreach($globalMenus as $menu)
-                                @if(in_array($menu->codmenu, [3, 14]))
-                                    @php
-                                        $submenuCXC[] = $menu;
-                                    @endphp
-                                @elseif(in_array($menu->codmenu, [9, 10, 11]))
-                                    @php
-                                        $submenuConfig[] = $menu;
-                                    @endphp
-                                @else
-                                    @if(count($submenuCXC) > 0)
-                                        <li class="pcoded-hasmenu {{ Request::is('cuentas-por-cobrar*') ? 'active' : '' }}">
-                                            <a href="javascript:void(0)">
-                                                <span class="pcoded-micon">
-                                                    <i class="fas fa-comments-dollar"></i>
-                                                </span>
-                                                <span class="pcoded-mtext">Cuentas por Cobrar</span>
-                                            </a>
-                                            <ul class="pcoded-submenu">
-                                                @foreach($submenuCXC as $submenu)
-                                                    <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
-                                                        <a href="{{ url($submenu->ruta) }}">
-                                                            <span class="pcoded-micon">
-                                                                <i class="{{ $submenu->logo_boostrap }}"></i>
-                                                            </span>
-                                                            <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
-                                                        </a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </li>
-                                        @php
-                                            $submenuCXC = [];
-                                        @endphp
-                                    @endif
-                        
-                                    <!-- Renderizar el menú normal -->
+                                <li class="{{ Request::is('home*') ? 'active' : '' }}">
+                                    <a href="{{ url('home') }}">
+                                        <span class="pcoded-micon"><i class="fas fa-home"></i></span>
+                                        <span class="pcoded-mtext">Inicio</span>
+                                    </a>
+                                </li>
+
+                                {{-- Cuentas por Cobrar --}}
+                                @if (count($groupedMenus['cxc']) > 0)
+                                    <li
+                                        class="pcoded-hasmenu {{ Request::is('cuentas-por-cobrar*') ? 'active' : '' }}">
+                                        <a href="javascript:void(0)">
+                                            <span class="pcoded-micon"><i class="fas fa-comments-dollar"></i></span>
+                                            <span class="pcoded-mtext">Cuentas por Cobrar</span>
+                                        </a>
+                                        <ul class="pcoded-submenu">
+                                            @foreach ($groupedMenus['cxc'] as $submenu)
+                                                <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
+                                                    <a href="{{ url($submenu->ruta) }}">
+                                                        <span class="pcoded-micon"><i
+                                                                class="{{ $submenu->logo_boostrap }}"></i></span>
+                                                        <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endif
+
+                                {{-- Comisiones --}}
+                                @if (count($groupedMenus['comisiones']) > 0)
+                                    <li class="pcoded-hasmenu {{ Request::is('comisiones*') ? 'active' : '' }}">
+                                        <a href="javascript:void(0)">
+                                            <span class="pcoded-micon"><i class="fas fa-coins"></i></span>
+                                            <span class="pcoded-mtext">Comisiones</span>
+                                        </a>
+                                        <ul class="pcoded-submenu">
+                                            @foreach ($groupedMenus['comisiones'] as $submenu)
+                                                <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
+                                                    <a href="{{ url($submenu->ruta) }}">
+                                                        <span class="pcoded-micon"><i
+                                                                class="{{ $submenu->logo_boostrap }}"></i></span>
+                                                        <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                @endif
+
+                                {{-- Otros menús normales --}}
+                                @foreach ($groupedMenus['otros'] as $menu)
                                     <li class="{{ Request::is($menu->ruta . '*') ? 'active' : '' }}">
                                         <a href="{{ url($menu->ruta) }}">
-                                            <span class="pcoded-micon">
-                                                <i class="{{ $menu->logo_boostrap }}"></i>
-                                            </span>
+                                            <span class="pcoded-micon"><i
+                                                    class="{{ $menu->logo_boostrap }}"></i></span>
                                             <span class="pcoded-mtext">{{ $menu->nombre }}</span>
                                         </a>
                                     </li>
-                                @endif
-                            @endforeach
+                                @endforeach
                             </ul>
 
-                            @if(Auth::user()->master)
-                            <div class="pcoded-navigatio-lavel">Administrador</div>
-                            <ul class="pcoded-item pcoded-left-item">
-                                <li class="pcoded-hasmenu">
-                                    <a href="javascript:void(0)">
-                                        <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
-                                        <span class="pcoded-mtext">Configuración</span>
-                                    </a>
-                                    <ul class="pcoded-submenu">
-                                        @foreach($submenuConfig as $submenu)
-                                            <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
-                                                <a href="{{ url($submenu->ruta) }}">
-                                                    <span class="pcoded-micon">
-                                                        <i class="{{ $submenu->logo_boostrap }}"></i>
-                                                    </span>
-                                                    <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            </ul>
+                            {{-- Configuración solo si es master --}}
+                            @if (Auth::user()->master && count($groupedMenus['config']) > 0)
+                                <div class="pcoded-navigatio-lavel">Administrador</div>
+                                <ul class="pcoded-item pcoded-left-item">
+                                    <li class="pcoded-hasmenu">
+                                        <a href="javascript:void(0)">
+                                            <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
+                                            <span class="pcoded-mtext">Configuración</span>
+                                        </a>
+                                        <ul class="pcoded-submenu">
+                                            @foreach ($groupedMenus['config'] as $submenu)
+                                                <li class="{{ Request::is($submenu->ruta . '*') ? 'active' : '' }}">
+                                                    <a href="{{ url($submenu->ruta) }}">
+                                                        <span class="pcoded-micon"><i
+                                                                class="{{ $submenu->logo_boostrap }}"></i></span>
+                                                        <span class="pcoded-mtext">{{ $submenu->nombre }}</span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                </ul>
                             @endif
+
                             <div class="pcoded-navigatio-lavel text-center">V {{ env('APP_VERSION') }}</div>
 
                         </div>
@@ -262,7 +274,8 @@
             <div class="col-md-12">
                 <div class="card mb-0">
                     <div class="card-header copyright text-center">
-                        <span>Copyright © {{ env('APP_NAME') }} {{ date('Y') }} / V{{ env('APP_VERSION') }} </span>
+                        <span>Copyright © {{ env('APP_NAME') }} {{ date('Y') }} / V{{ env('APP_VERSION') }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -271,17 +284,22 @@
 
     <input type="hidden" id="exp" value="$bKe02KI@FL1j&GxAJW-">
 
-    
+
 
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery/dist/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/popper.js/dist/umd/popper.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery-ui/jquery-ui.min.js') }}">
+    </script>
+    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/popper.js/dist/umd/popper.min.js') }}">
+    </script>
+    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/bootstrap/dist/js/bootstrap.min.js') }}">
+    </script>
     <!-- jquery slimscroll js -->
-    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
+    <script type="text/javascript"
+        src="{{ asset('assets/adminty/bower_components/jquery-slimscroll/jquery.slimscroll.js') }}"></script>
     <!-- modernizr js -->
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/modernizr/modernizr.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/modernizr/feature-detects/css-scrollbars.js') }}"></script>
+    <script type="text/javascript"
+        src="{{ asset('assets/adminty/bower_components/modernizr/feature-detects/css-scrollbars.js') }}"></script>
     <!-- Chart js -->
     <script type="text/javascript" src="{{ asset('assets/adminty/bower_components/chart.js/dist/Chart.js') }}"></script>
 
@@ -299,26 +317,35 @@
 
 
     <script src="{{ asset('assets/adminty/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/adminty/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('assets/adminty/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}">
+    </script>
     <script src="{{ asset('assets/adminty/assets/pages/data-table/js/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/pages/data-table/js/pdfmake.min.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/pages/data-table/js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/dataTables.buttons.min.js') }}">
+    </script>
+    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/buttons.flash.min.js') }}">
+    </script>
     <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/jszip.min.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/buttons.colVis.min.js') }}">
+    </script>
     <script src="{{ asset('assets/adminty/bower_components/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/adminty/bower_components/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    
+
     <script src="{{ asset('assets/adminty/assets/pages/data-table/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/adminty/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/adminty/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/extension-btns-custom.js') }}"></script>
+    <script src="{{ asset('assets/adminty/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
+    </script>
+    <script
+        src="{{ asset('assets/adminty/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
+    </script>
+    <script src="{{ asset('assets/adminty/assets/pages/data-table/extensions/buttons/js/extension-btns-custom.js') }}">
+    </script>
 
     <script src="{{ asset('assets/adminty/bower_components/select2/dist/js/select2.full.min.js') }}"></script>
     <!-- Multiselect js -->
-    <script src="{{ asset('assets/adminty/bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}"></script>
+    <script src="{{ asset('assets/adminty/bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}">
+    </script>
     <script src="{{ asset('assets/adminty/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/js/jquery.quicksearch.js') }}"></script>
     <script src="{{ asset('assets/adminty/assets/pages/advance-elements/select2-custom.js') }}"></script>
@@ -337,73 +364,75 @@
     <script src="{{ asset('assets/customAssets/js/script.js?v=13') }}"></script>
 
 
-    @if(session()->has('message'))
-    <script>	
-        Swal.fire({
-            text: "{{ session('message') }}",
-            icon: "success",
-            confirmButtonText: "Continuar", 
-            confirmButtonColor: '#28a745'
-        });
-    </script>
-    @endif	
+    @if (session()->has('message'))
+        <script>
+            Swal.fire({
+                text: "{{ session('message') }}",
+                icon: "success",
+                confirmButtonText: "Continuar",
+                confirmButtonColor: '#28a745'
+            });
+        </script>
+    @endif
 
-    @if(session()->has('error'))
-    <script>	
-        Swal.fire({
-            text: "{{ session('error') }}",
-            icon: "error",
-            confirmButtonText: "Entendido!", 
-            confirmButtonColor: '#dc3545'
-        });
-    </script>
-    @endif	
+    @if (session()->has('error'))
+        <script>
+            Swal.fire({
+                text: "{{ session('error') }}",
+                icon: "error",
+                confirmButtonText: "Entendido!",
+                confirmButtonColor: '#dc3545'
+            });
+        </script>
+    @endif
 
-    @foreach($errors->all() as $error)
-    <script>	
-        Swal.fire({
-            text: "{{ $error }}",
-            icon: "error",
-            confirmButtonText: "Entendido!", 
-            confirmButtonColor: '#dc3545'
-        });
-    </script>
+    @foreach ($errors->all() as $error)
+        <script>
+            Swal.fire({
+                text: "{{ $error }}",
+                icon: "error",
+                confirmButtonText: "Entendido!",
+                confirmButtonColor: '#dc3545'
+            });
+        </script>
     @endforeach
 
-<script>
-    // Desactiva botón submit en formularios
-    $('form').on('submit', function () {
-        const $btn = $(this).find('button[type=submit]');
-        $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
-    });
-
-    // Desactiva botones individuales (fuera de <form>)
-    $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').on('click', function () {
-        const $btn = $(this);
-        $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
-    });
-
-    // Al finalizar cualquier AJAX, reactivamos todos los botones
-    $(document).ajaxComplete(function () {
-        // Reactivar botones de formularios
-        $('form').each(function () {
+    <script>
+        // Desactiva botón submit en formularios
+        $('form').on('submit', function() {
             const $btn = $(this).find('button[type=submit]');
-            $btn.prop('disabled', false);
-            if ($btn.data('original-text')) {
-                $btn.text($btn.data('original-text'));
-            }
+            $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
         });
 
-        // Reactivar los botones individuales
-        $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').each(function () {
-            const $btn = $(this);
-            $btn.prop('disabled', false);
-            if ($btn.data('original-text')) {
-                $btn.text($btn.data('original-text'));
-            }
+        // Desactiva botones individuales (fuera de <form>)
+        $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').on('click',
+            function() {
+                const $btn = $(this);
+                $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
+            });
+
+        // Al finalizar cualquier AJAX, reactivamos todos los botones
+        $(document).ajaxComplete(function() {
+            // Reactivar botones de formularios
+            $('form').each(function() {
+                const $btn = $(this).find('button[type=submit]');
+                $btn.prop('disabled', false);
+                if ($btn.data('original-text')) {
+                    $btn.text($btn.data('original-text'));
+                }
+            });
+
+            // Reactivar los botones individuales
+            $('#proyectoUpdateStatusButton, #presupuestoUpdateStatusButton, #entregaUpdateStatusButton').each(
+                function() {
+                    const $btn = $(this);
+                    $btn.prop('disabled', false);
+                    if ($btn.data('original-text')) {
+                        $btn.text($btn.data('original-text'));
+                    }
+                });
         });
-    });
-</script>
+    </script>
 
 </body>
 

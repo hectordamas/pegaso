@@ -1,5 +1,5 @@
 <h5 class="mb-3">Totales</h5>
-<table class="table table-bordered table-sm border-dark shadow">
+<table class="table table-bordered table-sm border-dark shadow table-striped">
     <tr>
         <th class="bg-dark text-light">Base Imponible</th>
         <td>${{ number_format($totalBaseImponible, 2, '.', ',') }}</td>

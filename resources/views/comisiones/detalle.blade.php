@@ -38,11 +38,11 @@
                                     <th>Base Imponible ($)</th> 
                                     <th>Total Productos</th> 
                                     <th>Total Servicios</th> 
-                                            <th>Cobrado Productos ($)</th> 
-                                            <th>Cobrado Servicios ($)</th> 
-                                            <th>Total Cobrado ($)</th> 
-                                            <th>Cobrado (%)</th> 
-                                            <th>Comisión Producto ($)</th> 
+                                    <th>Cobrado Productos ($)</th> 
+                                    <th>Cobrado Servicios ($)</th> 
+                                    <th>Total Cobrado ($)</th> 
+                                    <th>Cobrado (%)</th> 
+                                    <th>Comisión Producto ($)</th> 
                                     <th>Comisión Servicio ($)</th> 
                                     <th>Total Comisión ($)</th> 
                                     <th>Pendiente Por Cobrar ($)</th> 
@@ -263,5 +263,29 @@
     }
 
 
+</script>
+
+<script>
+    $(document).on('change', '.check-admin, .check-manager', function() {
+        let id = $(this).data('id');
+        let isAdmin = $(this).hasClass('check-admin');
+        let checked = $(this).is(':checked') ? 1 : 0;
+
+        let data = {
+            _token: '{{ csrf_token() }}',
+        };
+
+        if (isAdmin) {
+            data.check_admin = checked;
+        } else {
+            data.check_manager = checked;
+        }
+
+        $.post(`/comisiones/safact/${id}/check`, data, function(res) {
+            if (res.success) {
+                console.log('Guardado con éxito');
+            }
+        });
+    });
 </script>
 @endsection

@@ -26,6 +26,7 @@ use App\Http\Controllers\{
     ChatEntregaController,
 
     ComisionesController,
+    ComisionesCobranzasController,
 
     WalletController,
 
@@ -166,19 +167,30 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('chatentrega/send', 'sendMessage')->name('chatentrega.send');
     });
 
-    //Comisiones
+    //Comisiones Ventas
     Route::controller(ComisionesController::class)->group(function(){
-        Route::get('comisiones', 'index')->name('comisiones.index')->middleware('menu.permission:137');
-        Route::get('comisiones/set/{id}', 'set')->name('comisiones.set')->middleware('menu.permission:137');
-        Route::get('comisiones/vendedor/{id}', 'vendedor')->name('comisiones.vendedor')->middleware('menu.permission:137');
-        Route::get('comisiones/detalles/{id}/{mes}', 'detalles_vendedor')->name('comisiones.detalles.vendedor')->middleware('menu.permission:137');
+        Route::get('comisiones-ventas', 'index')->name('comisiones.index')->middleware('menu.permission:143');
+        Route::get('comisiones/set/{id}', 'set')->name('comisiones.set')->middleware('menu.permission:143');
+        Route::get('comisiones/vendedor/{id}', 'vendedor')->name('comisiones.vendedor')->middleware('menu.permission:143');
+        Route::get('comisiones/detalles/{id}/{mes}', 'detalles_vendedor')->name('comisiones.detalles.vendedor')->middleware('menu.permission:143');
 
         Route::get('comisionesDetallesTable', 'comisionesDetallesTable')->name('comisionesDetallesTable');
         
-        Route::get('comisiones/balance', 'balance')->name('comisiones.balance')->middleware('menu.permission:137');
-        Route::get('comisiones/safact/{safactId}/comprobantes', 'comprobantes')->name('comisiones.comprobantes')->middleware('menu.permission:137');
+        Route::get('comisiones/balance', 'balance')->name('comisiones.balance')->middleware('menu.permission:143');
+        Route::get('comisiones/safact/{safactId}/comprobantes', 'comprobantes')->name('comisiones.comprobantes')->middleware('menu.permission:143');
 
+        Route::post('comisiones/safact/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:143');
     });
+
+    //Comisiones Cobranzas Controller
+    Route::controller(ComisionesCobranzasController::class)->group(function(){
+        Route::get('comisiones-cobranzas', 'index')->name('comisiones.index')->middleware('menu.permission:143');
+        Route::get('listSafact', 'listSafact')->name('comisiones.listSafact')->middleware('menu.permission:143');
+        Route::get('getComisionesData', 'getComisionesData')->name('comisiones.getComisionesData')->middleware('menu.permission:143');
+
+        Route::post('guardarSafacts', 'guardarSafacts')->name('comisiones.guardarSafacts')->middleware('menu.permission:143');
+    });
+
 
     //Wallet
     Route::controller(WalletController::class)->group(function(){
