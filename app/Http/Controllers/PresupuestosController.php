@@ -117,7 +117,7 @@ class PresupuestosController extends Controller
         }
  
         
-        if($codestatus == 3 || $codestatus == 11){
+        if($codestatus == 3 || $codestatus == 11 || $codestatus == 14){
             if($request->abono){
                 $presupuesto->abono = str_replace(',','.', str_replace('.','', $request->abono));
 

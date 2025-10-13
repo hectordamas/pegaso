@@ -31,6 +31,7 @@ return new class extends Migration
             ['id' => 8, 'nombre' => 'EJECUTADO', 'color' => '#00CED1', 'inactivo' => 0],
             ['id' => 9, 'nombre' => 'PAUSADO', 'color' => '#FF69B4', 'inactivo' => 0],
             ['id' => 10, 'nombre' => 'CONTROL DE CALIDAD', 'color' => '#000000', 'inactivo' => 0],
+            //['id' => 11, 'nombre' => 'SOPORTE TÉCNICO', 'color' => '#2f00ffff', 'inactivo' => 0],
         ]);
     }
 

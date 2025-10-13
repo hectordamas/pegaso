@@ -13,7 +13,8 @@
             </thead>
             <tbody>
                 @foreach ($responsables as $r)
-                    <tr>
+                    <tr class="responsable-row" data-id="{{ $r['id'] ?? '' }}" data-name="{{ $r['name'] }}"
+                        data-porcentaje="{{ $r['porcentaje'] }}">
                         <td>{{ $r['name'] }}</td>
                         <td>{{ number_format($r['porcentaje'], 2) }}%</td>
                         <td>${{ number_format($r['total_comision'], 2, '.', ',') }}</td>

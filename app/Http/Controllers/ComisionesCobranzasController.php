@@ -8,25 +8,26 @@ use Carbon\Carbon;
 
 class ComisionesCobranzasController extends Controller
 {
-    public function listSafact(Request $request){
+    public function listSafact(Request $request)
+    {
         $year = $request->year ?: date('Y');
-       // $mes  = $request->mes ?: date('m');
-        $mes  = $request->mes ?: 8;
+        // $mes  = $request->mes ?: date('m');
+        $mes  = $request->mes ?: 6;
         $id = $request->savendId;
 
         $startOfMonth = Carbon::createFromDate($year, $mes, 1)->startOfDay();
         $endOfMonth   = Carbon::createFromDate($year, $mes, 1)->endOfMonth()->endOfDay();
 
         $safacts = Safact::with(['cxc.detallecxc'])
-        ->whereHas('cxc.detallecxc', function($q) use ($startOfMonth, $endOfMonth) {
-            $q->whereNotNull('fechaDePago')->whereBetween('fechaDePago', [
-                  $startOfMonth->toDateString(), 
-                  $endOfMonth->toDateString()
-              ]);
-        })
-        ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-        ->where('aplica_comision', false)
-        ->get();
+            ->whereHas('cxc.detallecxc', function ($q) use ($startOfMonth, $endOfMonth) {
+                $q->whereNotNull('fechaDePago')->whereBetween('fechaDePago', [
+                    $startOfMonth->toDateString(),
+                    $endOfMonth->toDateString()
+                ]);
+            })
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+            ->where('aplica_comision', false)
+            ->get();
 
         $query = $safacts;
 
@@ -39,8 +40,8 @@ class ComisionesCobranzasController extends Controller
             $row[] = $safact->descrip;
             $row[] = $safact->numerod;
             $row[] = \Carbon\Carbon::parse($safact->fechae)->format('d-m-Y');
-            $row[] = '$ '. number_format($safact->tgravable / ($safact->factor ?? 1), 2);
-            $row[] = '<input type="checkbox" class="safact-checkbox" data-id="'.$safact->id.'" name="presupuestos[]" value="'.$safact->id.'" '.($safact->aplica_comision ? 'checked' : '').'>';
+            $row[] = '$ ' . number_format($safact->tgravable / ($safact->factor ?? 1), 2);
+            $row[] = '<input type="checkbox" class="safact-checkbox" data-id="' . $safact->id . '" name="presupuestos[]" value="' . $safact->id . '" ' . ($safact->aplica_comision ? 'checked' : '') . '>';
             $data[] = $row;
         }
 
@@ -51,12 +52,11 @@ class ComisionesCobranzasController extends Controller
             'aaData' => $data,
             'safacts' => $safacts
         ]);
-
     }
 
     public function guardarSafacts(Request $request)
     {
-        $safacts = $request->input('safacts', []); 
+        $safacts = $request->input('safacts', []);
         $ids = collect($safacts)->pluck('id')->toArray();
 
         foreach ($ids as $id) {
@@ -77,28 +77,28 @@ class ComisionesCobranzasController extends Controller
         $year = $request->year ?: date('Y');
         $mes  = $request->mes ?: 8;
         $id   = $request->savendId;
-    
+
         $startOfMonth = Carbon::createFromDate($year, $mes, 1)->startOfDay();
         $endOfMonth   = Carbon::createFromDate($year, $mes, 1)->endOfMonth()->endOfDay();
-    
+
         // ✅ 1. Eager loading completo para evitar consultas por relación
         $detallecxc = DetalleCxC::with([
             'cxc.safact',
             'bank',
             'cobranzasOrigen'
         ])
-        ->whereBetween('fechaDePago', [
-            $startOfMonth->toDateString(),
-            $endOfMonth->toDateString()
-        ])
-        ->whereHas('cxc.safact')
-        ->where('aplica_comision', true)
-        ->get();
-        
+            ->whereBetween('fechaDePago', [
+                $startOfMonth->toDateString(),
+                $endOfMonth->toDateString()
+            ])
+            ->whereHas('cxc.safact')
+            ->where('aplica_comision', true)
+            ->get();
+
         $totalRecords = $detallecxc->count();
         $totalCobradoUSD = $detallecxc->sum('monto');
         $data = [];
-        
+
         // ✅ 2. Precalcular todos los abonos de las facturas implicadas, ordenados
         $safactIds = $detallecxc->pluck('cxc.safact_id')->unique()->values();
         $todosLosAbonos = DetalleCxC::with('cxc')
@@ -107,30 +107,30 @@ class ComisionesCobranzasController extends Controller
             ->orderBy('id')
             ->get()
             ->groupBy(fn($a) => $a->cxc->safact_id);
-        
+
         // ✅ 3. Loop optimizado
         foreach ($detallecxc as $pago) {
             $safact = $pago->cxc->safact;
             $base = $safact->base_imponible() ?? 0;
             $abonos = $todosLosAbonos[$safact->id] ?? collect();
-        
+
             // Encontrar posición del pago actual
             $index = $abonos->search(fn($a) => $a->id === $pago->id);
-        
+
             // Abonos antes y hasta el actual
             $totalAntes = $abonos->take($index)->sum('monto');
             $totalHasta = $abonos->take($index + 1)->sum('monto');
-        
+
             // Cálculos base (en memoria, sin queries)
             $montoAPagar = max($base - $totalAntes, 0);
             $saldoPendiente = max($base - $totalHasta, 0);
             $porcentajePagado = $base > 0 ? ($totalHasta / $base) * 100 : 0;
             $porcentajePendiente = 100 - $porcentajePagado;
-        
+
             // Factor y monto convertido
             $factor = $safact->factor ?? 1;
             $montoConvertido = $pago->monto * $factor;
-        
+
             // ✅ Renderización de fila
             $row = [];
             $row[] = "<p>{$pago->id}</p>";
@@ -150,30 +150,31 @@ class ComisionesCobranzasController extends Controller
             $row[] = round($porcentajePagado) . '%';
             $row[] = number_format($saldoPendiente, 2, '.', ',');
             $row[] = round($porcentajePendiente) . '%';
-            $row[] = '<input type="checkbox" class="check-admin" data-id="'.$pago->id.'" '.($pago->check_admin ? 'checked' : '').' '.($pago->check_manager ? 'disabled' : '').'>';
-            $row[] = '<input type="checkbox" class="check-manager" data-id="'.$pago->id.'" '.($pago->check_manager ? 'checked' : '').' '.($pago->check_manager ? 'disabled' : '').'>';
+            $row[] = '<input type="checkbox" class="check-admin" data-id="' . $pago->id . '" ' . ($pago->check_admin ? 'checked' : '') . ' ' . ($pago->check_manager ? 'disabled' : '') . '>';
+            $row[] = '<input type="checkbox" class="check-manager" data-id="' . $pago->id . '" ' . ($pago->check_manager ? 'checked' : '') . ' ' . ($pago->check_manager ? 'disabled' : '') . '>';
             $row[] = $pago->descripcion;
             $row[] = view('comisionesCobranzas.partials.buttons', compact('safact', 'pago'))->render();
-        
+
             $data[] = $row;
         }
-    
+
         // ✅ 4. Cálculo de comisiones por responsable
         $responsables = CobranzaResponsable::all();
         $dataResponsables = $responsables->map(function ($r) use ($totalCobradoUSD) {
             $comisionUSD = $totalCobradoUSD * ($r->comision / 100);
             return [
+                'id' => $r->id,
                 'name' => $r->name,
                 'porcentaje' => $r->comision,
                 'total_comision' => $comisionUSD,
             ];
         });
-    
+
         $htmlResponsables = view('comisionesCobranzas.partials.comisiones_responsables', [
             'responsables' => $dataResponsables,
             'totalCobradoUSD' => $totalCobradoUSD
         ])->render();
-        
+
         // ✅ 5. Totales por origen (ya en memoria)
         $totalesPorOrigen = $detallecxc->groupBy('cobranzas_origen_id')->map(function ($items) {
             $monto = $items->sum('monto');
@@ -183,7 +184,7 @@ class ComisionesCobranzasController extends Controller
                 'total' => $monto,
             ];
         });
-    
+
         $dataOrigenes = $totalesPorOrigen->map(function ($o) use ($totalCobradoUSD) {
             $porcentaje = $totalCobradoUSD > 0 ? ($o['total'] / $totalCobradoUSD) * 100 : 0;
             return [
@@ -192,12 +193,12 @@ class ComisionesCobranzasController extends Controller
                 'porcentaje' => $porcentaje,
             ];
         });
-    
+
         $htmlOrigenes = view('comisionesCobranzas.partials.cobrado_origen', [
             'origenes' => $dataOrigenes,
             'totalCobradoUSD' => $totalCobradoUSD
         ])->render();
-        
+
         return response()->json([
             "sEcho" => 1,
             "iTotalRecords" => $totalRecords,
@@ -210,11 +211,76 @@ class ComisionesCobranzasController extends Controller
     }
 
 
-    public function index(){
+    public function index()
+    {
         $origenes = CobranzasOrigen::all();
 
         return view('comisionesCobranzas.index', [
             'origenes' => $origenes
+        ]);
+    }
+
+
+    public function getPagoInfo($id)
+    {
+        $pago = DetalleCxC::findOrFail($id);
+
+        return response()->json([
+            'fechaDeCobro' => $pago->fechaDePago,
+            'origen_id' => $pago->cobranzasOrigen?->id,
+            'factura' => $pago->factura,
+            'fechaDeFactura' => $pago->fechaDeFactura,
+        ]);
+    }
+
+    public function addComisionesCobranzasInfo(Request $request)
+    {
+        $pago = DetalleCxC::findOrFail($request->pago_id);
+        $pago->fechaDeCobro = $request->fechaDePago;
+        $pago->origen_id = $request->origen;
+        $pago->factura = $request->factura;
+        $pago->fechaDeFactura = $request->fechaDeFactura;
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function createResponsable(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'comision' => 'required|numeric|min:0|max:100',
+        ]);
+
+        CobranzaResponsable::create([
+            'name' => $request->name,
+            'comision' => $request->comision,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Responsable creado correctamente.',
+        ]);
+    }
+
+    public function updateResponsable(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'name' => 'required|string|max:100',
+            'comision' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $responsable = CobranzaResponsable::findOrFail($request->id);
+        $responsable->update([
+            'name' => $request->name,
+            'comision' => $request->comision,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Responsable actualizado correctamente.',
         ]);
     }
 }
