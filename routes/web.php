@@ -193,6 +193,7 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('addComisionesCobranzasInfo', 'addComisionesCobranzasInfo')->middleware('menu.permission:143');
         Route::post('createResponsable', 'createResponsable')->middleware('menu.permission:143');
         Route::post('updateResponsable', 'updateResponsable')->middleware('menu.permission:143');
+        Route::post('comisiones/detallecxc/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:143');
     });
 
     //Soporte Tècnico

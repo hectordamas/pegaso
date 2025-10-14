@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC, Bank, Saclie, saitemfac};
+use App\Models\{Safact, EstatusPre, Savend, CxC, DetalleCxC, Bank, Saclie, saitemfac, SafactEstatusHistorial};
 
 class SoporteTecnicoController extends Controller
 {

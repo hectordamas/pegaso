@@ -11,8 +11,7 @@ class ComisionesCobranzasController extends Controller
     public function listSafact(Request $request)
     {
         $year = $request->year ?: date('Y');
-        // $mes  = $request->mes ?: date('m');
-        $mes  = $request->mes ?: 6;
+        $mes  = $request->mes ?: date('m');
         $id = $request->savendId;
 
         $startOfMonth = Carbon::createFromDate($year, $mes, 1)->startOfDay();
@@ -211,12 +210,14 @@ class ComisionesCobranzasController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
         $origenes = CobranzasOrigen::all();
+        $mes = $request->mes ?: date('m');
 
         return view('comisionesCobranzas.index', [
-            'origenes' => $origenes
+            'origenes' => $origenes,
+            'mes' => $mes
         ]);
     }
 
@@ -283,4 +284,21 @@ class ComisionesCobranzasController extends Controller
             'message' => 'Responsable actualizado correctamente.',
         ]);
     }
+
+    public function updateCheck(Request $request, $id)
+    {
+        $pago = DetalleCxC::findOrFail($id);
+
+        if ($request->has('check_admin')) {
+            $pago->check_admin = $request->check_admin;
+        }
+        if ($request->has('check_manager')) {
+            $pago->check_manager = $request->check_manager;
+        }
+
+        $pago->save();
+
+        return response()->json(['success' => true]);
+    }
+
 }

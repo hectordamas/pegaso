@@ -11,20 +11,21 @@ use Mail;
 
 class PresupuestosController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $estatus = EstatusPre::where('inactivo', false)
-        ->whereIn('id', [2, 3, 5, 6, 11])
-        ->get();
+            ->whereIn('id', [2, 3, 5, 6, 11])
+            ->get();
 
         $vendedores = Savend::where('activo', true)
-        ->get();
+            ->get();
 
         $client = $request->client;
 
         $banks = Bank::all();
 
         return view('presupuestos', [
-            'estatus' => $estatus, 
+            'estatus' => $estatus,
             'vendedores' => $vendedores,
             'client' => $client,
             'banks' => $banks
@@ -42,10 +43,10 @@ class PresupuestosController extends Controller
             ->bySaclie($request->input('client'))
             ->with(['saclie', 'estatusPre', 'savend'])
             ->get();
-    
+
         // Obtener la cantidad total de registros antes de la paginación
         $totalRecords = (clone $query)->count();
-    
+
         // Contadores por estatus
         $pendientes = (clone $query)->where('codestatus', 1)->count();
         $aprobados = (clone $query)->where('codestatus', 2)->count();
@@ -56,7 +57,7 @@ class PresupuestosController extends Controller
 
         $data = [];
 
-        foreach($query as $p){
+        foreach ($query as $p) {
             $dias = \Carbon\Carbon::parse($p->fechae)->diffInDays();
             // Condiciones para determinar el badge
             if ($dias >= 0 && $dias < 6) {
@@ -85,11 +86,11 @@ class PresupuestosController extends Controller
             $row[] = '<p>' . number_format($p->mtototal, 2, ',', '.') . '</p>';
             $row[] = '<p>' . ($p->factor ? number_format($p->mtototal / $p->factor, 2, ',', '.') : number_format(0, 2, ',', '.')) . '</p>';
             $row[] = '<p>' . ($p->savend->descrip ?? 'N/A') . '</p>';
-            $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">'. ($p->estatusPre->nombre ?? "N/A"). '</span>';
+            $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">' . ($p->estatusPre->nombre ?? "N/A") . '</span>';
             $row[] = view('presupuestos.actions', compact('p'))->render();
             $data[] = $row;
         }
-    
+
         return response()->json([
             "sEcho" => 1,
             "iTotalRecords" => $totalRecords,
@@ -104,55 +105,70 @@ class PresupuestosController extends Controller
         ]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $presupuesto = Safact::find($request->presupuestoId);
         $codestatus = $request->codestatus;
         $presupuesto->codestatus = $request->codestatus;
 
 
-        if($codestatus == 5 || $codestatus == 6){
-            if($request->razon){
+        if ($codestatus == 5 || $codestatus == 6) {
+            if ($request->razon) {
                 $presupuesto->razon = $request->razon;
-            }       
+            }
         }
- 
-        
-        if($codestatus == 3 || $codestatus == 11 || $codestatus == 14){
-            if($request->abono){
-                $presupuesto->abono = str_replace(',','.', str_replace('.','', $request->abono));
+
+
+        if ($codestatus == 3 || $codestatus == 11 || $codestatus == 14) {
+            if ($request->abono) {
+                $presupuesto->abono = str_replace(',', '.', str_replace('.', '', $request->abono));
 
                 $cxc = new CxC();
-                $cxc->codwallet	= 1;			
-                $cxc->fecha	= date('Y-m-d');
-                $cxc->fecha_emision	= $presupuesto->fechae;						
-                $cxc->codmoneda	= 2;			
-                $cxc->codtipomoneda	= 4;		
-                $cxc->codclie = $presupuesto->saclie->codclie;			
-                $cxc->cliente = $presupuesto->saclie->rif . ' | '. $presupuesto->saclie->descrip;			
-                $cxc->monto	= $presupuesto->tgravable / $presupuesto->factor;			
-                $cxc->codusuario = Auth::user()->codusuario;	
-                $cxc->observacion = ($codestatus == 3 ? 'Proyecto: ' . $presupuesto->numerod : 'Entrega: '. $presupuesto->numerod) . ' ' . $request->observacion;
+                $cxc->codwallet    = 1;
+                $cxc->fecha    = date('Y-m-d');
+                $cxc->fecha_emision    = $presupuesto->fechae;
+                $cxc->codmoneda    = 2;
+                $cxc->codtipomoneda    = 4;
+                $cxc->codclie = $presupuesto->saclie->codclie;
+                $cxc->cliente = $presupuesto->saclie->rif . ' | ' . $presupuesto->saclie->descrip;
+                $cxc->monto    = $presupuesto->tgravable / $presupuesto->factor;
+                $cxc->codusuario = Auth::user()->codusuario;
+                if ($codestatus == 3) {
+                    $prefix = 'Proyecto: ' . $presupuesto->numerod;
+                } elseif ($codestatus == 14) {
+                    $prefix = 'Servicio de soporte: ' . $presupuesto->numerod;
+                } else {
+                    $prefix = 'Entrega: ' . $presupuesto->numerod;
+                }
+
+                $cxc->observacion = $prefix . ' ' . $request->observacion;
+
                 $cxc->departamento = 'Ventas';
-                $cxc->safact_id = $presupuesto->id;	
+                $cxc->safact_id = $presupuesto->id;
                 $cxc->save();
 
                 $abono = new DetalleCxC();
-                $abono->codcxc = $cxc->codcxc;	
+                $abono->aplica_comision = $request->input('aplicaComision', 0); // por defecto 0 si no se envía
+
+                $abono->codcxc = $cxc->codcxc;
                 $abono->codtipomoneda = 4;
-                $abono->fecha = date('Y-m-d');			
-                $abono->monto = str_replace(',','.', str_replace('.','', $request->abono));			
-                $abono->descripcion = ($codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: '. $presupuesto->numerod) . ' ' . $request->observacion;	
-                $abono->file = $request->input('file');	
-                $abono->codusuario = Auth::user()->codusuario;	
-                $abono->departamento = 'Ventas';	
+                $abono->fecha = date('Y-m-d');
+                $abono->monto = str_replace(',', '.', str_replace('.', '', $request->abono));
+                $abono->descripcion = ($codestatus == 3 ? 'Abono Proyecto: ' . $presupuesto->numerod : 'Abono Entrega: ' . $presupuesto->numerod) . ' ' . $request->observacion;
+                $abono->file = $request->input('file');
+                $abono->codusuario = Auth::user()->codusuario;
+                $abono->departamento = 'Ventas';
                 $abono->fechaDePago = $request->fechaDePago;
                 $abono->bank_id = $request->bank_id;
+
+                $abono->aplicaComision = $request->input('aplicaComision', 0); // por defecto 0 si no se envía
+
                 $abono->save();
-                
-                $cxc = Cxc::where('codcxc','=', $cxc->codcxc)->first();
-                
-                if($cxc){
-                    $cxc->abono = $cxc->abono + str_replace(',','.', str_replace('.','', $request->abono));
+
+                $cxc = Cxc::where('codcxc', '=', $cxc->codcxc)->first();
+
+                if ($cxc) {
+                    $cxc->abono = $cxc->abono + str_replace(',', '.', str_replace('.', '', $request->abono));
                     $cxc->save();
                 }
             }
@@ -162,7 +178,7 @@ class PresupuestosController extends Controller
 
         if ($presupuesto->codestatus == 3) {
             $email = $presupuesto->savend->email ?? null;
-        
+
             if ($email) {
                 Mail::to($email)->send(new ProyectoAprobadoMail($presupuesto));
             }
@@ -173,7 +189,8 @@ class PresupuestosController extends Controller
         ]);
     }
 
-    public function verDetalles($id){
+    public function verDetalles($id)
+    {
         $presupuesto = Safact::find($id);
         $items = $presupuesto->saitemfac;
 

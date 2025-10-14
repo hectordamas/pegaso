@@ -5,362 +5,398 @@
 @endsection
 
 @section('styles')
-<style>
-    .color-selector {
-        border: 3px solid transparent;
-        border-radius: 10px;
-        cursor: pointer;
-        padding: 10px;
-        transition: all 0.2s;
-    }
+    <style>
+        .color-selector {
+            border: 3px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.2s;
+        }
 
-    .color-selector.active {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-    .color-selector:hover{
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-        transition: all 0.2s;
-    }
-</style>
+        .color-selector.active {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-selector:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+    </style>
 @endsection
 
 @section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5>Cuentas por Cobrar</h5>
+                    <span>Selecciona una empresa para consultar Cuentas por Cobrar</span>
+                </div>
+                <div class="card-block">
+                    <div class="row">
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5>Cuentas por Cobrar</h5>
-                <span>Selecciona una empresa para consultar Cuentas por Cobrar</span>
-            </div>
-            <div class="card-block">
-                <div class="row">
+                        <!-- Selección de Empresa -->
+                        <div class="col-lg-6 col-md-6 form-group">
+                            <label for="cmbcodwallet" class="font-weight-bold mb-2 fw-bold">Empresa</label>
+                            <select name="cmbcodwallet" class="form-control" id="cmbcodwallet" required>
+                                <option selected>Seleccione una empresa</option>
+                                @foreach ($wallet as $w)
+                                    @if ($w->cxc)
+                                        <option value="{{ $w->codwallet }}">{{ $w->nombre }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <!-- Selección de Empresa -->
-                    <div class="col-lg-6 col-md-6 form-group">
-                        <label for="cmbcodwallet" class="font-weight-bold mb-2 fw-bold">Empresa</label>
-                        <select name="cmbcodwallet" class="form-control" id="cmbcodwallet" required>
-                            <option selected>Seleccione una empresa</option>
-                            @foreach($wallet as $w)
-                                @if($w->cxc)
-                                    <option value="{{ $w->codwallet }}">{{ $w->nombre }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <!-- Saldo Pendiente -->
-                    <div class="col-lg-6 col-md-6">
-                        <div class="card bg-c-green text-white shadow">
-                            <div class="card-block">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <p class="m-b-5 fw-bold">Saldo por Cobrar ($)</p>
-                                        <h4 class="m-b-0" id="saldocxc">${{ number_format(0,2,',','.') }}</h4>
-                                    </div>
-                                    <div class="col col-auto text-end">
-                                        <i class="fas fa-hand-holding-usd f-50 text-c-green"></i>
+                        <!-- Saldo Pendiente -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="card bg-c-green text-white shadow">
+                                <div class="card-block">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <p class="m-b-5 fw-bold">Saldo por Cobrar ($)</p>
+                                            <h4 class="m-b-0" id="saldocxc">${{ number_format(0, 2, ',', '.') }}</h4>
+                                        </div>
+                                        <div class="col col-auto text-end">
+                                            <i class="fas fa-hand-holding-usd f-50 text-c-green"></i>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+
+                        </div>
+
+
+                    </div> <!-- /.row -->
+
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="color-selector" data-color="#00FF00">
+                                <label class="control-label fw-bold">COBRAR</label><br>
+
+                                <input type="color" value="#00FF00" disabled style="pointer-events: none;">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <div class="color-selector" data-color="#FFA500">
+                                <label class="control-label fw-bold">JULIO FARFAN</label><br>
+                                <input type="color" value="#FFA500" disabled style="pointer-events: none;">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <div class="color-selector" data-color="#0000FF">
+                                <label class="control-label fw-bold">DANIEL SOUSA</label><br>
+                                <input type="color" value="#0000FF" disabled style="pointer-events: none;">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <div class="color-selector" data-color="#FF0000">
+                                <label class="control-label fw-bold">NO COBRAR</label><br>
+                                <input type="color" value="#FF0000" disabled style="pointer-events: none;">
                             </div>
                         </div>
 
                     </div>
 
+                </div> <!-- /.card-body -->
+            </div> <!-- /.card -->
+        </div> <!-- /.col-md-12 -->
+    </div> <!-- /.row -->
 
-                </div> <!-- /.row -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5>Operaciones Diarias</h5>
+                        <span>Resultados de consulta de cuentas por cobrar</span>
+                    </div>
+                    <button type="button" class="btn btn-primary shadow rounded" data-bs-toggle="modal"
+                        data-bs-target="#createCxcModal">
+                        <i class="fas fa-coins"></i> Registrar Cuentas por Cobrar
+                    </button>
+                </div>
+                <div class="card-block">
 
-                <div class="row">
-                    <div class="col-md-3 text-center">
-                        <div class="color-selector" data-color="#00FF00">
-                            <label class="control-label fw-bold">COBRAR</label><br>
-
-                            <input type="color" value="#00FF00" disabled style="pointer-events: none;">
+                    <div class="row" id="searchContainer">
+                        <div class="col-md-6 form-group">
+                            <input type="text" class="form-control" id="searchCxc"
+                                placeholder="Buscar por Código / RIF / Razón Social">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <a href="javascript:void(0)" onclick="imprimir()" class="btn btn-success rounded shadow">
+                                <i class="fas fa-print"></i> Imprimir Todo
+                            </a>
                         </div>
                     </div>
 
-                    <div class="col-md-3 text-center">
-                        <div class="color-selector" data-color="#FFA500">
-                            <label class="control-label fw-bold">JULIO FARFAN</label><br>
-                            <input type="color" value="#FFA500"  disabled style="pointer-events: none;">
+                    <div id="saldosPorClienteContainer">
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12" id="cxcContainer">
+
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="col-md-3 text-center">
-                        <div class="color-selector" data-color="#0000FF">
-                            <label class="control-label fw-bold">DANIEL SOUSA</label><br>
-                            <input type="color" value="#0000FF" disabled style="pointer-events: none;">
+    {{-- Modal para crear una cxc Nueva!!!!! --}}
+    <div class="modal fade createCxcModal" tabindex="-1" id="createCxcModal" aria-labelledby="createCxcModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form enctype="multipart/form-data" id="formReg" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h6 class="modal-title fw-bold" id="createCxcModalLabel">Registrar Cuenta por Cobrar</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Selección de Empresa -->
+                        <div class="form-group col-md-6">
+                            <label for="empresa" class="font-weight-bold mb-2 fw-bold">Empresa</label>
+                            <select name="empresa" class="form-control" id="empresa" required>
+                                <option selected>Seleccione una empresa</option>
+                                @foreach ($wallet as $w)
+                                    @if ($w->cxc)
+                                        <option value="{{ $w->codwallet }}">{{ $w->nombre }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="clienteSaint" class="fw-bold">Cliente Saint</label>
+                            <select name="codclie" required id="clienteSaint"
+                                class="form-control js-example-basic-single">
+                                <option value="">Elige una Opción</option>
+                                @foreach ($saclie as $item)
+                                    <option value="{{ $item->codclie }}">{{ $item->descrip }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="fw-bold">Fecha</label>
+                            <input type="date" id="fechacxc" class="form-control" name="fecha"
+                                value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label fw-bold">Monto</label>
+                            <input name="monto" id="montocxc" type="text" class="montopcd form-control"
+                                onkeyup="convertirmonto(this.form)" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="" class="control-label fw-bold">Descripción</label>
+                            <input type="text" id="descripcioncxc" class="form-control" name="description">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="" class="control-label fw-bold">Responsable</label>
+                            <input type="text" id="responsablecxc" readonly class="form-control" name="responsable"
+                                value="{{ Auth::user()->name }}">
                         </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="far fa-check-square"></i> Registrar
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="far fa-times-circle"></i> Cerrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-                    <div class="col-md-3 text-center">
-                        <div class="color-selector" data-color="#FF0000">
-                            <label class="control-label fw-bold">NO COBRAR</label><br>
-                            <input type="color" value="#FF0000" disabled style="pointer-events: none;">
+
+    <!-- Modal Para ver detalles de cxc por cliente -->
+    <div class="modal fade CxcDetailsModalView" tabindex="-1" id="CxcDetailsModalView"
+        aria-labelledby="CxcDetailsModalViewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="CxcDetailsModalViewLabel">Detalles del Cliente: <span
+                            class="codclie badge badge-danger"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="cxcDetailsTableContainer">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="far fa-times-circle"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Para Adjuntar un abono -->
+    <div class="modal fade AbonoModalView" tabindex="-1" id="AbonoModalView" aria-labelledby="AbonoModalViewLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <form enctype="multipart/form-data" id="formRegAbono" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h6 class="modal-title" id="AbonoModalViewLabel">Cuenta por Cobrar #<span class="codcxc"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="inputcxc" type="hidden">
+
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="fechaDePago">Fecha de Pago</label>
+                            <input type="date" class="form-control" name="fechaDePago" id="fechaDePago"
+                                value="{{ date('Y-m-d') }}" required>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label fw-bold">Forma de Pago</label>
+                            <select class="form-control" name="cmbcodtipomonedaabono" id="cmbcodtipomonedaabono"
+                                required>
+                                <option value="" selected></option>
+                                @foreach ($tipomoneda as $tm)
+                                    <option value="{{ $tm->codtipomoneda }}">{{ $tm->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 form-group" id="bankSelectContainer" style="display: none;">
+                            <label for="bankSelect" class="control-label fw-bold">Banco</label>
+                            <select class="form-control" name="bank_id" id="bankSelect">
+                                <option value="" selected disabled>Seleccione un banco...</option>
+                                @foreach ($banks as $bank)
+                                    <option value="{{ $bank->id }}">{{ $bank->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label fw-bold">Monto</label>
+                            <input name="montoabono" id="montoabono" type="text" class="montopcd form-control"
+                                onkeyup="convertirmonto(this.form)" required>
+                        </div>
+
+                        <div class="col-sm-6 form-group">
+                            <label for="" class="control-label fw-bold mb-2">Adjuntar Comprobante</label>
+                            <input type="file" id="file" name="file" accept="image/*, application/pdf"
+                                class="form-control" required>
+                        </div>
+
+                        <div class="col-md-12 form-group">
+                            <label for="" class="control-label fw-bold">Descripción</label>
+                            <textarea required class="form-control" id="descripcionabono" name="descripcionabono" rows="2"
+                                onKeyUp="this.value=this.value.toUpperCase();"></textarea>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="control-label fw-bold d-block mb-2">Aplica Comisión</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="aplicaComision"
+                                    name="aplicaComision" value="1">
+                                <label class="form-check-label" for="aplicaComision">Sí</label>
+                            </div>
                         </div>
                     </div>
-
                 </div>
-
-            </div> <!-- /.card-body -->
-        </div> <!-- /.card -->
-    </div> <!-- /.col-md-12 -->
-</div> <!-- /.row -->
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h5>Operaciones Diarias</h5>
-                    <span>Resultados de consulta de cuentas por cobrar</span>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">
+                        <i class="far fa-check-square"></i> Guardar
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="far fa-times-circle"></i> Cerrar
+                    </button>
                 </div>
-                <button type="button" class="btn btn-primary shadow rounded" data-bs-toggle="modal" data-bs-target="#createCxcModal">
-                    <i class="fas fa-coins"></i> Registrar Cuentas por Cobrar
-                </button>
-            </div>
-            <div class="card-block">
+            </form>
+        </div>
+    </div>
 
-                <div class="row" id="searchContainer">
-                    <div class="col-md-6 form-group">
-                        <input type="text" class="form-control" id="searchCxc" placeholder="Buscar por Código / RIF / Razón Social">
+    {{-- Modal abono details view --}}
+    <div class="modal fade AbonoDetailsModalView" tabindex="-1" id="AbonoDetailsModalView"
+        aria-labelledby="AbonoDetailsModalViewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h6 class="modal-title" id="AbonoDetailsModalViewLabel">Abonos | Cuenta por Cobrar #<span
+                            class="codcxc"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12" id="AbonoDetailsModalContainer">
+
+                        </div>
                     </div>
-                    <div class="col-md-6 form-group">
-                        <a  href="javascript:void(0)" onclick="imprimir()" class="btn btn-success rounded shadow">
-                            <i class="fas fa-print"></i> Imprimir Todo
-                        </a>
-                    </div>
                 </div>
-
-                <div id="saldosPorClienteContainer">
-
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12" id="cxcContainer">
-
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="far fa-times-circle"></i> Cerrar
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-{{-- Modal para crear una cxc Nueva!!!!! --}}
-<div class="modal fade createCxcModal" tabindex="-1" id="createCxcModal" aria-labelledby="createCxcModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form enctype="multipart/form-data" id="formReg" class="modal-content">
-            @csrf
-            <div class="modal-header">
-                <h6 class="modal-title fw-bold" id="createCxcModalLabel">Registrar Cuenta por Cobrar</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Selección de Empresa -->
-                    <div class="form-group col-md-6">
-                        <label for="empresa" class="font-weight-bold mb-2 fw-bold">Empresa</label>
-                        <select name="empresa" class="form-control" id="empresa" required>
-                            <option selected>Seleccione una empresa</option>
-                            @foreach($wallet as $w)
-                                @if($w->cxc)
-                                    <option value="{{ $w->codwallet }}">{{ $w->nombre }}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="clienteSaint" class="fw-bold">Cliente Saint</label>
-                        <select name="codclie" required id="clienteSaint" class="form-control js-example-basic-single">
-                            <option value="">Elige una Opción</option>
-                            @foreach($saclie as $item)
-                                <option value="{{ $item->codclie }}">{{ $item->descrip }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="fw-bold">Fecha</label>
-                        <input type="date" id="fechacxc" class="form-control" name="fecha" value="{{ date('Y-m-d') }}">
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="control-label fw-bold">Monto</label>
-                        <input name="monto" id="montocxc" type="text" class="montopcd form-control" onkeyup="convertirmonto(this.form)" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="" class="control-label fw-bold">Descripción</label>
-                        <input type="text" id="descripcioncxc" class="form-control" name="description">
-                    </div> 
-                    <div class="form-group col-md-6">
-                        <label for="" class="control-label fw-bold">Responsable</label>
-                        <input type="text" id="responsablecxc" readonly class="form-control" name="responsable" value="{{ Auth::user()->name }}">
-                    </div> 
+
+    <!-- Modal superior para mostrar comprobantes -->
+    <div class="modal fade" id="comprobanteViewerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white">Comprobante</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Imagen -->
+                    <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid d-none" />
+                    <!-- PDF -->
+                    <iframe id="comprobantePdf" src="" allow="fullscreen"
+                        style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">
-                    <i class="far fa-check-square"></i> Registrar
-                </button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <i class="far fa-times-circle"></i> Cerrar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-<!-- Modal Para ver detalles de cxc por cliente -->
-<div class="modal fade CxcDetailsModalView" tabindex="-1" id="CxcDetailsModalView" aria-labelledby="CxcDetailsModalViewLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="CxcDetailsModalViewLabel">Detalles del Cliente: <span class="codclie badge badge-danger"></span></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="cxcDetailsTableContainer">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <i class="far fa-times-circle"></i> Cerrar
-                </button>
-            </div>
         </div>
     </div>
-</div>
-
-<!-- Modal Para Adjuntar un abono -->
-<div class="modal fade AbonoModalView" tabindex="-1" id="AbonoModalView" aria-labelledby="AbonoModalViewLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form enctype="multipart/form-data" id="formRegAbono" class="modal-content">
-            @csrf
-            <div class="modal-header">
-                <h6 class="modal-title" id="AbonoModalViewLabel">Cuenta por Cobrar #<span class="codcxc"></span></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input id="inputcxc" type="hidden">
-
-                <div class="row">
-                    <div class="col-md-6 form-group">
-                        <label for="fechaDePago">Fecha de Pago</label>
-                        <input type="date" class="form-control" name="fechaDePago" id="fechaDePago" value="{{ date('Y-m-d') }}" required>
-                    </div>
-
-                    <div class="col-sm-6 form-group">
-                        <label class="control-label fw-bold">Forma de Pago</label>
-                        <select class="form-control" name="cmbcodtipomonedaabono" id="cmbcodtipomonedaabono" required>
-                            <option value="" selected></option>
-                            @foreach($tipomoneda as $tm)
-                                <option value="{{$tm->codtipomoneda}}">{{$tm->nombre}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-sm-6 form-group">
-                        <label class="control-label fw-bold">Monto</label>
-                        <input name="montoabono" id="montoabono" type="text" class="montopcd form-control" onkeyup="convertirmonto(this.form)" required>
-                    </div>
-
-                    <div class="col-sm-6 form-group">
-                        <label for="" class="control-label fw-bold mb-2">Adjuntar Comprobante</label>
-                        <input type="file" id="file" name="file" accept="image/*, application/pdf" class="form-control" required>
-                    </div>
-
-                    <div class="col-md-12 form-group">
-                        <label for="" class="control-label fw-bold">Descripción</label>
-                        <textarea required class="form-control" id="descripcionabono" name="descripcionabono" rows="2" onKeyUp="this.value=this.value.toUpperCase();"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">
-                    <i class="far fa-check-square"></i> Guardar
-                </button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <i class="far fa-times-circle"></i> Cerrar
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-{{-- Modal abono details view--}}
-<div class="modal fade AbonoDetailsModalView" tabindex="-1" id="AbonoDetailsModalView" aria-labelledby="AbonoDetailsModalViewLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            @csrf
-            <div class="modal-header">
-                <h6 class="modal-title" id="AbonoDetailsModalViewLabel">Abonos | Cuenta por Cobrar #<span class="codcxc"></span></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12" id="AbonoDetailsModalContainer">
-
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <i class="far fa-times-circle"></i> Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal superior para mostrar comprobantes -->
-<div class="modal fade" id="comprobanteViewerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content bg-dark">
-        <div class="modal-header border-0">
-          <h5 class="modal-title text-white">Comprobante</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body text-center">
-            <!-- Imagen -->
-            <img id="comprobanteImg" src="" alt="Comprobante" class="img-fluid d-none" />
-            <!-- PDF -->
-            <iframe id="comprobantePdf" src="" allow="fullscreen" style="width: 100%; height: 80vh; max-width: 400px;" frameborder="0" class="d-none"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
 @endsection
 
 @section('scripts')
-<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
-<script>
-    function openComprobanteViewer(base64) {
-        const mime = base64.substring(5, base64.indexOf(';'));
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+    <script>
+        function openComprobanteViewer(base64) {
+            const mime = base64.substring(5, base64.indexOf(';'));
 
-        const img = document.getElementById('comprobanteImg');
-        const pdf = document.getElementById('comprobantePdf');
+            const img = document.getElementById('comprobanteImg');
+            const pdf = document.getElementById('comprobantePdf');
 
-        if (mime === 'application/pdf') {
-            // Mostrar PDF
-            img.classList.add('d-none');
-            pdf.classList.remove('d-none');
-            pdf.src = base64;
-        } else {
-            // Mostrar imagen
-            pdf.classList.add('d-none');
-            img.classList.remove('d-none');
-            img.src = base64;
+            if (mime === 'application/pdf') {
+                // Mostrar PDF
+                img.classList.add('d-none');
+                pdf.classList.remove('d-none');
+                pdf.src = base64;
+            } else {
+                // Mostrar imagen
+                pdf.classList.add('d-none');
+                img.classList.remove('d-none');
+                img.src = base64;
+            }
+
+            $('#comprobanteViewerModal').modal('show');
         }
+    </script>
 
-        $('#comprobanteViewerModal').modal('show');
-    }
-</script>
+    <script>
+        var printJson;
 
-<script>
-
-
-    var printJson;
-
-    function imprimir() {
-        let formattedHtml = `
+        function imprimir() {
+            let formattedHtml = `
             <table style="width:100%; border-collapse: collapse; font-family: Arial, sans-serif;">
                 <thead>
                     <tr>
@@ -370,586 +406,625 @@
                 </thead>
                 <tbody>`;
 
-        printJson.forEach(item => {
-            let formattedSaldo = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD' }).format(item.saldo);
-            formattedHtml += `
+            printJson.forEach(item => {
+                let formattedSaldo = new Intl.NumberFormat('es-ES', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(item.saldo);
+                formattedHtml += `
                 <tr>
                     <td style="text-align: left; padding: 5px; border-bottom: 1px solid #ccc;">${item.cliente}</td>
                     <td style="text-align: right; padding: 5px; border-bottom: 1px solid #ccc;">${formattedSaldo}</td>
                 </tr>`;
-        });
+            });
 
-        formattedHtml += `</tbody></table>`;
+            formattedHtml += `</tbody></table>`;
 
-        printJS({
-            printable: formattedHtml,
-            type: 'raw-html'
-        });
-    }
-
-    var cxcTable;
-    var cxcDetailsTable;
-
-    function convertirmonto(input){
-		$(".montopcd").on({
-			"focus": function (event) {
-				$(event.target).select();
-			},
-			"keyup": function (event) {
-				$(event.target).val(function (index, value ) {
-					return value.replace(/\D/g, "")
-						.replace(/([0-9])([0-9]{2})$/, '$1,$2')
-						.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-				});	   
-			}
-		});
-	}
-
-    function initializeCxcTable(){
-        const exp = $('#exp').val();
-
-        if ($.fn.DataTable.isDataTable('#cxc-table')) {
-            $('#cxc-table').dataTable().fnClearTable();
-			$('#cxc-table').dataTable().fnDestroy();
+            printJS({
+                printable: formattedHtml,
+                type: 'raw-html'
+            });
         }
 
-        if($('#cxc-table').length){
-            cxcTable = $('#cxc-table').DataTable({
-		    	deferRender: true, // Solo renderiza lo visible
-		    	order: [[0, 'desc']],
-		    	responsive: true,
-		    	lengthChange: false,
-		    	autoWidth: false,
-		    	lengthMenu: [
-		    		[10, 50, 100, 150, -1],
-		    		[10, 50, 100, 150, 'Todos']
-		    	],
-		    	dom: 'Bfrtip',
-                buttons: [
-				{
-					extend: 'copy',
-					text: 'Copiar',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
-				},
-				{
-					extend: 'csv',
-					text: 'Exportar CSV',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
-				},
-				{
-					extend: 'excel',
-					text: 'Exportar Excel',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
-				},
-				{
-					extend: 'pdf',
-					text: 'Exportar PDF',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
-				},
-				{
-					extend: 'print',
-					text: 'Imprimir',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
-				}
-			],	
-		    	language: {
-		    		sProcessing: "Procesando...",
-		    		sLengthMenu: "Mostrar _MENU_ registros",
-		    		sZeroRecords: "No se encontraron resultados",
-		    		sEmptyTable: "Ningún dato disponible en esta tabla",
-		    		sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-		    		sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-		    		sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-		    		sSearch: "Buscar:",
-		    		oPaginate: {
-		    			sFirst: "Primero",
-		    			sLast: "Último",
-		    			sNext: "Siguiente",
-		    			sPrevious: "Anterior"
-		    		},
-		    		buttons: {
-		    			pageLength: {
-		    				_: "Ver %d Registros",
-		    				'-1': "Todos"
-		    			},
-		    			colvis: "Columnas",
-		    			copy: "Copiar",
-		    			print: "Imprimir"
-		    		}
-		    	}
-		    });
-	    }
-    }
+        var cxcTable;
+        var cxcDetailsTable;
 
-    function initializeCxcDetailsTable(){
-        const exp = $('#exp').val();
-
-        if ($.fn.DataTable.isDataTable('#cxcDetails-table')) {
-            $('#cxcDetails-table').dataTable().fnClearTable();
-			$('#cxcDetails-table').dataTable().fnDestroy();
+        function convertirmonto(input) {
+            $(".montopcd").on({
+                "focus": function(event) {
+                    $(event.target).select();
+                },
+                "keyup": function(event) {
+                    $(event.target).val(function(index, value) {
+                        return value.replace(/\D/g, "")
+                            .replace(/([0-9])([0-9]{2})$/, '$1,$2')
+                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                    });
+                }
+            });
         }
 
-        if($('#cxcDetails-table').length){
-            cxcTable = $('#cxcDetails-table').DataTable({
-		    	deferRender: true, // Solo renderiza lo visible
-		    	order: [[0, 'desc']],
-		    	responsive: true,
-		    	lengthChange: false,
-		    	autoWidth: false,
-		    	lengthMenu: [
-		    		[10, 50, 100, 150, -1],
-		    		[10, 50, 100, 150, 'Todos']
-		    	],
-		    	dom: 'Bfrtip',
-                buttons: [
-				{
-					extend: 'copy',
-					text: 'Copiar',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
-				},
-				{
-					extend: 'csv',
-					text: 'Exportar CSV',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
-				},
-				{
-					extend: 'excel',
-					text: 'Exportar Excel',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
-				},
-				{
-					extend: 'pdf',
-					text: 'Exportar PDF',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
-				},
-				{
-					extend: 'print',
-					text: 'Imprimir',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
-				}
-			],		    	
-                language: {
-		    		sProcessing: "Procesando...",
-		    		sLengthMenu: "Mostrar _MENU_ registros",
-		    		sZeroRecords: "No se encontraron resultados",
-		    		sEmptyTable: "Ningún dato disponible en esta tabla",
-		    		sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-		    		sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-		    		sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-		    		sSearch: "Buscar:",
-		    		oPaginate: {
-		    			sFirst: "Primero",
-		    			sLast: "Último",
-		    			sNext: "Siguiente",
-		    			sPrevious: "Anterior"
-		    		},
-		    		buttons: {
-		    			pageLength: {
-		    				_: "Ver %d Registros",
-		    				'-1': "Todos"
-		    			},
-		    			colvis: "Columnas",
-		    			copy: "Copiar",
-		    			print: "Imprimir"
-		    		}
-		    	}
-		    });
-	    }
-    }
+        function initializeCxcTable() {
+            const exp = $('#exp').val();
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Captura el evento de entrada del usuario
-        document.getElementById("searchCxc").addEventListener("input", function () {
-            let searchValue = this.value.toLowerCase().trim(); // Convertir a minúsculas y quitar espacios
-            let cards = document.querySelectorAll(".cxc-item"); // Seleccionar todas las tarjetas
-        
-            // Si el campo de búsqueda está vacío, mostramos todas las tarjetas
-            if (searchValue === "") {
-                cards.forEach(card => {
-                    card.style.display = ""; // Muestra todas las tarjetas
-                });
-                return;
+            if ($.fn.DataTable.isDataTable('#cxc-table')) {
+                $('#cxc-table').dataTable().fnClearTable();
+                $('#cxc-table').dataTable().fnDestroy();
             }
-        
-            // Filtrar las tarjetas basándonos en el texto de búsqueda
-            cards.forEach(card => {
-                // Obtener los valores de la tarjeta para comparación
-                let codclie = card.querySelector("label.badge").textContent.toLowerCase(); // Obtener código cliente
-                let cliente = card.querySelector("p.clienteText").textContent.toLowerCase(); // Obtener saldo
-            
-                // Verificar si el valor de búsqueda está contenido en el código de cliente o saldo
-                if (codclie.includes(searchValue) || cliente.includes(searchValue)) {
-                    card.style.display = ""; // Mostrar tarjeta si coincide
-                } else {
-                    card.style.display = "none"; // Ocultar tarjeta si no coincide
-                }
-            });
-        });
-    });
 
-
-    $(document).ready(function(){
-
-        $(document).on('click', '.color-selector', function () {
-            $('.color-selector').removeClass('active');
-            $(this).addClass('active');
-        
-            colorSeleccionado = $(this).data('color');
-            consultaDeCxc(false, false, colorSeleccionado);
-        });
-
-        if($('#client').val()){
-            $('#cmbcodwallet').val(1);
-            consultaDeCxc();
-        }
-
-        function consultaDeCxc(eliminado, anulado, color = null) {
-            var codwallet = $('#cmbcodwallet').val();
-            var client = $('#client').val();
-            $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-
-            $.ajax({
-				data:{
-                    "codwallet": codwallet,
-                    'client': client,
-                    "color": color // Nuevo
-                },
-				url: "{{ route('cxc.balance') }}",
-				type: 'get',
-				dataType: 'json',
-				success: function (response) {
-                    $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-                    printJson = response.saldosPorCliente
-                    console.log(response.saldosPorCliente)
-					$('#saldocxc').html('$ 0,00');
-					$('#saldocxc').html('$ '+ response.saldo);
-                    $('#saldosPorClienteContainer').html(response.saldosPorClienteHtml)
-                    $('#cxcContainer').html(response.cxcHtml)
-                    initializeCxcTable()
-                    $("[data-toggle='tooltip']").tooltip();
-                    if(eliminado){
-                        Swal.fire(
-                            "Eliminado",
-                            "El registro ha sido eliminado correctamente.",
-                            "success"
-                        );
-                    }
-
-                    if(anulado){
-                        Swal.fire(
-                            "Anulado",
-                            "El registro ha sido anulado correctamente.",
-                            "success"
-                        );
-                    }
-				},
-				error: function(mensaje) {
-                    $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-                    console.log(mensaje);
-				},
-			});
-        }
-
-        $('#cmbcodwallet').on('input', function(){ 
-            consultaDeCxc()
-        })
-
-        window.modalClienteCxc = function(codclie) {
-            $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-            $.ajax({
-				data:{
-                    "codclie": codclie
-                },
-				url: "{{ route('cxc.getDetailsByClient') }}",
-				type: 'get',
-				dataType: 'json',
-				success: function (response) {
-                    $("#loadingSpinner").css("display", "none");
-                    $("#CxcDetailsModalView").modal('show')
-                    $('.codclie').html(response?.saclie?.descrip)
-                    $('#cxcDetailsTableContainer').html(response.cxcDetails);
-                    initializeCxcDetailsTable()
-				},
-				error: function(err) {
-                    console.log(err);
-				},
-			});
-        }
-
-        $("#formReg").submit(function(e){
-			e.preventDefault();
-			var codclie = $('#clienteSaint').val();
-			var codwallet = $('#empresa').val();
-			var codmoneda = 2;//$('#cmbmoneda').val();
-			var codtipomoneda = 4;//$('#cmbtipomoneda').val();
-			var fecha = $('#fechacxc').val();
-			var monto = $('#montocxc').val();
-			var observacion	= $('#descripcioncxc').val();
-				
-			$.ajax({
-				url: "{{ route('registrarCxcWallet') }}",
-				type: 'post',
-				dataType: 'json',
-				async: true,
-                data: {
-                    "_token": "{{ csrf_token() }}", // Agrega el token CSRF aquí
-			    	"codclie": codclie,
-			    	"codwallet": codwallet,
-			    	"codmoneda": codmoneda,
-			    	"codtipomoneda": codtipomoneda,
-			    	"fecha": fecha,
-			    	"monto" : monto,
-			    	"observacion": observacion
-			    },
-				success: function (response) {
-					if(response.success){
-						consultaDeCxc();
-
-			            $('#empresa').val('');
-			            $('#fechacxc').val("{{ date('Y-m-d') }}");
-			            $('#montocxc').val('');
-			            $('#descripcioncxc').val('');
-                        $('#createCxcModal').modal('hide');
-
-                        Swal.fire({
-    		    		  icon: 'success',
-    		    		  text: 'Cuenta por Cobrar registrado con exito!',
-    		    		  showConfirmButton: true
-    		    		});
-
-					}
-				},
-				error: function(mensaje) {
-					console.log(mensaje);
-				},
-			});
-							
-		});
-
-        $("#formRegAbono").submit(function( event ){
-            event.preventDefault();
-
-            $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-				
-			var id = $('#inputcxc').val();
-			var montodeuda = $('#montodeuda_'+id).val();	
-			var montoabono = $('#montoabono').val();
-			var cmbcodtipomonedaabono = $('#cmbcodtipomonedaabono').val();
-			var descripcionabono = $('#descripcionabono').val();
-			var codwallet = $('#cmbcodwallet').val();
-            var fechaDePago = $('#fechaDePago').val();
-
-			var datos='';
-			
-			let deudaf = parseFloat(montodeuda).toFixed(2);
-
-            var fileInput = $("#file")[0].files[0]; // Obtener archivo
-
-            let reader = new FileReader();
-            reader.readAsDataURL(fileInput);
-            reader.onload = function () {
-                let base64File = reader.result; // Mantener el prefijo Base64
-                $.ajax({
-			    	data: {
-                        _token: '{{ csrf_token() }}',
-			    	    "codwallet": codwallet,
-			    	    "codcxc": id,
-			    	    "montodeuda": deudaf,
-			    	    "montoabono": montoabono,
-			    	    "cmbcodtipomonedaabono": cmbcodtipomonedaabono,
-			    	    "descripcionabono": descripcionabono,
-                        "file": base64File, // Se envía el archivo con prefijo
-                        "fechaDePago": fechaDePago,
-			        },
-			    	url: "{{ url('registrarCxcAbono') }}",
-			    	type: 'post',
-			    	dataType: 'json',
-			    	async:true,
-			    	success: function (response) {
-                        $('#AbonoModalView').modal('hide');
-                        $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-			    		console.log(response);
-			    		if(response.success == false){
-			    			Swal.fire({
-    		    			  icon: 'error',
-    		    			  title: 'El monto a pagar no puede ser mayor a la deuda.',
-    		    			  showConfirmButton: true
-    		    			});
-                        
-			    		}else{
-			    			Swal.fire({
-    		    			  icon: 'success',
-    		    			  title: 'Pago registrado con exito !!!',
-    		    			  showConfirmButton: true
-    		    			});
-			    			consultaDeCxc();
-			    		}
-                    
-			    	},
-			    	error: function(mensaje) {
-			    		console.log(mensaje);
-			    	},
-			    });	
-            }			
-		});
-
-        $('#AbonoModalView').on('shown.bs.modal', function () {
-            $('#saldodeuda').html('');		
-			$('#nrocxc').html('');
-			$('#montoabono').val('');
-			$('#descripcionabono').val('');
-			$('#cmbcodtipomonedaabono').val('');
-
-			$('#file').val('');
-	    })
-
-        window.setCxCCode = function(codcxc){
-            $('.codcxc').html(codcxc);
-            $('#inputcxc').val(codcxc);
-        }
-
-        window.getAbonosDetails = function(codcxc){
-            $('.codcxc').html(codcxc)
-            $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-            $.ajax({
-				data:{
-                    "codcxc": codcxc
-                },
-				url: "{{ route('cxc.getAbonosDetails') }}",
-				type: 'get',
-				dataType: 'json',
-				success: function (response) {
-                    $("#loadingSpinner").css("display", "none");
-                    $("#AbonoDetailsModalView").modal('show')
-                    $('#AbonoDetailsModalContainer').html(response.html);
-				},
-				error: function(err) {
-                    console.log(err);
-				},
-			});
-        }
-
-        window.aceptarEliminar = function(codcxc) {
-            Swal.fire({
-                title: "¿Estás seguro?",
-                text: "Para confirmar, introduce tu clave de seguridad.",
-                icon: "warning",
-                input: "password",
-                inputPlaceholder: "Introduce tu clave de seguridad",
-                inputAttributes: {
-                    autocomplete: "new-password", // Evita que el navegador lo llene automáticamente
-                    autocorrect: "off",
-                    spellcheck: false,
-                    required: true
-                },
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar",
-                preConfirm: (password) => {
-                    if (!password) {
-                        Swal.showValidationMessage("La clave de seguridad es obligatoria");
-                    }
-                    return password;
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    
-                    if(result.value !== 'dase995**--'){
-                        return Swal.fire(
-                            "Error",
-                            "Contraseña inválida.",
-                            "error"
-                        );
-                    }
-
-                    $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-
-                    $.ajax({
-                        url: "{{ url('cxc/eliminar') }}/" + codcxc,
-                        type: "POST",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
+            if ($('#cxc-table').length) {
+                cxcTable = $('#cxc-table').DataTable({
+                    deferRender: true, // Solo renderiza lo visible
+                    order: [
+                        [0, 'desc']
+                    ],
+                    responsive: true,
+                    lengthChange: false,
+                    autoWidth: false,
+                    lengthMenu: [
+                        [10, 50, 100, 150, -1],
+                        [10, 50, 100, 150, 'Todos']
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'copy',
+                            text: 'Copiar',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
                         },
-                        success: function(response) {
-                            if (response.success) {
-                                consultaDeCxc(true)
-                            } else {
-                                Swal.fire("Error", response.message || "No se pudo eliminar la cuenta por cobrar.", "error");
-                            }
+                        {
+                            extend: 'csv',
+                            text: 'Exportar CSV',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
                         },
-                        error: function(err) {
-                            console.log(err);
-                            Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                        {
+                            extend: 'excel',
+                            text: 'Exportar Excel',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'Exportar PDF',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Imprimir',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
                         }
-                    });
-                }
-            });
-        }
-
-        window.anular = function(codcxc) {
-            Swal.fire({
-                text: "Estáseguro de anular esta cuenta por cobrar?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Sí, eliminar",
-                cancelButtonText: "Cancelar",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    
-                    $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
-
-                    $.ajax({
-                        url: "{{ url('cxc/anular') }}/" + codcxc,
-                        type: "POST",
-                        data: {
-                            "_token": "{{ csrf_token() }}",
+                    ],
+                    language: {
+                        sProcessing: "Procesando...",
+                        sLengthMenu: "Mostrar _MENU_ registros",
+                        sZeroRecords: "No se encontraron resultados",
+                        sEmptyTable: "Ningún dato disponible en esta tabla",
+                        sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                        sSearch: "Buscar:",
+                        oPaginate: {
+                            sFirst: "Primero",
+                            sLast: "Último",
+                            sNext: "Siguiente",
+                            sPrevious: "Anterior"
                         },
-                        success: function(response) {
-                            if (response.success) {
-                                consultaDeCxc(false, true)
-                            } else {
-                                Swal.fire("Error", response.message || "No se pudo eliminar la cuenta por cobrar.", "error");
-                            }
-                            $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-
-                        },
-                        error: function(err) {
-                            $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
-                            console.log(err);
-                            Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                        buttons: {
+                            pageLength: {
+                                _: "Ver %d Registros",
+                                '-1': "Todos"
+                            },
+                            colvis: "Columnas",
+                            copy: "Copiar",
+                            print: "Imprimir"
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
         }
 
-        window.updateColor = function(codcxc){
-            $.ajax({
-                url: "{{ url('cxc/updateColor') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    codcxc: codcxc,
-                    color: $('#codcxc_' + codcxc).val(),
-                },
-                success: function(response) {
-                    if (response.success) {
-                        consultaDeCxc()
+        function initializeCxcDetailsTable() {
+            const exp = $('#exp').val();
+
+            if ($.fn.DataTable.isDataTable('#cxcDetails-table')) {
+                $('#cxcDetails-table').dataTable().fnClearTable();
+                $('#cxcDetails-table').dataTable().fnDestroy();
+            }
+
+            if ($('#cxcDetails-table').length) {
+                cxcTable = $('#cxcDetails-table').DataTable({
+                    deferRender: true, // Solo renderiza lo visible
+                    order: [
+                        [0, 'desc']
+                    ],
+                    responsive: true,
+                    lengthChange: false,
+                    autoWidth: false,
+                    lengthMenu: [
+                        [10, 50, 100, 150, -1],
+                        [10, 50, 100, 150, 'Todos']
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'copy',
+                            text: 'Copiar',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
+                        },
+                        {
+                            extend: 'csv',
+                            text: 'Exportar CSV',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
+                        },
+                        {
+                            extend: 'excel',
+                            text: 'Exportar Excel',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'Exportar PDF',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Imprimir',
+                            action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
+                        }
+                    ],
+                    language: {
+                        sProcessing: "Procesando...",
+                        sLengthMenu: "Mostrar _MENU_ registros",
+                        sZeroRecords: "No se encontraron resultados",
+                        sEmptyTable: "Ningún dato disponible en esta tabla",
+                        sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                        sSearch: "Buscar:",
+                        oPaginate: {
+                            sFirst: "Primero",
+                            sLast: "Último",
+                            sNext: "Siguiente",
+                            sPrevious: "Anterior"
+                        },
+                        buttons: {
+                            pageLength: {
+                                _: "Ver %d Registros",
+                                '-1': "Todos"
+                            },
+                            colvis: "Columnas",
+                            copy: "Copiar",
+                            print: "Imprimir"
+                        }
+                    }
+                });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Captura el evento de entrada del usuario
+            document.getElementById("searchCxc").addEventListener("input", function() {
+                let searchValue = this.value.toLowerCase()
+                    .trim(); // Convertir a minúsculas y quitar espacios
+                let cards = document.querySelectorAll(".cxc-item"); // Seleccionar todas las tarjetas
+
+                // Si el campo de búsqueda está vacío, mostramos todas las tarjetas
+                if (searchValue === "") {
+                    cards.forEach(card => {
+                        card.style.display = ""; // Muestra todas las tarjetas
+                    });
+                    return;
+                }
+
+                // Filtrar las tarjetas basándonos en el texto de búsqueda
+                cards.forEach(card => {
+                    // Obtener los valores de la tarjeta para comparación
+                    let codclie = card.querySelector("label.badge").textContent
+                        .toLowerCase(); // Obtener código cliente
+                    let cliente = card.querySelector("p.clienteText").textContent
+                        .toLowerCase(); // Obtener saldo
+
+                    // Verificar si el valor de búsqueda está contenido en el código de cliente o saldo
+                    if (codclie.includes(searchValue) || cliente.includes(searchValue)) {
+                        card.style.display = ""; // Mostrar tarjeta si coincide
                     } else {
-                        Swal.fire("Error", response.message || "No se pudo eliminar la cuenta por cobrar.", "error");
+                        card.style.display = "none"; // Ocultar tarjeta si no coincide
                     }
-                },
-                error: function(err) {
-                    console.log(err);
-                    Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                });
+            });
+        });
+
+
+        $(document).ready(function() {
+
+            $(document).on('click', '.color-selector', function() {
+                $('.color-selector').removeClass('active');
+                $(this).addClass('active');
+
+                colorSeleccionado = $(this).data('color');
+                consultaDeCxc(false, false, colorSeleccionado);
+            });
+
+            if ($('#client').val()) {
+                $('#cmbcodwallet').val(1);
+                consultaDeCxc();
+            }
+
+            function consultaDeCxc(eliminado, anulado, color = null) {
+                var codwallet = $('#cmbcodwallet').val();
+                var client = $('#client').val();
+                $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+                $.ajax({
+                    data: {
+                        "codwallet": codwallet,
+                        'client': client,
+                        "color": color // Nuevo
+                    },
+                    url: "{{ route('cxc.balance') }}",
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(response) {
+                        $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
+                        printJson = response.saldosPorCliente
+                        console.log(response.saldosPorCliente)
+                        $('#saldocxc').html('$ 0,00');
+                        $('#saldocxc').html('$ ' + response.saldo);
+                        $('#saldosPorClienteContainer').html(response.saldosPorClienteHtml)
+                        $('#cxcContainer').html(response.cxcHtml)
+                        initializeCxcTable()
+                        $("[data-toggle='tooltip']").tooltip();
+                        if (eliminado) {
+                            Swal.fire(
+                                "Eliminado",
+                                "El registro ha sido eliminado correctamente.",
+                                "success"
+                            );
+                        }
+
+                        if (anulado) {
+                            Swal.fire(
+                                "Anulado",
+                                "El registro ha sido anulado correctamente.",
+                                "success"
+                            );
+                        }
+                    },
+                    error: function(mensaje) {
+                        $("#loadingSpinner").css("display", "none"); // Mostrar el spinner
+                        console.log(mensaje);
+                    },
+                });
+            }
+
+            $('#cmbcodwallet').on('input', function() {
+                consultaDeCxc()
+            })
+
+            window.modalClienteCxc = function(codclie) {
+                $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+                $.ajax({
+                    data: {
+                        "codclie": codclie
+                    },
+                    url: "{{ route('cxc.getDetailsByClient') }}",
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(response) {
+                        $("#loadingSpinner").css("display", "none");
+                        $("#CxcDetailsModalView").modal('show')
+                        $('.codclie').html(response?.saclie?.descrip)
+                        $('#cxcDetailsTableContainer').html(response.cxcDetails);
+                        initializeCxcDetailsTable()
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    },
+                });
+            }
+
+            $("#formReg").submit(function(e) {
+                e.preventDefault();
+                var codclie = $('#clienteSaint').val();
+                var codwallet = $('#empresa').val();
+                var codmoneda = 2; //$('#cmbmoneda').val();
+                var codtipomoneda = 4; //$('#cmbtipomoneda').val();
+                var fecha = $('#fechacxc').val();
+                var monto = $('#montocxc').val();
+                var observacion = $('#descripcioncxc').val();
+
+                $.ajax({
+                    url: "{{ route('registrarCxcWallet') }}",
+                    type: 'post',
+                    dataType: 'json',
+                    async: true,
+                    data: {
+                        "_token": "{{ csrf_token() }}", // Agrega el token CSRF aquí
+                        "codclie": codclie,
+                        "codwallet": codwallet,
+                        "codmoneda": codmoneda,
+                        "codtipomoneda": codtipomoneda,
+                        "fecha": fecha,
+                        "monto": monto,
+                        "observacion": observacion
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            consultaDeCxc();
+
+                            $('#empresa').val('');
+                            $('#fechacxc').val("{{ date('Y-m-d') }}");
+                            $('#montocxc').val('');
+                            $('#descripcioncxc').val('');
+                            $('#createCxcModal').modal('hide');
+
+                            Swal.fire({
+                                icon: 'success',
+                                text: 'Cuenta por Cobrar registrado con exito!',
+                                showConfirmButton: true
+                            });
+
+                        }
+                    },
+                    error: function(mensaje) {
+                        console.log(mensaje);
+                    },
+                });
+
+            });
+
+            $("#formRegAbono").submit(function(event) {
+                event.preventDefault();
+
+                $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+                var id = $('#inputcxc').val();
+                var montodeuda = $('#montodeuda_' + id).val();
+                var montoabono = $('#montoabono').val();
+                var cmbcodtipomonedaabono = $('#cmbcodtipomonedaabono').val();
+                var descripcionabono = $('#descripcionabono').val();
+                var codwallet = $('#cmbcodwallet').val();
+                var fechaDePago = $('#fechaDePago').val();
+                var aplicaComision = $('#aplicaComision').val()
+
+                var bank = $('#bankSelect').val()
+                var datos = '';
+
+                let deudaf = parseFloat(montodeuda).toFixed(2);
+
+                var fileInput = $("#file")[0].files[0]; // Obtener archivo
+
+                let reader = new FileReader();
+                reader.readAsDataURL(fileInput);
+                reader.onload = function() {
+                    let base64File = reader.result; // Mantener el prefijo Base64
+                    $.ajax({
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            "codwallet": codwallet,
+                            "codcxc": id,
+                            "montodeuda": deudaf,
+                            "montoabono": montoabono,
+                            "cmbcodtipomonedaabono": cmbcodtipomonedaabono,
+                            "descripcionabono": descripcionabono,
+                            "file": base64File, // Se envía el archivo con prefijo
+                            "fechaDePago": fechaDePago,
+                            "bank": bank, 
+                            "aplicaComision": aplicaComision
+                        },
+                        url: "{{ url('registrarCxcAbono') }}",
+                        type: 'post',
+                        dataType: 'json',
+                        async: true,
+                        success: function(response) {
+                            $('#AbonoModalView').modal('hide');
+                            $("#loadingSpinner").css("display",
+                                "none"); // Mostrar el spinner
+                            console.log(response);
+                            if (response.success == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'El monto a pagar no puede ser mayor a la deuda.',
+                                    showConfirmButton: true
+                                });
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Pago registrado con exito !!!',
+                                    showConfirmButton: true
+                                });
+                                consultaDeCxc();
+                            }
+
+                        },
+                        error: function(mensaje) {
+                            console.log(mensaje);
+                        },
+                    });
                 }
             });
-        }
 
-    })
-</script>
+            $('#AbonoModalView').on('shown.bs.modal', function() {
+                $('#saldodeuda').html('');
+                $('#nrocxc').html('');
+                $('#montoabono').val('');
+                $('#descripcionabono').val('');
+                $('#cmbcodtipomonedaabono').val('');
+
+                $('#file').val('');
+            })
+
+            window.setCxCCode = function(codcxc) {
+                $('.codcxc').html(codcxc);
+                $('#inputcxc').val(codcxc);
+            }
+
+            window.getAbonosDetails = function(codcxc) {
+                $('.codcxc').html(codcxc)
+                $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+                $.ajax({
+                    data: {
+                        "codcxc": codcxc
+                    },
+                    url: "{{ route('cxc.getAbonosDetails') }}",
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(response) {
+                        $("#loadingSpinner").css("display", "none");
+                        $("#AbonoDetailsModalView").modal('show')
+                        $('#AbonoDetailsModalContainer').html(response.html);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    },
+                });
+            }
+
+            window.aceptarEliminar = function(codcxc) {
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "Para confirmar, introduce tu clave de seguridad.",
+                    icon: "warning",
+                    input: "password",
+                    inputPlaceholder: "Introduce tu clave de seguridad",
+                    inputAttributes: {
+                        autocomplete: "new-password", // Evita que el navegador lo llene automáticamente
+                        autocorrect: "off",
+                        spellcheck: false,
+                        required: true
+                    },
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    preConfirm: (password) => {
+                        if (!password) {
+                            Swal.showValidationMessage("La clave de seguridad es obligatoria");
+                        }
+                        return password;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        if (result.value !== 'dase995**--') {
+                            return Swal.fire(
+                                "Error",
+                                "Contraseña inválida.",
+                                "error"
+                            );
+                        }
+
+                        $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+                        $.ajax({
+                            url: "{{ url('cxc/eliminar') }}/" + codcxc,
+                            type: "POST",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    consultaDeCxc(true)
+                                } else {
+                                    Swal.fire("Error", response.message ||
+                                        "No se pudo eliminar la cuenta por cobrar.",
+                                        "error");
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
+                                Swal.fire("Error", "Ocurrió un problema en la eliminación.",
+                                    "error");
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.anular = function(codcxc) {
+                Swal.fire({
+                    text: "Estáseguro de anular esta cuenta por cobrar?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+                        $.ajax({
+                            url: "{{ url('cxc/anular') }}/" + codcxc,
+                            type: "POST",
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    consultaDeCxc(false, true)
+                                } else {
+                                    Swal.fire("Error", response.message ||
+                                        "No se pudo eliminar la cuenta por cobrar.",
+                                        "error");
+                                }
+                                $("#loadingSpinner").css("display",
+                                    "none"); // Mostrar el spinner
+
+                            },
+                            error: function(err) {
+                                $("#loadingSpinner").css("display",
+                                    "none"); // Mostrar el spinner
+                                console.log(err);
+                                Swal.fire("Error", "Ocurrió un problema en la eliminación.",
+                                    "error");
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.updateColor = function(codcxc) {
+                $.ajax({
+                    url: "{{ url('cxc/updateColor') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        codcxc: codcxc,
+                        color: $('#codcxc_' + codcxc).val(),
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            consultaDeCxc()
+                        } else {
+                            Swal.fire("Error", response.message ||
+                                "No se pudo eliminar la cuenta por cobrar.", "error");
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        Swal.fire("Error", "Ocurrió un problema en la eliminación.", "error");
+                    }
+                });
+            }
+
+        })
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#cmbcodtipomonedaabono').on('change', function() {
+                var selectedValue = $(this).val();
+                console.log(selectedValue)
+
+                if (selectedValue == '6') {
+                    $('#bankSelectContainer').slideDown(); // mostrar con animación
+                    $('#bankSelect').attr('required', true);
+                } else {
+                    $('#bankSelectContainer').slideUp();
+                    $('#bankSelect').removeAttr('required').val('');
+                }
+            });
+        });
+    </script>
 @endsection

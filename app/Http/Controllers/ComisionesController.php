@@ -69,7 +69,7 @@ class ComisionesController extends Controller
         $savend = Savend::find($id);
 
         return view('comisiones.vendedor', [
-            'savend' => $savend
+            'savend' => $savend, 
         ]);
     }
 
@@ -258,7 +258,6 @@ class ComisionesController extends Controller
             $safact->porcentajeComisionProducto = $safact->comision_producto;
             $safact->porcentajeComisionServicio = $safact->comision_servicio;
             $safact->porcentajeComisionGerencia = $safact->comision_gerencia;
-
         }
 
         $safact->save();

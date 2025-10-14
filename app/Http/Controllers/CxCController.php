@@ -3,57 +3,61 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{CxC, Wallet, TipoMoneda, Saclie, DetalleCxC};
+use App\Models\{CxC, Wallet, TipoMoneda, Saclie, DetalleCxC, Bank};
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Mail;
 
 class CxCController extends Controller
 {
-    public function index(Request $request){
-		$wallet = Wallet::where('inactivo', false)->get();  
-		$tipomoneda = TipoMoneda::where('codmoneda', 2)->where('inactivo', false)->get();
-		$saclie = Saclie::orderby('descrip','asc')->where('activo', true)->get();
+    public function index(Request $request)
+    {
+        $wallet = Wallet::where('inactivo', false)->get();
+        $tipomoneda = TipoMoneda::where('codmoneda', 2)->where('inactivo', false)->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
         $client = $request->client;
+        $banks = Bank::all();
 
         return view('cxc', [
             'wallet' => $wallet,
-            'tipomoneda' => $tipomoneda, 
+            'tipomoneda' => $tipomoneda,
             'saclie' => $saclie,
-            'client' => $client
+            'client' => $client,
+            'banks' => $banks
         ]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $codclie = $request->input('codclie');
-		$codusuario = Auth::user()->codusuario;
-		$codwallet = $request->input('codwallet');
-		$codmoneda = $request->input('codmoneda');
-		$codtipomoneda = $request->input('codtipomoneda');
-		$cliente = $request->input('cliente');
-		$nfecha = new \DateTime(date(str_replace('/','-',$request['fecha'])));
-		$fecha = $nfecha->format('Y-m-d H:i:s');
-		$monto = str_replace(',','.',str_replace('.','',$request->input('monto')));
-		$observacion = $request->input('observacion');
+        $codusuario = Auth::user()->codusuario;
+        $codwallet = $request->input('codwallet');
+        $codmoneda = $request->input('codmoneda');
+        $codtipomoneda = $request->input('codtipomoneda');
+        $cliente = $request->input('cliente');
+        $nfecha = new \DateTime(date(str_replace('/', '-', $request['fecha'])));
+        $fecha = $nfecha->format('Y-m-d H:i:s');
+        $monto = str_replace(',', '.', str_replace('.', '', $request->input('monto')));
+        $observacion = $request->input('observacion');
 
         $saclie = Saclie::where('codclie', $codclie)->first();
-								
-		$reg = new CxC();
-		$reg->codwallet	= $codwallet;			
-		$reg->fecha	= date('Y-m-d');	
-        $reg->fecha_emision = $request->fecha;		
-		$reg->codmoneda	= $codmoneda;			
-		$reg->codtipomoneda	= $codtipomoneda;		
-		$reg->codclie = $codclie;			
-		$reg->cliente = $saclie->rif . ' | '. $saclie->descrip;			
-		$reg->monto			= $monto;			
-		$reg->codusuario	= $codusuario;	
-		$reg->observacion	= $observacion;	
-		$reg->save();
-				
-		$response = ["success" => true, "data" => $reg];
-				
-		return $response;
+
+        $reg = new CxC();
+        $reg->codwallet    = $codwallet;
+        $reg->fecha    = date('Y-m-d');
+        $reg->fecha_emision = $request->fecha;
+        $reg->codmoneda    = $codmoneda;
+        $reg->codtipomoneda    = $codtipomoneda;
+        $reg->codclie = $codclie;
+        $reg->cliente = $saclie->rif . ' | ' . $saclie->descrip;
+        $reg->monto            = $monto;
+        $reg->codusuario    = $codusuario;
+        $reg->observacion    = $observacion;
+        $reg->save();
+
+        $response = ["success" => true, "data" => $reg];
+
+        return $response;
     }
 
     public function balance(Request $request)
@@ -64,63 +68,63 @@ class CxCController extends Controller
 
         //Todas las cxc de este wallet
         $cxcs = CxC::bySaclie($request->client)
-        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
-            $q->where('departamento', 'Ventas');
-        })
-        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
-            $q->where('codusuario', Auth::user()->codusuario);
-        })
-        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
-            // Sin restricciones
-        })
-        ->when($color, fn($q) => $q->where('color', $color))
-        ->where('codwallet', $codwallet)
-        ->where('codmoneda', 2)
-        ->whereColumn('monto', '>', 'abono')
-        ->whereRaw('ABS(monto - abono) > 0.01')
-        ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
-        ->withCount('detallecxc')
-        ->get()
-        ->map(function ($cxc) {
-            $cxc->saldo = $cxc->monto - $cxc->abono; // Calcular saldo individual por registro
-            return $cxc; 
-        });
-    
+            ->when(Auth::user()->departamento == 'Ventas', function ($q) {
+                $q->where('departamento', 'Ventas');
+            })
+            ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
+                $q->where('codusuario', Auth::user()->codusuario);
+            })
+            ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
+                // Sin restricciones
+            })
+            ->when($color, fn($q) => $q->where('color', $color))
+            ->where('codwallet', $codwallet)
+            ->where('codmoneda', 2)
+            ->whereColumn('monto', '>', 'abono')
+            ->whereRaw('ABS(monto - abono) > 0.01')
+            ->orderByRaw('monto - abono ASC') // Ordenar por saldo restante
+            ->withCount('detallecxc')
+            ->get()
+            ->map(function ($cxc) {
+                $cxc->saldo = $cxc->monto - $cxc->abono; // Calcular saldo individual por registro
+                return $cxc;
+            });
+
         // Obtener las CxC con los datos necesarios por cliente
         $saldosPorCliente = CxC::bySaclie($request->client)
-        ->when(Auth::user()->departamento == 'Ventas', function ($q) {
-            $q->where('departamento', 'Ventas');
-        })
-        ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
-            $q->where('codusuario', Auth::user()->codusuario);
-        })
-        ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
-            // Sin restricciones
-        })
-         ->when($color, fn($q) => $q->where('color', $color))
-        ->where('codwallet', $codwallet)
-        ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
-        ->where('codwallet', $codwallet)
-        ->where('codmoneda', 2)
-        ->where('anulado', false)
-        ->whereColumn('monto', '>', 'abono')
-        ->whereRaw('ABS(monto - abono) > 0.01')
-        ->groupBy('codclie', 'cliente')
-        ->orderByRaw('SUM(monto) - SUM(abono) ASC')
-        ->get()
-        ->map(function ($cxc) {
-            $cxc->saldo = $cxc->total_monto - $cxc->total_abono;
-            return $cxc;
-        });
+            ->when(Auth::user()->departamento == 'Ventas', function ($q) {
+                $q->where('departamento', 'Ventas');
+            })
+            ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
+                $q->where('codusuario', Auth::user()->codusuario);
+            })
+            ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
+                // Sin restricciones
+            })
+            ->when($color, fn($q) => $q->where('color', $color))
+            ->where('codwallet', $codwallet)
+            ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
+            ->where('codwallet', $codwallet)
+            ->where('codmoneda', 2)
+            ->where('anulado', false)
+            ->whereColumn('monto', '>', 'abono')
+            ->whereRaw('ABS(monto - abono) > 0.01')
+            ->groupBy('codclie', 'cliente')
+            ->orderByRaw('SUM(monto) - SUM(abono) ASC')
+            ->get()
+            ->map(function ($cxc) {
+                $cxc->saldo = $cxc->total_monto - $cxc->total_abono;
+                return $cxc;
+            });
 
-    
+
         // Calcular saldo total
         $saldo = $saldosPorCliente->sum('saldo');
-    
+
         // Generar la vista con los datos obtenidos
         $saldosPorClienteHtml = view('cxc.cxcItem', compact('saldosPorCliente'))->render();
         $cxcHtml = view('cxc.table', compact('cxcs'))->render();
-    
+
         return response()->json([
             'saldosPorCliente' => $saldosPorCliente,
             'saldosPorClienteHtml' => $saldosPorClienteHtml,
@@ -129,7 +133,8 @@ class CxCController extends Controller
         ]);
     }
 
-    public function updateColor(Request $request){
+    public function updateColor(Request $request)
+    {
         $cxc = CxC::where('codcxc', $request->codcxc)->first();
         $cxc->color = $request->color;
         $cxc->save();
@@ -140,7 +145,8 @@ class CxCController extends Controller
         ]);
     }
 
-    public function getDetailsByClient(Request $request){
+    public function getDetailsByClient(Request $request)
+    {
         $codclie = $request->codclie;
 
         if (!$codclie) {
@@ -148,92 +154,102 @@ class CxCController extends Controller
         }
 
         $cxcs = CxC::query()
-        ->where('codclie', $codclie)
-        ->where('codmoneda', 2)
-        ->whereColumn('monto', '>', 'abono')
-        ->orderByRaw('monto - abono ASC')
-        ->whereRaw('ABS(monto - abono) > 0.01')
-        ->where('anulado', false)
-        ->get()
-        ->map(function ($cxc) {
-            $cxc->saldo = $cxc->monto - $cxc->abono;
-            return $cxc;
-        });
+            ->where('codclie', $codclie)
+            ->where('codmoneda', 2)
+            ->whereColumn('monto', '>', 'abono')
+            ->orderByRaw('monto - abono ASC')
+            ->whereRaw('ABS(monto - abono) > 0.01')
+            ->where('anulado', false)
+            ->get()
+            ->map(function ($cxc) {
+                $cxc->saldo = $cxc->monto - $cxc->abono;
+                return $cxc;
+            });
 
         $saclie = Saclie::where('codclie', $codclie)->first();
-        
-        
+
+
         $cxcDetails = view('cxc.tableCxcDetails', compact('cxcs'))->render();
-        
+
         return response()->json([
             'cxcDetails' => $cxcDetails,
             'cxcs' => $cxcs,
             'saclie' => $saclie
         ]);
-    }   
+    }
 
-	public function registrarCxcAbono(Request $request){
-		
-		$codusuario = Auth::user()->codusuario;
-		
-		$codwallet = $request->get('codwallet');
-		$codcxc = $request->get('codcxc');
-		$montodeuda = $request->get('montodeuda');
-		$codtipomoneda = $request->get('cmbcodtipomonedaabono');
-		$descripcion = $request->get('descripcionabono');
-		$montoabono = str_replace(',','.',str_replace('.','',$request->get('montoabono')));
+    public function registrarCxcAbono(Request $request)
+    {
+
+        $codusuario = Auth::user()->codusuario;
+
+        $codwallet = $request->get('codwallet');
+        $codcxc = $request->get('codcxc');
+        $montodeuda = $request->get('montodeuda');
+        $codtipomoneda = $request->get('cmbcodtipomonedaabono');
+        $descripcion = $request->get('descripcionabono');
+        $montoabono = str_replace(',', '.', str_replace('.', '', $request->get('montoabono')));
         $file = $request->input('file');
-		$fechaDePago = $request->get('fechaDePago');
+        $fechaDePago = $request->get('fechaDePago');
+        $bank = $request->get('bank');
 
-		if($montoabono > $montodeuda){
-			$response = ["success" => false, "data" => ''];
-		}else{
-			$reg = new DetalleCxC();
-			$reg->codcxc = $codcxc;	
-			$reg->codtipomoneda	= $codtipomoneda;
-			$reg->fecha	= date('Y-m-d');			
-			$reg->monto = $montoabono;			
-			$reg->descripcion = $descripcion;	
-			$reg->file = $file;	
-			$reg->codusuario = $codusuario;	
-            $reg->fechaDePago = $fechaDePago;	
-			$reg->save();
-			
-			$cxc = Cxc::where('codcxc','=',$codcxc)->first();
-			
-			if($cxc){
-				$cxc->abono = $cxc->abono + $montoabono;
-				$cxc->save();
-			}
-			
-			if($cxc->codlic > 0){
-			   if($montoabono == $montodeuda){ 
-    			    $regLig = Control_Licencia::where('id', $cxc->codlic)->first();
-            		if(!empty($regLig)){
-            		    $regLig->pagada = 1;
-            		    $regLig->save();
-            		    $email = $this->enviaremail('PAGO A LICENCIA Nro.: '.$cxc->codlic.' Fecha: '.date("d/m/Y H:i:s a"),$email,$datos,"mails.addCxC");
-            		}  
-			   }
-			}
-			
-			if($cxc->codlicotras > 0){
-			   if($montoabono == $montodeuda){ 
-    			    $regLig = ControlLicenciaOtras::where('id', $cxc->codlicotras)->first();
-            		if(!empty($regLig))
-            		{
-            		    $regLig->pagada = 1;
-            		    $regLig->save();
-            		    $email = $this->enviaremail('PAGO A LICENCIA OTRAS Nro.: '.$cxc->codlicotras.' Fecha: '.date("d/m/Y H:i:s a"),$email,$datos,"mails.addCxC");
-            		}  
-			   }
-			}
-			$response = ["success" => true, "data" => $reg];
-		}
-		return $response;
-	}
+        if ($montoabono > $montodeuda) {
+            $response = ["success" => false, "data" => ''];
+        } else {
+            $reg = new DetalleCxC();
+            $reg->codcxc = $codcxc;
+            $reg->codtipomoneda    = $codtipomoneda;
+            $reg->fecha    = date('Y-m-d');
+            $reg->monto = $montoabono;
+            $reg->descripcion = $descripcion;
+            $reg->file = $file;
+            $reg->codusuario = $codusuario;
+            $reg->fechaDePago = $fechaDePago;
+            $reg->bank_id = match (true) {
+                $codtipomoneda == 6 && $bank => $bank,
+                $codtipomoneda == 4 => 6,
+                $codtipomoneda == 5 => 7,
+                default => null,
+            };
+            $reg->aplica_comision = $request->input('aplicaComision', 0); // por defecto 0 si no se envía
 
-    public function getAbonosDetails(Request $request){
+            $reg->save();
+
+            $cxc = Cxc::where('codcxc', '=', $codcxc)->first();
+
+            if ($cxc) {
+                $cxc->abono = $cxc->abono + $montoabono;
+                $cxc->save();
+            }
+
+            if ($cxc->codlic > 0) {
+                if ($montoabono == $montodeuda) {
+                    $regLig = Control_Licencia::where('id', $cxc->codlic)->first();
+                    if (!empty($regLig)) {
+                        $regLig->pagada = 1;
+                        $regLig->save();
+                        $email = $this->enviaremail('PAGO A LICENCIA Nro.: ' . $cxc->codlic . ' Fecha: ' . date("d/m/Y H:i:s a"), $email, $datos, "mails.addCxC");
+                    }
+                }
+            }
+
+            if ($cxc->codlicotras > 0) {
+                if ($montoabono == $montodeuda) {
+                    $regLig = ControlLicenciaOtras::where('id', $cxc->codlicotras)->first();
+                    if (!empty($regLig)) {
+                        $regLig->pagada = 1;
+                        $regLig->save();
+                        $email = $this->enviaremail('PAGO A LICENCIA OTRAS Nro.: ' . $cxc->codlicotras . ' Fecha: ' . date("d/m/Y H:i:s a"), $email, $datos, "mails.addCxC");
+                    }
+                }
+            }
+            $response = ["success" => true, "data" => $reg];
+        }
+        return $response;
+    }
+
+    public function getAbonosDetails(Request $request)
+    {
         $codcxc = $request->codcxc;
         $abonos = DetalleCxC::where('codcxc', $codcxc)->get();
 
@@ -248,10 +264,10 @@ class CxCController extends Controller
     {
         $saclie = Saclie::orderBy('descrip', 'asc')->where('activo', true)->get();
         $abonos = DetalleCxC::byDateRange($request->from, $request->until)
-        ->bySaclie($request->codclie)
-        ->orderBy('codcxc', 'desc')
-        ->get();
-    
+            ->bySaclie($request->codclie)
+            ->orderBy('codcxc', 'desc')
+            ->get();
+
         return view('cxc.reportes', [
             'abonos' => $abonos,
             'requestFrom' => $request->from,
@@ -265,25 +281,25 @@ class CxCController extends Controller
     {
         try {
             $cxc = CxC::find($codcxc);
-    
+
             if (!$cxc) {
                 return response()->json(["success" => false, "message" => "Cuenta por cobrar no encontrada"]);
             }
-    
+
             // Guardar IDs antes de eliminar
             $idLicencia = $cxc->codlic ?? null;
             $idLicOtras = $cxc->codlicotras ?? null;
-    
+
             // Eliminar la cuenta por cobrar
             $cxc->delete();
-    
+
             // Manejo de Control_Licencia si existe
             if ($idLicencia) {
                 $licencia = Control_Licencia::find($idLicencia);
                 if ($licencia) {
                     $licencia->eliminada = 1;
                     $licencia->save();
-    
+
                     $this->enviaremail(
                         'SE ELIMINÓ LICENCIA Nro.: ' . $idLicencia . ' Fecha: ' . now(),
                         "",
@@ -292,14 +308,14 @@ class CxCController extends Controller
                     );
                 }
             }
-    
+
             // Manejo de ControlLicenciaOtras si existe
             if ($idLicOtras) {
                 $licenciaOtras = ControlLicenciaOtras::find($idLicOtras);
                 if ($licenciaOtras) {
                     $licenciaOtras->eliminada = 1;
                     $licenciaOtras->save();
-    
+
                     $this->enviaremail(
                         'SE ELIMINÓ LICENCIA OTRAS Nro.: ' . $idLicOtras . ' Fecha: ' . now(),
                         "",
@@ -308,63 +324,63 @@ class CxCController extends Controller
                     );
                 }
             }
-    
+
             return response()->json(["success" => true, "message" => "Cuenta por cobrar eliminada correctamente"]);
-    
         } catch (\Exception $e) {
             return response()->json(["success" => false, "message" => "Error al eliminar: " . $e->getMessage()]);
         }
     }
-    
 
-    public function anular(Request $request, $codcxc){
-            $cxc = CxC::find($codcxc);
-            if (!$cxc) {
-                return response()->json(["success" => false, "message" => "Cuenta por cobrar no encontrada"]);
-            }
 
-            $cxc->anulado = true;
-            $cxc->save();
-            $tipomoneda = TipoMoneda::where('codmoneda', $cxc->codmoneda)->where('nombre', 'ANULADO')->first();
-            $cxc->codtipomoneda = $tipomoneda->codtipomoneda;
-            $cxc->save();
+    public function anular(Request $request, $codcxc)
+    {
+        $cxc = CxC::find($codcxc);
+        if (!$cxc) {
+            return response()->json(["success" => false, "message" => "Cuenta por cobrar no encontrada"]);
+        }
 
-            return response()->json(["success" => true, "message" => "Cuenta por cobrar anulada correctamente"]);
+        $cxc->anulado = true;
+        $cxc->save();
+        $tipomoneda = TipoMoneda::where('codmoneda', $cxc->codmoneda)->where('nombre', 'ANULADO')->first();
+        $cxc->codtipomoneda = $tipomoneda->codtipomoneda;
+        $cxc->save();
 
+        return response()->json(["success" => true, "message" => "Cuenta por cobrar anulada correctamente"]);
     }
 
-    protected function enviaremail($asunto, $emaildestino, $datos, $formato){
-        try {    
+    protected function enviaremail($asunto, $emaildestino, $datos, $formato)
+    {
+        try {
 
-			 $EmailEnviado = Mail::send($formato, [
-			    'datos' => $datos
-            ], 
-            function ($message) use ($datos, $asunto, $emaildestino) {
+            $EmailEnviado = Mail::send(
+                $formato,
+                [
+                    'datos' => $datos
+                ],
+                function ($message) use ($datos, $asunto, $emaildestino) {
 
-				 $message->from(env('MAIL_FROM_ADDRESS'),'Ds Pegaso');
-				 $message->subject($asunto);
-				 $message->to($emaildestino);
-			 });
-             
-            if(is_object($EmailEnviado)) 
-            {
-                $fecha=date("Y-m-d H:i:s",time()+1800);
-                $enviados=1;
-				return 1;
-            }elseif(is_string($EmailEnviado)){
-                if ($EmailEnviado=='1') 
-                {
+                    $message->from(env('MAIL_FROM_ADDRESS'), 'Ds Pegaso');
+                    $message->subject($asunto);
+                    $message->to($emaildestino);
+                }
+            );
+
+            if (is_object($EmailEnviado)) {
+                $fecha = date("Y-m-d H:i:s", time() + 1800);
+                $enviados = 1;
+                return 1;
+            } elseif (is_string($EmailEnviado)) {
+                if ($EmailEnviado == '1') {
                     return 1;
                 } else {
                     return 0;
                 }
-            }else{
+            } else {
                 return $EmailEnviado;
             }
-        }catch (\Exception $e){
-           // return $e->getMessage();
+        } catch (\Exception $e) {
+            // return $e->getMessage();
             return "0";
         }
     }
-    
 }

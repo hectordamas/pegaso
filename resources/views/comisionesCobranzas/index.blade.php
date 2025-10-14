@@ -13,6 +13,22 @@
 @endsection
 
 @section('content')
+    @php
+        $meses = collect([
+            ['numero' => '01', 'nombre' => 'Enero'],
+            ['numero' => '02', 'nombre' => 'Febrero'],
+            ['numero' => '03', 'nombre' => 'Marzo'],
+            ['numero' => '04', 'nombre' => 'Abril'],
+            ['numero' => '05', 'nombre' => 'Mayo'],
+            ['numero' => '06', 'nombre' => 'Junio'],
+            ['numero' => '07', 'nombre' => 'Julio'],
+            ['numero' => '08', 'nombre' => 'Agosto'],
+            ['numero' => '09', 'nombre' => 'Septiembre'],
+            ['numero' => '10', 'nombre' => 'Octubre'],
+            ['numero' => '11', 'nombre' => 'Noviembre'],
+            ['numero' => '12', 'nombre' => 'Diciembre'],
+        ])->map(fn($o) => (object) $o);
+    @endphp
     <!-- Modal Para ver detalles de Presupuesto -->
     <div class="modal fade PresupuestoModalView" tabindex="-1" id="PresupuestoModalView"
         aria-labelledby="PresupuestoModalViewLabel" aria-hidden="true">
@@ -166,6 +182,36 @@
 
 
     <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Reporte de Comisiones 💰</h5>
+                    <span>Filtra y analiza las comisiones del equipo de cobranzas</span>
+                </div>
+                <div class="card-block">
+                    <form class="row" action="{{ url('comisiones-cobranzas') }}">
+
+                        <div class="col-md-6 form-group">
+                            <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
+                            <select name="mes" id="mes" class="form-control">
+                                @foreach ($meses as $m)
+                                    <option {{ $m->numero == $mes ? 'selected' : '' }} value="{{ $m->numero }}">
+                                        {{ $m->nombre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary" id="filtrar">
+                                <i class="fas fa-search"></i> Filtrar
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
@@ -545,7 +591,7 @@
 
             $.ajax({
                 url: '{{ url('presupuestos/ver-detalles') }}' + '/' +
-                presupuestoId, // Asegúrate de que esta ruta sea correcta
+                    presupuestoId, // Asegúrate de que esta ruta sea correcta
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}' // CSRF Token para seguridad
@@ -563,5 +609,29 @@
                 }
             });
         }
+    </script>
+
+    <script>
+        $(document).on('change', '.check-admin, .check-manager', function() {
+            let id = $(this).data('id');
+            let isAdmin = $(this).hasClass('check-admin');
+            let checked = $(this).is(':checked') ? 1 : 0;
+
+            let data = {
+                _token: '{{ csrf_token() }}',
+            };
+
+            if (isAdmin) {
+                data.check_admin = checked;
+            } else {
+                data.check_manager = checked;
+            }
+
+            $.post(`/comisiones/detallecxc/${id}/check`, data, function(res) {
+                if (res.success) {
+                    console.log('Guardado con éxito');
+                }
+            });
+        });
     </script>
 @endsection

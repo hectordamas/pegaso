@@ -30,7 +30,7 @@
                 <span>Filtra y analiza las comisiones del equipo de ventas</span>
             </div>
             <div class="card-block">
-                <form class="row" action="{{ url('comisiones') }}">    
+                <form class="row" action="{{ url('comisiones-ventas') }}">    
                     <div class="col-md-6 form-group">
                         <label for="mes" class="fw-bold mb-2">Selecciona un Mes</label>
                         <select name="mes" id="mes" class="form-control">
