@@ -181,6 +181,7 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::get('comisiones/safact/{safactId}/comprobantes', 'comprobantes')->name('comisiones.comprobantes')->middleware('menu.permission:143');
 
         Route::post('comisiones/safact/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:143');
+        Route::post('cerrar/mes',  'cerrarMes')->name('cerrar.mes')->middleware('menu.permission:143');
     });
 
     //Comisiones Cobranzas Controller

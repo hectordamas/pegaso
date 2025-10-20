@@ -190,7 +190,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="presupuestoUpdateform" method="POST">
+                    <form id="presupuestoUpdateform" method="POST">
                         @csrf
 
                         <input type="hidden" name="presupuestoId" id="presupuestoId">
@@ -238,6 +238,7 @@
                                 <textarea name="observacion" id="observacion" class="form-control"></textarea>
                             </div>
 
+                            @if(Auth::user()->departamento == 'Otros')
                             <div class="col-sm-6 form-group abonado-container d-none">
                                 <label class="control-label fw-bold d-block mb-2">Aplica Comisión</label>
                                 <div class="form-check form-switch">
@@ -246,6 +247,7 @@
                                     <label class="form-check-label" for="aplicaComision">Sí</label>
                                 </div>
                             </div>
+                            @endif
 
                             <div class="col-md-6 form-group d-none" id="razon-container">
                                 <label for="" class="control-label" id="razonLabel">Motivo</label>
@@ -256,11 +258,12 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 <i class="far fa-times-circle"></i> Cerrar
                             </button>
-                            <button id="presupuestoUpdateStatusButton" class="btn btn-success float-center">
+                            <button type="button" id="presupuestoUpdateStatusButton"
+                                class="btn btn-success float-center">
                                 <i class="fas fa-sync"></i> Actualizar Estatus
                             </button>
                         </div>
-                    </div> <!-- Cierre del formulario -->
+                    </form> <!-- Cierre del formulario -->
                 </div>
             </div>
         </div>
@@ -438,7 +441,7 @@
 
             $.ajax({
                 url: '{{ url('presupuestos/ver-detalles') }}' + '/' +
-                presupuestoId, // Asegúrate de que esta ruta sea correcta
+                    presupuestoId, // Asegúrate de que esta ruta sea correcta
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}' // CSRF Token para seguridad
@@ -523,6 +526,12 @@
             $('#razon').val('');
             $('#abono').val('');
             $('#file').val('');
+            var form = $('#presupuestoUpdateform');
+
+            // Reset del formulario completo
+            form.trigger('reset');
+            $('.abonado-container').addClass('d-none'); // Oculta el campo si no es 5 o 6
+
         });
 
         $("#estatusPresupuestoId").on('change', function() {

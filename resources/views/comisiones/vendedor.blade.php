@@ -5,8 +5,6 @@
 @endsection
 
 @section('content')
-
-
     <div class="row">
 
 

@@ -14,7 +14,7 @@ class PresupuestosController extends Controller
     public function index(Request $request)
     {
         $estatus = EstatusPre::where('inactivo', false)
-            ->whereIn('id', [2, 3, 5, 6, 11])
+            ->whereIn('id', [2, 3, 5, 6, 11, 14])
             ->get();
 
         $vendedores = Savend::where('activo', true)
@@ -161,7 +161,7 @@ class PresupuestosController extends Controller
                 $abono->fechaDePago = $request->fechaDePago;
                 $abono->bank_id = $request->bank_id;
 
-                $abono->aplicaComision = $request->input('aplicaComision', 0); // por defecto 0 si no se envía
+                $abono->aplica_comision = $request->input('aplicaComision', 0); // por defecto 0 si no se envía
 
                 $abono->save();
 

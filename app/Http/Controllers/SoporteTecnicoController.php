@@ -50,6 +50,10 @@ class SoporteTecnicoController extends Controller
         $data = [];
 
         foreach ($query as $p) {
+            $total = ($p->tgravable / $p->factor);
+            $abono = $p->cxc?->abono ?? 0;
+            $porcentaje = $total > 0 ? ($abono * 100) / $total: 0;
+
             $row = [];
             $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
             $row[] = '<p>' . $p->id . '</p>';
@@ -63,6 +67,8 @@ class SoporteTecnicoController extends Controller
             $row[] = '<p>' . number_format($p->mtototal, 2, ',', '.') . '</p>';
             $row[] = '<p>' . ($p->factor ? number_format($p->mtototal / $p->factor, 2, ',', '.') : number_format(0, 2, ',', '.')) . '</p>';
             $row[] = '<p>' . ($p->savend->descrip ?? 'N/A') . '</p>';
+            $row[] = '<p>' . number_format($porcentaje, 2, ',', '.') . '%</p>';
+
             $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">' . ($p->estatusPre->nombre ?? "N/A") . '</span>';
             $row[] = view('entregas.actions', compact('p'))->render();
             $data[] = $row;
@@ -163,6 +169,4 @@ class SoporteTecnicoController extends Controller
 
         return response()->json(['success' => false], 400);
     }
-
-
 }

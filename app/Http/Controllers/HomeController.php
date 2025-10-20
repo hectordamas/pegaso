@@ -18,7 +18,7 @@ class HomeController extends Controller
     private function obtenerDatosDashboard($type)
     {
         $hoy = now();
-    
+
         switch ($type) {
             case 'dia':
                 $desde = $hoy->copy()->startOfDay();
@@ -34,13 +34,17 @@ class HomeController extends Controller
                 $hasta = $hoy->copy()->endOfYear();
                 break;
         }
-    
+
         // Cuentas por cobrar
         $cxcs = CxC::with(['saclie:id,codclie,descrip'])
             ->where('codwallet', 1)
             ->whereBetween('fecha', [$desde, $hasta])
             ->where('codmoneda', 2)
+            ->where('anulado', false)
+
             ->whereColumn('monto', '>', 'abono')
+            ->whereRaw('ABS(monto - abono) > 0.01')
+
             ->orderByRaw('monto - abono ASC')
             ->withCount('detallecxc')
             ->get()
@@ -48,15 +52,18 @@ class HomeController extends Controller
                 $cxc->saldo = $cxc->monto - $cxc->abono;
                 return $cxc;
             });
-    
+
         $saldoPorCobrar = $cxcs->sum('saldo');
-    
+
         $saldosPorCliente = CxC::with(['saclie:id,codclie,descrip'])
             ->selectRaw('codclie, SUM(monto) as total_monto, SUM(abono) as total_abono')
             ->whereBetween('fecha', [$desde, $hasta])
             ->where('codwallet', 1)
             ->where('codmoneda', 2)
+            ->where('anulado', false)
             ->whereColumn('monto', '>', 'abono')
+            ->whereRaw('ABS(monto - abono) > 0.01')
+
             ->groupBy('codclie')
             ->orderByRaw('SUM(monto) - SUM(abono) DESC')
             ->limit(5)
@@ -67,9 +74,9 @@ class HomeController extends Controller
                     'saldo' => $cxc->total_monto - $cxc->total_abono,
                 ];
             });
-    
+
         $cxcColors = ["#3498db", "#e74c3c", "#2ecc71", "#f39c12", "#9b59b6"];
-    
+
         // Proyectos
         $proyectos = Safact::whereIn('codestatus', [3, 4, 7, 8, 10])
             ->whereBetween('fechae', [$desde, $hasta])
@@ -79,12 +86,12 @@ class HomeController extends Controller
 
         $estatusProyectos = ['PROYECTO', 'COMPLETADO', 'EN PROCESO', 'EJECUTADO', 'CONTROL DE CALIDAD'];
         $cantidadesPorProyectos = $proyectos->pluck('cantidad');
-    
+
         // Entregas
         $entregasComprado = Safact::where('codestatus', 11)->whereBetween('fechae', [$desde, $hasta])->count();
         $entregasEnProceso = Safact::where('codestatus', 12)->whereBetween('fechae', [$desde, $hasta])->count();
         $entregasEntregado = Safact::where('codestatus', 13)->whereBetween('fechae', [$desde, $hasta])->count();
-    
+
         // Atención Clientes
         $atencionClientes = AtencionCliente::join('estatusat', 'atencioncliente.codestatus', '=', 'estatusat.codestatus')
             ->whereBetween('fecha', [$desde, $hasta])
@@ -94,7 +101,7 @@ class HomeController extends Controller
         $atencionClientesEstatus =  $atencionClientes->pluck('estatus');
         $atencionClientesCantidad =  $atencionClientes->pluck('cantidad');
         $clientesAtendidos = $atencionClientes->sum('cantidad');
-    
+
         // Eventos
         $eventos = Calendario::with(['consultor:id,nombre', 'saclie:id,codclie,descrip'])->get()->map(function ($item) {
             return [
@@ -111,7 +118,7 @@ class HomeController extends Controller
                 'color' => $item->color ?: '#404E67',
             ];
         });
-    
+
         // Entrada Equipos
         $entradaEquipos = EntradaEquipos::join('estatus', 'entradaequipos.codestatus', '=', 'estatus.codestatus')
             ->whereBetween('fecha', [$desde, $hasta])
@@ -120,7 +127,7 @@ class HomeController extends Controller
             ->get();
         $entradaEquiposEstatus = $entradaEquipos->pluck('estatus');
         $entradaEquiposCantidad = $entradaEquipos->pluck('cantidad');
-    
+
         // Ventas por Vendedor
         $cobrosPorVendedor = \DB::table('detallecxc')
             ->join('cxc', 'detallecxc.codcxc', '=', 'cxc.codcxc')
@@ -130,7 +137,7 @@ class HomeController extends Controller
             ->selectRaw('safact.codvend, SUM(detallecxc.monto) as total_abonos')
             ->groupBy('safact.codvend')
             ->pluck('total_abonos', 'codvend');
-    
+
         $ventasPorVendedor = Safact::whereBetween('fechae', [$desde, $hasta])
             ->whereIn('codestatus', [3, 4, 7, 8, 10, 11, 12, 13])
             ->whereNotNull('codvend')
@@ -145,30 +152,31 @@ class HomeController extends Controller
                     'cobros' => round($cobrosPorVendedor[$venta->codvend] ?? 0, 2),
                 ];
             });
-    
+
         $ventasVendedorLabels = $ventasPorVendedor->pluck('vendedor');
         $ventasVendedorTotales = $ventasPorVendedor->pluck('total');
         $cobrosVendedorTotales = $ventasPorVendedor->pluck('cobros');
-    
+
         // Consultores: solicitudes, eventos, visitas
         $fuentes = [
             'solicitudes' => AtencionCliente::whereBetween('fecha', [$desde, $hasta])
                 ->whereNotNull('codconsultor')
                 ->where('codestatus', 3),
-        
+
             'eventos' => Calendario::whereBetween('fecha', [$desde, $hasta])
                 ->whereNotNull('codconsultor'),
-        
+
             'visitas' => Visita::whereBetween('fecha', [$desde, $hasta])
                 ->whereNotNull('codconsultor'),
         ];
 
         // Agrupar conteos por codconsultor
-        $conteos = collect($fuentes)->map(fn($query) =>
+        $conteos = collect($fuentes)->map(
+            fn($query) =>
             $query->selectRaw('codconsultor, COUNT(*) as cantidad')
-                  ->groupBy('codconsultor')
-                  ->get()
-                  ->pluck('cantidad', 'codconsultor')
+                ->groupBy('codconsultor')
+                ->get()
+                ->pluck('cantidad', 'codconsultor')
         );
 
         // Codigos únicos y nombres
@@ -203,7 +211,7 @@ class HomeController extends Controller
         $consultoresSolicitudes = $consultoresData->pluck('solicitudes');
         $consultoresEventos = $consultoresData->pluck('eventos');
         $consultoresVisitas = $consultoresData->pluck('visitas');
-    
+
         return compact(
             'saldoPorCobrar',
             'saldosPorCliente',

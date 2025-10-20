@@ -66,8 +66,21 @@ class CxCController extends Controller
         $codwallet = $request->codwallet;
         $color = $request->color;
 
+        if ($color) {
+            // Obtener clientes que tienen alguna CxC con el color seleccionado
+            $clientesConColor = CxC::where('color', $color)
+                ->pluck('codclie')
+                ->unique();
+        } else {
+            $clientesConColor = collect();
+        }
+
+
         //Todas las cxc de este wallet
         $cxcs = CxC::bySaclie($request->client)
+            ->when($clientesConColor->isNotEmpty(), function ($q) use ($clientesConColor) {
+                $q->whereIn('codclie', $clientesConColor);
+            })
             ->when(Auth::user()->departamento == 'Ventas', function ($q) {
                 $q->where('departamento', 'Ventas');
             })
@@ -77,7 +90,6 @@ class CxCController extends Controller
             ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
                 // Sin restricciones
             })
-            ->when($color, fn($q) => $q->where('color', $color))
             ->where('codwallet', $codwallet)
             ->where('codmoneda', 2)
             ->whereColumn('monto', '>', 'abono')
@@ -92,16 +104,18 @@ class CxCController extends Controller
 
         // Obtener las CxC con los datos necesarios por cliente
         $saldosPorCliente = CxC::bySaclie($request->client)
+            ->when($clientesConColor->isNotEmpty(), function ($q) use ($clientesConColor) {
+                $q->whereIn('codclie', $clientesConColor);
+            })
             ->when(Auth::user()->departamento == 'Ventas', function ($q) {
                 $q->where('departamento', 'Ventas');
             })
-            ->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
+            /*->when(Auth::user()->role == 'Analista' && Auth::user()->departamento == 'Ventas', function ($q) {
                 $q->where('codusuario', Auth::user()->codusuario);
             })
             ->when(Auth::user()->role == 'Gerencia' || Auth::user()->departamento === 'Otros' || Auth::user()->role == 'Directiva', function ($q) {
                 // Sin restricciones
-            })
-            ->when($color, fn($q) => $q->where('color', $color))
+            })*/
             ->where('codwallet', $codwallet)
             ->selectRaw('cxc.*, SUM(monto) as total_monto, SUM(abono) as total_abono')
             ->where('codwallet', $codwallet)
