@@ -208,6 +208,7 @@ class ComisionesController extends Controller
 
             $row[] = '<input type="checkbox" class="check-admin" data-id="' . $safact->id . '" ' . ($safact->check_admin ? 'checked' : '') . ' ' . ($safact->check_manager ? 'disabled' : '') . '>';
             $row[] = '<input type="checkbox" class="check-manager" data-id="' . $safact->id . '" ' . ($safact->check_manager ? 'checked' : '') . ' ' . ($safact->check_manager ? 'disabled' : '') . '>';
+            
             $data[] = $row;
         }
 

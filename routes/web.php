@@ -27,6 +27,7 @@ use App\Http\Controllers\{
 
     ComisionesController,
     ComisionesCobranzasController,
+    ComisionesSoporteController,
 
     WalletController,
 
@@ -186,15 +187,26 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
 
     //Comisiones Cobranzas Controller
     Route::controller(ComisionesCobranzasController::class)->group(function () {
-        Route::get('comisiones-cobranzas', 'index')->name('comisiones.index')->middleware('menu.permission:143');
-        Route::get('listSafact', 'listSafact')->name('comisiones.listSafact')->middleware('menu.permission:143');
-        Route::get('getComisionesData', 'getComisionesData')->name('comisiones.getComisionesData')->middleware('menu.permission:143');
-        Route::post('guardarSafacts', 'guardarSafacts')->name('comisiones.guardarSafacts')->middleware('menu.permission:143');
+        Route::get('comisiones-cobranzas', 'index')->name('comisiones.index')->middleware('menu.permission:144');
+        Route::get('listSafact', 'listSafact')->name('comisiones.listSafact')->middleware('menu.permission:144');
+        Route::get('getComisionesData', 'getComisionesData')->name('comisiones.getComisionesData')->middleware('menu.permission:144');
+        Route::post('guardarSafacts', 'guardarSafacts')->name('comisiones.guardarSafacts')->middleware('menu.permission:144');
         Route::get('getPagoInfo/{id}', 'getPagoInfo');
-        Route::post('addComisionesCobranzasInfo', 'addComisionesCobranzasInfo')->middleware('menu.permission:143');
-        Route::post('createResponsable', 'createResponsable')->middleware('menu.permission:143');
-        Route::post('updateResponsable', 'updateResponsable')->middleware('menu.permission:143');
-        Route::post('comisiones/detallecxc/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:143');
+        Route::post('addComisionesCobranzasInfo', 'addComisionesCobranzasInfo')->middleware('menu.permission:144');
+        Route::post('createResponsable', 'createResponsable')->middleware('menu.permission:144');
+        Route::post('updateResponsable', 'updateResponsable')->middleware('menu.permission:144');
+        Route::post('comisiones/detallecxc/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:144');
+    });
+
+    //Comsiiones Soporte
+    Route::controller(ComisionesSoporteController::class)->group(function(){
+        Route::get('comisiones-soporte', 'index')->name('comisionesSoporte.index')->middleware('menu.permission:145');
+        Route::get('comisionesSoporte/getComisionesData', 'getComisionesData')->name('comisionesSoporte.getComisionesData')->middleware('menu.permission:145');
+        Route::get('comisionesSoporte/getSafactInfo/{id}', 'getSafactInfo');
+        Route::post('comisionesSoporte/addComisionesSoporteInfo', 'addComisionesSoporteInfo')->middleware('menu.permission:145');
+        Route::post('comisionesSoporte/safact/{id}/check',  'updateCheck')->name('comisionesSoporte.updateCheck')->middleware('menu.permission:145');
+        Route::post('/soporte/update-tipo-servicio/{id}', 'updateTipoServicio');
+        Route::post('/soporte/update-origen/{id}', 'updateOrigen');
     });
 
     //Soporte Tècnico

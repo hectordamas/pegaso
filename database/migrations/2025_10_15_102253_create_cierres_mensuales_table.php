@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('mes')->unique();
             $table->string('year');
             $table->json('comisiones')->nullable(); // aquí irá toda la info dinámica
-
         });
     }
 

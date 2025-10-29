@@ -126,6 +126,13 @@ class Safact extends Model
         return $this->hasOne(Detallecxc::class, 'cxc_id')->latest('fechaDePago');
     }
 
+    public function soporteTipoServicio()
+    {
+        return $this->belongsTo(SoporteTipoServicio::class, 'soporte_tipo_servicio_id');
+    }
+
+    //Helpers
+
     public function esClienteNuevo(): bool
     {
         if (!$this->saclie) {
@@ -362,5 +369,46 @@ class Safact extends Model
         $year = $year ?? date('Y');
 
         return $this->totalComisionProducto($mes, $year) + $this->totalComisionServicio($mes, $year);
+    }
+
+
+
+
+
+    //*** Comisiones de soporte  * */
+
+    public function porcentajeCobradoSoporte(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+
+        return ($this->abonadoServiciosMes($mes, $year) * 100) / $this->pendienteServiciosMes($mes, $year);
+    }
+
+    public function porcentajePorCobrarSoporte(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+
+        $pendiente = $this->pendienteServiciosMes($mes, $year);
+        $abonado = $this->abonadoServiciosMes($mes, $year);
+
+        if ($pendiente == 0) {
+            return 0; // evitar división por cero
+        }
+
+        $porcentajeCobrado = ($abonado * 100) / $pendiente;
+        $porcentajePorCobrar = 100 - $porcentajeCobrado;
+
+        // Nunca puede ser negativo (por si se cobra más del total)
+        return max(0, $porcentajePorCobrar);
+    }
+
+    public function montoPorCobrarSoporte(int $mes, int $year = null)
+    {
+        $year = $year ?? date('Y');
+
+        $pendiente = $this->pendienteServiciosMes($mes, $year);
+        $abonado = $this->abonadoServiciosMes($mes, $year);
+
+        return max(0, $pendiente - $abonado);
     }
 }
