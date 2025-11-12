@@ -26,11 +26,11 @@ class ComisionesController extends Controller
                     $endOfMonth->toDateString()
                 ]);
             })
-                ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-                ->with('cxc.detallecxc'); // precarga los pagos
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+            ->with('cxc.detallecxc'); // precarga los pagos
         }])
-            ->where('activo', true)
-            ->get();
+        ->where('activo', true)
+        ->get();
 
         $data = [];
 
@@ -112,6 +112,8 @@ class ComisionesController extends Controller
 
     public function comisionesDetallesTable(Request $request)
     {
+        ini_set('max_execution_time', 300);
+
         $year = $request->year ?: date('Y');
         $mes  = $request->mes ?: date('m');
         $id = $request->savendId;
@@ -130,6 +132,9 @@ class ComisionesController extends Controller
                     $startOfMonth->toDateString(),
                     $endOfMonth->toDateString()
                 ]);
+            })
+            ->whereHas('savend', function ($q) {
+                $q->where('activo', true);
             })
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
             ->where('codvend', $savend->codvend)
@@ -208,7 +213,7 @@ class ComisionesController extends Controller
 
             $row[] = '<input type="checkbox" class="check-admin" data-id="' . $safact->id . '" ' . ($safact->check_admin ? 'checked' : '') . ' ' . ($safact->check_manager ? 'disabled' : '') . '>';
             $row[] = '<input type="checkbox" class="check-manager" data-id="' . $safact->id . '" ' . ($safact->check_manager ? 'checked' : '') . ' ' . ($safact->check_manager ? 'disabled' : '') . '>';
-            
+
             $data[] = $row;
         }
 

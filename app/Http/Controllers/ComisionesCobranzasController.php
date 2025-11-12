@@ -241,6 +241,7 @@ class ComisionesCobranzasController extends Controller
         $pago->origen_id = $request->origen;
         $pago->factura = $request->factura;
         $pago->fechaDeFactura = $request->fechaDeFactura;
+        $pago->save();
 
         return response()->json([
             'success' => true

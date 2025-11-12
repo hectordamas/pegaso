@@ -28,6 +28,7 @@ use App\Http\Controllers\{
     ComisionesController,
     ComisionesCobranzasController,
     ComisionesSoporteController,
+    ComisionesProyectosController,
 
     WalletController,
 
@@ -198,7 +199,7 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('comisiones/detallecxc/{id}/check',  'updateCheck')->name('comisiones.updateCheck')->middleware('menu.permission:144');
     });
 
-    //Comsiiones Soporte
+    //Comsiones Soporte
     Route::controller(ComisionesSoporteController::class)->group(function(){
         Route::get('comisiones-soporte', 'index')->name('comisionesSoporte.index')->middleware('menu.permission:145');
         Route::get('comisionesSoporte/getComisionesData', 'getComisionesData')->name('comisionesSoporte.getComisionesData')->middleware('menu.permission:145');
@@ -209,7 +210,19 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('/soporte/update-origen/{id}', 'updateOrigen');
     });
 
-    //Soporte Tècnico
+
+    //Comsiones Proyecto
+    Route::controller(ComisionesProyectosController::class)->group(function(){
+        Route::get('comisiones-proyecto', 'index')->name('comisionesProyecto.index')->middleware('menu.permission:146');
+        Route::get('comisionesProyecto/getComisionesData', 'getComisionesData')->name('comisionesProyecto.getComisionesData')->middleware('menu.permission:146');
+        Route::get('comisionesProyecto/getSafactInfo/{id}', 'getSafactInfo');
+        Route::post('comisionesProyecto/addComisionesSoporteInfo', 'addComisionesProyectoInfo')->middleware('menu.permission:146');
+        Route::post('comisionesProyecto/safact/{id}/check',  'updateCheck')->name('comisionesProyecto.updateCheck')->middleware('menu.permission:146');
+        Route::post('comisiones/update-tipo-servicio/{id}', 'updateTipoServicio');
+        Route::post('comisiones/update-origen/{id}', 'updateOrigen');
+    });
+
+    //Soporte Técnico
     Route::controller(SoporteTecnicoController::class)->group(function () {
         Route::get('soporte-tecnico', 'index')->name('soporte.index')->middleware('menu.permission:147');
         Route::get('soporteData', 'data')->name('soporte.data')->middleware('menu.permission:147');

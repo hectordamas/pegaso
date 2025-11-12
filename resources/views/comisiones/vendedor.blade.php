@@ -15,7 +15,7 @@
                         {{ $savend->descrip }} - Configuración de Comisiones
                     </h5>
 
-                    <a href="{{ url('comisiones') }}" class="btn btn-inverse shadow rounded">
+                    <a href="{{ url('comisiones-ventas') }}" class="btn btn-inverse shadow rounded">
                         <i class="fas fa-arrow-left"></i> Tabla de Comisiones
                     </a>
                 </div>

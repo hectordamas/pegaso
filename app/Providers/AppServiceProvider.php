@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 foreach ($menus as $menu) {
                     if (in_array($menu->codmenu, [3, 14])) {
                         $groupedMenus['cxc'][] = $menu;
-                    } elseif (in_array($menu->codmenu, [143, 144, 145])) {
+                    } elseif (in_array($menu->codmenu, [143, 144, 145, 146])) {
                         $groupedMenus['comisiones'][] = $menu;
                     } elseif (in_array($menu->codmenu, [9, 10, 11])) {
                         $groupedMenus['config'][] = $menu;
