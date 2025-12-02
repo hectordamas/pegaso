@@ -200,7 +200,7 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
     });
 
     //Comsiones Soporte
-    Route::controller(ComisionesSoporteController::class)->group(function(){
+    Route::controller(ComisionesSoporteController::class)->group(function () {
         Route::get('comisiones-soporte', 'index')->name('comisionesSoporte.index')->middleware('menu.permission:145');
         Route::get('comisionesSoporte/getComisionesData', 'getComisionesData')->name('comisionesSoporte.getComisionesData')->middleware('menu.permission:145');
         Route::get('comisionesSoporte/getSafactInfo/{id}', 'getSafactInfo');
@@ -208,11 +208,14 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('comisionesSoporte/safact/{id}/check',  'updateCheck')->name('comisionesSoporte.updateCheck')->middleware('menu.permission:145');
         Route::post('/soporte/update-tipo-servicio/{id}', 'updateTipoServicio');
         Route::post('/soporte/update-origen/{id}', 'updateOrigen');
+
+        Route::get('/soporte/tipo-servicio/{id}',  'show');
+        Route::post('/soporte/tipo-servicio/{id}',  'update');
     });
 
 
     //Comsiones Proyecto
-    Route::controller(ComisionesProyectosController::class)->group(function(){
+    Route::controller(ComisionesProyectosController::class)->group(function () {
         Route::get('comisiones-proyecto', 'index')->name('comisionesProyecto.index')->middleware('menu.permission:146');
         Route::get('comisionesProyecto/getComisionesData', 'getComisionesData')->name('comisionesProyecto.getComisionesData')->middleware('menu.permission:146');
         Route::get('comisionesProyecto/getSafactInfo/{id}', 'getSafactInfo');
@@ -220,6 +223,9 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('comisionesProyecto/safact/{id}/check',  'updateCheck')->name('comisionesProyecto.updateCheck')->middleware('menu.permission:146');
         Route::post('comisiones/update-tipo-servicio/{id}', 'updateTipoServicio');
         Route::post('comisiones/update-origen/{id}', 'updateOrigen');
+
+        Route::get('/comisiones/general/{id}/{type}', 'show');
+        Route::post('/comisiones/general/{id}/{type}', 'update');
     });
 
     //Soporte Técnico

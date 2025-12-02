@@ -130,4 +130,33 @@ class ComisionesProyectosController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function show($id, $type)
+    {
+        $p = ProjectManager::findOrFail($id);
+
+        return response()->json([
+            'monto' => $type === 'proyecto'
+                ? $p->proyecto_comision
+                : $p->servicio_comision
+        ]);
+    }
+
+    public function update(Request $request, $id, $type)
+    {
+        $p = ProjectManager::findOrFail($id);
+
+        if ($type === 'proyecto') {
+            $p->proyecto_comision = $request->monto;
+        } else {
+            $p->servicio_comision = $request->monto;
+        }
+
+        $p->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comisión actualizada'
+        ]);
+    }
 }

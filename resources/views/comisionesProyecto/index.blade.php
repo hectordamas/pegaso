@@ -380,5 +380,50 @@
                 }
             });
         });
-    </script>
+
+    // ABRIR MODAL GENERAL
+    $(document).on('click', '.btnEditarComisionGeneral', function() {
+
+        let id = $(this).data('id');
+        let type = $(this).data('type');
+
+        $('#general_id').val(id);
+        $('#general_type').val(type);
+
+        // Cambiar título según el tipo
+        if (type === 'proyecto')
+            $('#tituloModalGeneral').text("Editar Comisión de Proyectos");
+        else
+            $('#tituloModalGeneral').text("Editar Comisión de Servicios");
+
+        // Obtener valores actuales
+        $.get(`/comisiones/general/${id}/${type}`, function(res) {
+            $('#general_monto').val(res.monto);
+            $('#modalEditarComisionGeneral').modal('show');
+        });
+    });
+
+    // GUARDAR
+    $(document).on('click', '#btnGuardarComisionGeneral', function() {
+        let id = $('#general_id').val();
+        let type = $('#general_type').val();
+        let monto = $('#general_monto').val();
+
+        $.ajax({
+            url: `/comisiones/general/${id}/${type}`,
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                monto: monto
+            },
+            success: function(res) {
+                $('#modalEditarComisionGeneral').modal('hide');
+
+                if (res.success) {
+                    getComisionesData(); // luego puedo hacerte versión sin recargar
+                }
+            }
+        });
+    });
+</script>
 @endsection

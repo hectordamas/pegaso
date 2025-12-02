@@ -52,6 +52,7 @@ class ComisionesSoporteController extends Controller
         $resumen = [];
         foreach ($tipos as $tipo) {
             $resumen[$tipo->name] = [
+                'id' => $tipo->id,
                 'name' => $tipo->name,
                 'total_servicio' => 0,
                 'total_cobrado' => 0,
@@ -192,6 +193,33 @@ class ComisionesSoporteController extends Controller
         $safact->soporte_status = $request->estatus; // <-- Nuevo campo
 
         $safact->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function show($id)
+    {
+        $t = SoporteTipoServicio::findOrFail($id);
+
+        return response()->json([
+            'porcentaje' => $t->porcentaje,
+            'comision_fija' => $t->comision_fija
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $t = SoporteTipoServicio::findOrFail($id);
+
+        if ($request->tipo === 'porcentaje') {
+            $t->porcentaje = $request->monto;
+            $t->comision_fija = null;
+        } else {
+            $t->comision_fija = $request->monto;
+            $t->porcentaje = null;
+        }
+
+        $t->save();
 
         return response()->json(['success' => true]);
     }

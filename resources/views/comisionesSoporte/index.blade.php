@@ -388,5 +388,66 @@
                 }
             });
         });
+
+
+        // GUARDAR CAMBIOS
+        $(document).on('click', '#btnGuardarComision', function() {
+            let id = $('#tipo_id').val();
+            let tipo = $('#tipo_comision').val();
+            let monto = $('#monto_comision').val();
+            $.ajax({
+                url: `/soporte/tipo-servicio/${id}`,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    tipo: tipo,
+                    monto: monto
+                },
+                success: function(res) {
+                    $('#modalEditarComision').modal('hide');
+
+                    console.log(res)
+                    if (res.success) {
+                        getComisionesData();
+                    }
+                },
+                error: function(err){
+                    console.log(err)
+
+                }
+            });
+        });
+
+        // ABRIR MODAL
+        $(document).on('click', '.btnEditarComision', function() {
+            let id = $(this).data('id');
+            $('#tipo_id').val(id);
+
+            $.get(`/soporte/tipo-servicio/${id}`, function(res) {
+
+                if (res.porcentaje !== null) {
+                    $('#tipo_comision').val('porcentaje');
+                    $('#monto_comision').val(res.porcentaje);
+                    $('#label_monto').text("Porcentaje (%)");
+                } else {
+                    $('#tipo_comision').val('fija');
+                    $('#monto_comision').val(res.comision_fija);
+                    $('#label_monto').text("Comisión Fija ($)");
+                }
+
+                $('#modalEditarComision').modal('show');
+            });
+        });
+
+        // CAMBIAR LABEL CUANDO CAMBIA TIPO
+        $('#tipo_comision').on('change', function() {
+            if ($(this).val() === 'porcentaje') {
+                $('#label_monto').text("Porcentaje (%)");
+            } else {
+                $('#label_monto').text("Comisión Fija ($)");
+            }
+        });
+
+
     </script>
 @endsection
