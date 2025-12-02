@@ -548,7 +548,7 @@
 
             $('#abono').val('');
             $('#file').val('');
-            if (codestatus == 3 || codestatus == 11 || codestatus == 14) {
+            if (codestatus == 3 || codestatus == 11 || codestatus == 14 || codestatus == 15) {
                 $('.abonado-container').removeClass('d-none'); // Muestra el campo
             } else {
                 $('.abonado-container').addClass('d-none'); // Oculta el campo si no es 5 o 6

@@ -14,7 +14,7 @@ class PresupuestosController extends Controller
     public function index(Request $request)
     {
         $estatus = EstatusPre::where('inactivo', false)
-            ->whereIn('id', [2, 3, 5, 6, 11, 14])
+            ->whereIn('id', [2, 3, 5, 6, 11, 14, 15])
             ->get();
 
         $vendedores = Savend::where('activo', true)
@@ -119,7 +119,7 @@ class PresupuestosController extends Controller
         }
 
 
-        if ($codestatus == 3 || $codestatus == 11 || $codestatus == 14) {
+        if ($codestatus == 3 || $codestatus == 11 || $codestatus == 14| | $codestatus == 15) {
             if ($request->abono) {
                 $presupuesto->abono = str_replace(',', '.', str_replace('.', '', $request->abono));
 
@@ -137,6 +137,9 @@ class PresupuestosController extends Controller
                     $prefix = 'Proyecto: ' . $presupuesto->numerod;
                 } elseif ($codestatus == 14) {
                     $prefix = 'Servicio de soporte: ' . $presupuesto->numerod;
+                } 
+                elseif ($codestatus == 15) {
+                    $prefix = 'Servicio: ' . $presupuesto->numerod;
                 } else {
                     $prefix = 'Entrega: ' . $presupuesto->numerod;
                 }
