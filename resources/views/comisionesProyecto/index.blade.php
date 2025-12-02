@@ -131,7 +131,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-6">
+        <div class="col-xl-8">
             <div id="tablaDeComisiones"></div>
         </div>
     </div>

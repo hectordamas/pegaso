@@ -5,11 +5,12 @@
                 <tr>
                     <th>TIPO DE SERVICIO</th>
                     <th>COMISIÓN</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($soporteTipoDeServicio as $t)
-                    <tr class="btnEditarComision" data-id="{{ $t->id }}" style="cursor: pointer;">
+                    <tr >
                         <td><strong>{{ $t->name }}</strong></td>
 
                         @if ($t->porcentaje)
@@ -17,6 +18,11 @@
                         @else
                             <td>${{ number_format($t->comision_fija, 2, ',', '.') }}</td>
                         @endif
+                        <td>
+                            <a href="javascript:void(0)" class="btnEditarComision btn btn-dark" data-id="{{ $t->id }}" style="cursor: pointer;">
+                                <i class="fas fa-cog"></i>
+                            </a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

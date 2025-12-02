@@ -6,25 +6,41 @@
                     <th>TIPO DE SERVICIO</th>
                     <th>COMISIÓN</th>
                     <th>COMISIÓN PORCENTAJE</th>
+                    <th>Configurar</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="btnEditarComisionGeneral" data-type="proyecto" data-id="{{ $projectM->id }}" style="cursor: pointer;">
+                <tr>
                     <td>Total Proyectos</td>
                     <td>${{ number_format($totalComisionProyecto, 2, '.', ',') }}</td>
                     <td>{{ $projectM->proyecto_comision }}%</td>
+                    <td>
+                        <a href="javascript:void(0)" class="btn btn-dark btnEditarComisionGeneral" data-type="proyecto"
+                            data-id="{{ $projectM->id }}" style="cursor: pointer;">
+                            <i class="fas fa-cog"></i>
+                        </a>
+                    </td>
                 </tr>
 
-                <tr class="btnEditarComisionGeneral" data-type="servicio" data-id="{{ $projectM->id }}" style="cursor: pointer;">
+                <tr>
                     <td>Total Servicios</td>
                     <td>${{ number_format($totalComisionServicio, 2, '.', ',') }}</td>
                     <td>{{ $projectM->servicio_comision }}%</td>
+                    <td>
+                        <a href="javascript:void(0)" class="btn btn-dark btnEditarComisionGeneral" data-type="servicio"
+                            data-id="{{ $projectM->id }}" style="cursor: pointer;">
+                            <i class="fas fa-cog"></i>
+
+                        </a>
+                    </td>
+
                 </tr>
             </tbody>
             <tfoot class="table-dark">
                 <tr>
                     <th>Total Comisión</th>
                     <th>${{ number_format($totalComision, 2, '.', ',') }}</th>
+                    <th></th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -61,4 +77,3 @@
         </div>
     </div>
 </div>
-
