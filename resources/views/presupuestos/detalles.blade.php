@@ -35,7 +35,7 @@
                             <td>{{ $item->Cantidad }}</td>
                             <td>{{ number_format($item->TotalItem, 2, '.', ',') }}</td>
                             <td>{{ number_format($item->TotalItem / ($item->safact->factor ?: 1), 2, '.', ',') }}</td>
-                            <td>{{ number_format($item->factor ?: 1, 2, '.', ',') }}</td>
+                            <td>{{ number_format($item->safact->factor ?: 1, 2, '.', ',') }}</td>
                             <td>{{ number_format($item->MtoTax, 2, '.', ',') }}</td>
                             <td>{{ number_format($item->TotalItem + $item->MtoTax, 2, '.', ',') }}</td>
                         </tr>
