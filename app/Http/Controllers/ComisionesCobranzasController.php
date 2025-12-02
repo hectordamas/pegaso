@@ -24,7 +24,7 @@ class ComisionesCobranzasController extends Controller
                     $endOfMonth->toDateString()
                 ]);
             })
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15])
             ->where('aplica_comision', false)
             ->get();
 
