@@ -16,7 +16,6 @@
 
                         <div class="col-md-6">
                             <div class="row">
-                                <hr>
                                 <label>Fecha de Registro</label>
                                 <hr>
                                 <div class="col-md-6 form-group">
@@ -35,7 +34,6 @@
 
                         <div class="col-md-6">
                             <div class="row">
-                                <hr>
                                 <label>Fecha de Pago</label>
                                 <hr>
                                 <div class="col-md-6 form-group">
