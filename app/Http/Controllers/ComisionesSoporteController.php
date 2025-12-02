@@ -34,6 +34,7 @@ class ComisionesSoporteController extends Controller
                     $endOfMonth->toDateString()
                 ]);
             })
+            ->where('aplica_comision_proyecto', true)
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
             ->get()
             ->filter(function ($s) use ($mes, $year) {

@@ -23,13 +23,14 @@ class DetalleCxC extends Model
         return $this->belongsTo(CxC::class, 'codcxc', 'codcxc');
     }
 
-    
+
     public function bank()
     {
         return $this->belongsTo(Bank::class, 'bank_id', 'id');
     }
-    
-    public function cobranzasOrigen(){
+
+    public function cobranzasOrigen()
+    {
         return $this->belongsTo(CobranzasOrigen::class, 'origen_id', 'id');
     }
 
@@ -52,6 +53,20 @@ class DetalleCxC extends Model
         }
     }
 
+
+    public function scopeByDateRangePago($query, $from = null, $until = null)
+    {
+        if ($from && $until) {
+            return $query->whereBetween('fechaDePago', [Carbon::parse($from), Carbon::parse($until)]);
+        } elseif ($from) {
+            return $query->where('fechaDePago', '>=', Carbon::parse($from));
+        } elseif ($until) {
+            return $query->where('fechaDePago', '<=', Carbon::parse($until));
+        } else {
+            return $query->whereBetween('fechaDePago', [now()->subMonths(2), now()]);
+        }
+    }
+
     public function scopeBySaclie($query, $codclie)
     {
         if ($codclie) {
@@ -63,6 +78,15 @@ class DetalleCxC extends Model
         return $query;
     }
 
-}
+    public function scopeByUser($query, $userId)
+    {
+        if ($userId) {
+            return $query->whereHas('cxc', function ($q) use ($userId) {
+                $q->where('codusuario', $userId);
+            });
+        }
 
+        return $query;
+    }
+}
 

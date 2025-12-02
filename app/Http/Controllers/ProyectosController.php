@@ -12,20 +12,21 @@ class ProyectosController extends Controller
 {
     use VerifyPermissions;
 
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $clientes = Saclie::all();
         $savend = Savend::where('activo', true)->get();
 
         $estatusPre = EstatusPre::where('inactivo', false)
-        ->whereIn('id', [3, 4, 5, 6, 7, 8, 9, 10])
-        ->get();   
+            ->whereIn('id', [3, 4, 5, 6, 7, 8, 9, 10])
+            ->get();
 
-		$saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
+        $saclie = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
         $client = $request->client;
         $registra = $this->hasPermissions('registra');
 
         return view('proyectos', [
-            'estatusPre' => $estatusPre, 
+            'estatusPre' => $estatusPre,
             'clientes' => $clientes,
             'savend' => $savend,
             'saclie' => $saclie,
@@ -38,7 +39,7 @@ class ProyectosController extends Controller
     {
         $registra = $request->registra;
 
-        $query = Safact::select('id', 'fechae','descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
+        $query = Safact::select('id', 'fechae', 'descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend', 'aplica_comision_soporte', 'aplica_comision_proyecto')
             ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
             ->where('tipofac', 'F')
             ->bySaclie($request->input('codclie'))
@@ -46,10 +47,10 @@ class ProyectosController extends Controller
             ->byStatus($request->input('codestatus'))
             ->with(['saclie', 'estatusPre', 'savend'])
             ->get();
-    
+
         // Obtener la cantidad total de registros antes de la paginación
         $totalRecords = (clone $query)->count();
-    
+
         // Contadores por estatus
         $pendientes = (clone $query)->where('codestatus', 1)->count();
         $aprobados = (clone $query)->where('codestatus', 2)->count();
@@ -65,11 +66,11 @@ class ProyectosController extends Controller
         $data = [];
 
 
-        foreach($query as $p){
+        foreach ($query as $p) {
             //Abonado
             $total = ($p->tgravable / $p->factor);
             $abono = $p->cxc?->abono ?? 0;
-            $porcentaje = $total > 0 ? ($abono * 100) / $total: 0;
+            $porcentaje = $total > 0 ? ($abono * 100) / $total : 0;
 
             $row = [];
             $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar
@@ -86,11 +87,11 @@ class ProyectosController extends Controller
             $row[] = '<p>' . ($p->factor ? number_format($p->mtototal / $p->factor, 2, ',', '.') : number_format(0, 2, ',', '.')) . '</p>';
             $row[] = '<p>' . ($p->savend->descrip ?? 'N/A') . '</p>';
             $row[] = '<p>' . number_format($porcentaje, 2, ',', '.') . '%</p>';
-            $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">'. ($p->estatusPre->nombre ?? "N/A"). '</span>';
+            $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">' . ($p->estatusPre->nombre ?? "N/A") . '</span>';
             $row[] = view('proyectos.actions', compact('p', 'registra'))->render();
             $data[] = $row;
         }
-    
+
         return response()->json([
             "sEcho" => 1,
             "iTotalRecords" => $totalRecords,
@@ -109,20 +110,20 @@ class ProyectosController extends Controller
         ]);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         // Buscar el proyecto
         $proyecto = Safact::findOrFail($request->proyectoId);
 
 
-        if($request->codestatus == 4 || $request->codestatus == 8){
+        if ($request->codestatus == 4 || $request->codestatus == 8) {
             $noCompletado = $proyecto->saitemfac()->where('valor', false)->count();
 
-            if($noCompletado > 0){
+            if ($noCompletado > 0) {
                 return response()->json([
                     'error' => 'Este proyecto aún tiene tareas sin completar, por lo que su estatus no pueder actualizado!'
                 ]);
             }
-
         }
 
         // Verificar si el estado realmente cambió
@@ -130,7 +131,7 @@ class ProyectosController extends Controller
             $historialAnterior = SafactEstatusHistorial::where('safact_id', $proyecto->id)
                 ->whereNull('fecha_fin')
                 ->first();
-            
+
             if ($historialAnterior) {
                 $historialAnterior->fecha_fin = Carbon::now();
                 $historialAnterior->save();
@@ -149,8 +150,8 @@ class ProyectosController extends Controller
             $proyecto->save();
         }
 
-        if($proyecto->codestatus == 4){
-            foreach($proyecto->saitemfac as $item){
+        if ($proyecto->codestatus == 4) {
+            foreach ($proyecto->saitemfac as $item) {
                 $item->valor = true;
                 $item->save();
             }
@@ -177,9 +178,9 @@ class ProyectosController extends Controller
         $proyecto = Safact::with(['savend', 'estatusPre', 'historyitems'])->findOrFail($id);
 
         $pdf = Pdf::loadView('proyectos.pdf', compact('proyecto'));
-        return $pdf->stream('informe_'. $proyecto->descrip . '_' . $proyecto->numerod . '.pdf');
+        return $pdf->stream('informe_' . $proyecto->descrip . '_' . $proyecto->numerod . '.pdf');
     }
-    
+
     public function updateInforme(Request $request, $id)
     {
         $request->validate([
@@ -196,7 +197,8 @@ class ProyectosController extends Controller
         return redirect()->back()->with('message', 'Historial guardado correctamente.');
     }
 
-    public function verDetalles($id){
+    public function verDetalles($id)
+    {
         $proyecto = Safact::find($id);
         $items = $proyecto->saitemfac;
 
@@ -208,22 +210,23 @@ class ProyectosController extends Controller
         ]);
     }
 
-    public function actualizarEstado(Request $request){//Actualiza el estado de safactitem
+    public function actualizarEstado(Request $request)
+    { //Actualiza el estado de safactitem
 
         $request->validate([
             'id' => 'required|integer|exists:saitemfac,id',
             'valor' => 'required|boolean'
         ]);
-    
+
         $item = saitemfac::find($request->id);
-    
+
         if ($item) {
             $item->valor = $request->valor; // Actualizar el estado
             $item->save();
-    
+
             return response()->json(['success' => true, $item->valor]);
         }
-    
+
         return response()->json(['success' => false], 400);
     }
 }

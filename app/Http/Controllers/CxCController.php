@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{CxC, Wallet, TipoMoneda, Saclie, DetalleCxC, Bank};
+use App\Models\{CxC, Wallet, TipoMoneda, Saclie, DetalleCxC, Bank, User};
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Mail;
@@ -278,16 +278,30 @@ class CxCController extends Controller
     {
         $saclie = Saclie::orderBy('descrip', 'asc')->where('activo', true)->get();
         $abonos = DetalleCxC::byDateRange($request->from, $request->until)
+            ->byDateRangePago($request->fechaDePago_from, $request->fechaDePago_until)
             ->bySaclie($request->codclie)
+            ->byUser($request->userId)
             ->orderBy('codcxc', 'desc')
             ->get();
+
+        $total = $abonos->sum('monto');        
+        $users = User::all();
 
         return view('cxc.reportes', [
             'abonos' => $abonos,
             'requestFrom' => $request->from,
             'requestUntil' => $request->until,
+
+            'requestFromFechaDePago' => $request->fechaDePago_from,
+            'requestUntilFechaDePago' => $request->fechaDePago_until,
+
             'requestCodclie' => $request->codclie,
-            'saclie' => $saclie
+            'userId' => $request->userId,
+
+            'users' => $users,
+            'saclie' => $saclie,
+
+            'total' => $total
         ]);
     }
 

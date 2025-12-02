@@ -26,11 +26,11 @@ class ComisionesController extends Controller
                     $endOfMonth->toDateString()
                 ]);
             })
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-            ->with('cxc.detallecxc'); // precarga los pagos
+                ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+                ->with('cxc.detallecxc'); // precarga los pagos
         }])
-        ->where('activo', true)
-        ->get();
+            ->where('activo', true)
+            ->get();
 
         $data = [];
 
@@ -266,6 +266,13 @@ class ComisionesController extends Controller
         }
         if ($request->has('check_manager')) {
             $safact->check_manager = $request->check_manager;
+        }
+
+        if ($request->has('aplica_comision_soporte')) {
+            $safact->aplica_comision_soporte = $request->aplica_comision_soporte;
+        }
+        if ($request->has('aplica_comision_proyecto')) {
+            $safact->aplica_comision_proyecto = $request->aplica_comision_proyecto;
         }
 
         // Si ambos están verificados → guardar comisiones

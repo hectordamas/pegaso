@@ -52,7 +52,7 @@ class SoporteTecnicoController extends Controller
         foreach ($query as $p) {
             $total = ($p->tgravable / $p->factor);
             $abono = $p->cxc?->abono ?? 0;
-            $porcentaje = $total > 0 ? ($abono * 100) / $total: 0;
+            $porcentaje = $total > 0 ? ($abono * 100) / $total : 0;
 
             $row = [];
             $row[] = \Carbon\Carbon::parse($p->fechae)->format('Y-m-d H:i:s'); // Columna oculta para ordenar

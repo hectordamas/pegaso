@@ -1,72 +1,136 @@
 @extends('layouts.admin')
 
 @section('metadata')
-<title>Proyectos - {{ env('APP_NAME') }}</title>
+    <title>Proyectos - {{ env('APP_NAME') }}</title>
 @endsection
 
 @section('styles')
-<style>
-    .owl-carousel {
-        position: relative;
-        z-index: 10;
-    }
-    .estatus-container, .owl-carousel, .estatus-row {
-        overflow: visible !important;
-    }
-    .owl-carousel .item {
-        min-width: 200px;
-        padding: 20px 0;
-    }
+    <style>
+        .owl-carousel {
+            position: relative;
+            z-index: 10;
+        }
 
-    .status-card {
-        height: 100%;
-        cursor: pointer;
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    }
+        .estatus-container,
+        .owl-carousel,
+        .estatus-row {
+            overflow: visible !important;
+        }
 
-    .status-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    }
+        .owl-carousel .item {
+            min-width: 200px;
+            padding: 20px 0;
+        }
 
-    .status-card:active {
-        transform: scale(0.95);
-    }
-/* Fondo oscuro de CKEditor (detrás del diálogo) */
-.cke_dialog_background_cover {
-    z-index: 100000000000 !important; /* más alto que tu modal */
-}
+        .status-card {
+            height: 100%;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
 
-/* Diálogo de CKEditor */
-.cke_dialog {
-    z-index: 100000000001 !important; /* encima del fondo */
-}
-</style>
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-card:active {
+            transform: scale(0.95);
+        }
+
+        /* Fondo oscuro de CKEditor (detrás del diálogo) */
+        .cke_dialog_background_cover {
+            z-index: 100000000000 !important;
+            /* más alto que tu modal */
+        }
+
+        /* Diálogo de CKEditor */
+        .cke_dialog {
+            z-index: 100000000001 !important;
+            /* encima del fondo */
+        }
+    </style>
 @endsection
 
 @section('content')
+    <div class="row mb-3">
+        <div class="col-md-12">
+            @php
+                $estatusCollection = [
+                    [
+                        'id' => 3,
+                        'name' => 'Proyectos',
+                        'count' => 0,
+                        'color' => 'primary',
+                        'icon' => 'fas fa-project-diagram',
+                    ],
+                    [
+                        'id' => 4,
+                        'name' => 'Completados',
+                        'count' => 0,
+                        'color' => 'success',
+                        'icon' => 'fas fa-clipboard-check',
+                    ],
+                    [
+                        'id' => 5,
+                        'name' => 'Rechazados',
+                        'count' => 0,
+                        'color' => 'danger',
+                        'icon' => 'fas fa-times-circle',
+                    ],
+                    [
+                        'id' => 6,
+                        'name' => 'Descartados',
+                        'count' => 0,
+                        'color' => 'secondary',
+                        'icon' => 'fas fa-trash-alt',
+                    ],
+                    ['id' => 7, 'name' => 'En Proceso', 'count' => 0, 'color' => 'info', 'icon' => 'fas fa-spinner'],
+                    [
+                        'id' => 8,
+                        'name' => 'Ejecutado',
+                        'count' => 0,
+                        'color' => 'warning',
+                        'icon' => 'fas fa-play-circle',
+                    ],
+                    [
+                        'id' => 9,
+                        'name' => 'Pausado',
+                        'count' => 0,
+                        'color' => 'warning',
+                        'icon' => 'fas fa-pause-circle',
+                    ],
+                    [
+                        'id' => 10,
+                        'name' => 'Control de Calidad',
+                        'count' => 0,
+                        'color' => 'dark',
+                        'icon' => 'fas fa-check-double',
+                    ],
+                ];
+            @endphp
+            <input type="hidden" name="registra" value="{{ $registra }}" id="registra">
 
-<div class="row mb-3">
-    <div class="col-md-12">
-        @php
-            $estatusCollection = [
-                ['id' => 3, 'name' => 'Proyectos', 'count' => 0, 'color' => 'primary', 'icon' => 'fas fa-project-diagram'],
-                ['id' => 4, 'name' => 'Completados', 'count' => 0, 'color' => 'success', 'icon' => 'fas fa-clipboard-check'],
-                ['id' => 5, 'name' => 'Rechazados', 'count' => 0, 'color' => 'danger', 'icon' => 'fas fa-times-circle'],
-                ['id' => 6, 'name' => 'Descartados', 'count' => 0, 'color' => 'secondary', 'icon' => 'fas fa-trash-alt'],
-                ['id' => 7, 'name' => 'En Proceso', 'count' => 0, 'color' => 'info', 'icon' => 'fas fa-spinner'],
-                ['id' => 8, 'name' => 'Ejecutado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-play-circle'],
-                ['id' => 9, 'name' => 'Pausado', 'count' => 0, 'color' => 'warning', 'icon' => 'fas fa-pause-circle'],
-                ['id' => 10, 'name' => 'Control de Calidad', 'count' => 0, 'color' => 'dark', 'icon' => 'fas fa-check-double'],
-            ];
-        @endphp
-        <input type="hidden" name="registra" value="{{ $registra }}" id="registra">
+            {{-- Consultar Presupuestos por Estatus --}}
+            <div class="owl-carousel owl-theme d-none d-md-block">
+                @foreach ($estatusCollection as $status)
+                    <div class="item">
+                        <div class="card text-white bg-{{ $status['color'] }} shadow status-card getProyectosByStatus mb-0"
+                            data-id="{{ $status['id'] }}">
+                            <div class="card-body text-center">
+                                <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
+                                <h5 class="mt-2">{{ $status['name'] }}</h5>
+                                <h4 class="fw-bold count{{ $status['id'] }}">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
 
-        {{-- Consultar Presupuestos por Estatus --}}
-        <div class="owl-carousel owl-theme d-none d-md-block">
-            @foreach($estatusCollection as $status)
-                <div class="item">
-                    <div class="card text-white bg-{{ $status['color'] }} shadow status-card getProyectosByStatus mb-0" data-id="{{ $status['id'] }}">
+            {{-- Consultar Presupuestos por Estatus en mobile --}}
+            @foreach ($estatusCollection as $status)
+                <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6 d-block d-md-none">
+                    <div class="card text-white bg-{{ $status['color'] }} shadow status-card getPresupuestosByStatus"
+                        data-id="{{ $status['id'] }}">
                         <div class="card-body text-center">
                             <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
                             <h5 class="mt-2">{{ $status['name'] }}</h5>
@@ -75,566 +139,604 @@
                     </div>
                 </div>
             @endforeach
-        </div>
 
-        {{-- Consultar Presupuestos por Estatus en mobile --}}
-        @foreach($estatusCollection as $status)
-        <div class="col-xl-2 col-lg-4 col-md-6 col-sm-6 d-block d-md-none">
-            <div class="card text-white bg-{{ $status['color'] }} shadow status-card getPresupuestosByStatus" data-id="{{ $status['id'] }}">
-                <div class="card-body text-center">
-                    <i class="{{ $status['icon'] }} fa-3x mb-2"></i>
-                    <h5 class="mt-2">{{ $status['name'] }}</h5>
-                    <h4 class="fw-bold count{{ $status['id'] }}">0</h4>
-                </div>
-            </div>
         </div>
-        @endforeach
-
     </div>
-</div>
 
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5>Consultar Proyectos</h5>
-                <span>📌 Completa los campos para filtrar y consultar Proyectos.</span>
-            </div>
-            <div class="card-block">
-                <div class="row" id="proyectoCreateForm">
-                    
-                    <div class="col-md-3 form-group">
-                        <label for="client">Cliente</label>
-                        <select name="client" id="client" class="form-control js-example-basic-single">
-                            <option value="">Elige una Opción</option>
-                            @foreach($saclie as $c)
-                                <option value="{{ $c->codclie }}" {{ $client == $c->codclie ? 'selected' : ''}}>{{ $c->descrip }} | {{$c->rif}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5>Consultar Proyectos</h5>
+                    <span>📌 Completa los campos para filtrar y consultar Proyectos.</span>
+                </div>
+                <div class="card-block">
+                    <div class="row" id="proyectoCreateForm">
 
-                    <div class="col-md-3 form-group">
-                        <label for="codvend">Vendedor</label>
-                        <select name="codvend" id="codvend" class="form-control">
-                            <option selected value="">Elige una Opción</option>
-                            @foreach($savend as $vendedor)
-                                <option value="{{ $vendedor->codvend }}">{{ $vendedor->descrip }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-md-3 form-group">
+                            <label for="client">Cliente</label>
+                            <select name="client" id="client" class="form-control js-example-basic-single">
+                                <option value="">Elige una Opción</option>
+                                @foreach ($saclie as $c)
+                                    <option value="{{ $c->codclie }}" {{ $client == $c->codclie ? 'selected' : '' }}>
+                                        {{ $c->descrip }} | {{ $c->rif }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="col-md-3 form-group">
-                        <label for="estatus">Estatus</label>
-                        <select name="estatus" id="estatus" class="form-control">
-                            <option selected value="">Elige una Opción</option>
-                            @foreach($estatusPre as $e)
-                                <option value="{{ $e->id }}">{{ $e->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                        <div class="col-md-3 form-group">
+                            <label for="codvend">Vendedor</label>
+                            <select name="codvend" id="codvend" class="form-control">
+                                <option selected value="">Elige una Opción</option>
+                                @foreach ($savend as $vendedor)
+                                    <option value="{{ $vendedor->codvend }}">{{ $vendedor->descrip }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label for="estatus">Estatus</label>
+                            <select name="estatus" id="estatus" class="form-control">
+                                <option selected value="">Elige una Opción</option>
+                                @foreach ($estatusPre as $e)
+                                    <option value="{{ $e->id }}">{{ $e->nombre }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
 
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-primary mt-3" id="consultarProyectos">
-                            <i class="fas fa-search"></i> Consultar
-                        </button>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary mt-3" id="consultarProyectos">
+                                <i class="fas fa-search"></i> Consultar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5>Proyectos</h5>
-                <span>📋 Reporte / Historial de Proyectos.</span>
-            </div>
-            <div class="card-block">
-                <div class="row">
-                    <div class="dt-responsive table-responsive">
-                        <table id="proyectos-table" class="table table-striped table-bordered nowrap table-small">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>#</th>
-                                    <th>Fecha</th>
-                                    <th>Documento</th>
-                                    <th>Cliente</th>
-                                    <th>Exento</th>
-                                    <th>Base Imponible</th>
-                                    <th>IVA</th>
-                                    <th>Factor</th>
-                                    <th>Total Bs.</th>
-                                    <th>Total USD.</th>
-                                    <th>Vendedor</th>
-                                    <th>Abonado</th>
-                                    <th>Estatus</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody id="proyectosTbody">
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5>Proyectos</h5>
+                    <span>📋 Reporte / Historial de Proyectos.</span>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Abrir Chat de Proyecto -->
-<div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title font-weight-bold" id="chatModalLabel">Chat de Proyecto</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0" style="background: #F0F2F5;">
-                <!-- Aquí se cargarán los mensajes del chat dinámicamente -->
-                <div id="chatContainer">
-
-                </div>
-
-                <div class="chat-input">
-                    <div class="input-group mb-2">
-                        <input type="hidden" id="codproyectoChat">
-                        <input id="newMessage" class="form-control" rows="1" placeholder="Escribe tu mensaje..." />
-                        <button id="sendMessage" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Enviar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Para ver detalles de Proyecto -->
-<div class="modal fade ProyectoModalView" tabindex="-1" id="ProyectoModalView" aria-labelledby="ProyectoModalViewLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="ProyectoModalViewLabel">Detalles del Proyecto #<span class="proyectoId"></span></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="productosProyecto">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                    <i class="far fa-times-circle"></i> Cerrar
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Modal Cambiar Estatus de Proyecto -->
-<div class="modal fade ProyectoModalEdit" tabindex="-1" id="ProyectoModalEdit" aria-labelledby="ProyectoModalEditLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title" id="ProyectoModalEditLabel">Cambiar Estatus de Proyecto #<span class="proyectoId"></span></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="proyectoUpdateform" method="POST">
-                    @csrf
-
-                    <input type="hidden" name="proyectoId" id="proyectoId">
-
+                <div class="card-block">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label class="control-label">Estatus</label>
-                                <select name="codestatus" class="form-control" id="estatusProyectoId" required>
-                                    @foreach($estatusPre->whereNotIn('id', [1]) as $e)
-                                        <option value="{{ $e->id }}">{{ $e->nombre }}</option>
-                                    @endforeach
-                                </select>
+                        <div class="dt-responsive table-responsive">
+                            <table id="proyectos-table" class="table table-striped table-bordered nowrap table-small">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th></th>
+                                        <th>#</th>
+                                        <th>Fecha</th>
+                                        <th>Documento</th>
+                                        <th>Cliente</th>
+                                        <th>Exento</th>
+                                        <th>Base Imponible</th>
+                                        <th>IVA</th>
+                                        <th>Factor</th>
+                                        <th>Total Bs.</th>
+                                        <th>Total USD.</th>
+                                        <th>Vendedor</th>
+                                        <th>Abonado</th>
+                                        <th>Estatus</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="proyectosTbody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Abrir Chat de Proyecto -->
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title font-weight-bold" id="chatModalLabel">Chat de Proyecto</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" style="background: #F0F2F5;">
+                    <!-- Aquí se cargarán los mensajes del chat dinámicamente -->
+                    <div id="chatContainer">
+
+                    </div>
+
+                    <div class="chat-input">
+                        <div class="input-group mb-2">
+                            <input type="hidden" id="codproyectoChat">
+                            <input id="newMessage" class="form-control" rows="1"
+                                placeholder="Escribe tu mensaje..." />
+                            <button id="sendMessage" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Para ver detalles de Proyecto -->
+    <div class="modal fade ProyectoModalView" tabindex="-1" id="ProyectoModalView" aria-labelledby="ProyectoModalViewLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="ProyectoModalViewLabel">Detalles del Proyecto #<span
+                            class="proyectoId"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="productosProyecto">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <i class="far fa-times-circle"></i> Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal Cambiar Estatus de Proyecto -->
+    <div class="modal fade ProyectoModalEdit" tabindex="-1" id="ProyectoModalEdit"
+        aria-labelledby="ProyectoModalEditLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="ProyectoModalEditLabel">Cambiar Estatus de Proyecto #<span
+                            class="proyectoId"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="proyectoUpdateform" method="POST">
+                        @csrf
+
+                        <input type="hidden" name="proyectoId" id="proyectoId">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Estatus</label>
+                                    <select name="codestatus" class="form-control" id="estatusProyectoId" required>
+                                        @foreach ($estatusPre->whereNotIn('id', [1]) as $e)
+                                            <option value="{{ $e->id }}">{{ $e->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 form-group">
+
+                            </div>
+
+                            <div class="col-md-12 form-group d-none">
+                                <label class="control-label">Monto Abonado</label>
+                                <input type="text" class="form-control montopcd" id="montoAbonado" name="monto"
+                                    onkeyup="convertirmonto(this.form)">
                             </div>
                         </div>
-
-                        <div class="col-md-12 form-group">
-
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="far fa-times-circle"></i> Cerrar
+                            </button>
+                            <button id="proyectoUpdateStatusButton" class="btn btn-success float-center">
+                                <i class="fas fa-sync"></i> Actualizar Estatus
+                            </button>
                         </div>
-
-                        <div class="col-md-12 form-group d-none">
-                            <label class="control-label">Monto Abonado</label>
-                            <input type="text" class="form-control montopcd" id="montoAbonado" name="monto" onkeyup="convertirmonto(this.form)">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="far fa-times-circle"></i> Cerrar
-                        </button>
-                        <button id="proyectoUpdateStatusButton" class="btn btn-success float-center">
-                            <i class="fas fa-sync"></i> Actualizar Estatus
-                        </button>
-                    </div>
-                </div> <!-- Cierre del formulario -->
+                    </div> <!-- Cierre del formulario -->
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 @endsection
 
 @section('scripts')
-<script src="{{ asset('assets/adminty/assets/pages/ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/adminty/assets/pages/ckeditor/ckeditor.js') }}"></script>
 
-<script>
-    function convertirmonto(input){
-		$(".montopcd").on({
-			"focus": function (event) {
-				$(event.target).select();
-			},
-			"keyup": function (event) {
-				$(event.target).val(function (index, value ) {
-					return value.replace(/\D/g, "")
-						.replace(/([0-9])([0-9]{2})$/, '$1,$2')
-						.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-				});	   
-			}
-		});
-	}
-
-    var presupuestosTable;
-
-    $(function(){
-        getProyectosData();
-    });
-
-    function getProyectosData(updated) {
-        const exp = $('#exp').val();
-
-        $("#loadingSpinner").css("display", "flex"); 
-
-        if ($.fn.DataTable.isDataTable('#proyectos-table')) {
-            $('#proyectos-table').dataTable().fnClearTable();
-			$('#proyectos-table').dataTable().fnDestroy();
+    <script>
+        function convertirmonto(input) {
+            $(".montopcd").on({
+                "focus": function(event) {
+                    $(event.target).select();
+                },
+                "keyup": function(event) {
+                    $(event.target).val(function(index, value) {
+                        return value.replace(/\D/g, "")
+                            .replace(/([0-9])([0-9]{2})$/, '$1,$2')
+                            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                    });
+                }
+            });
         }
 
-        let id = $(this).data('id')
-        let codclie = $('#client').val();
-        let codvend = $('#codvend').val();
-        let codestatus =  id || $('#estatus').val(); // this ahora está correctamente referenciado
-        let registra = $('#registra').val();
-        $('#proyectos-table').DataTable({
-            columns: [
-                { visible: false },           // columna 0: fecha cruda (oculta, para orden)
-                null,                         // columna 1: ID
-                { orderData: [0] },           // columna 2: fecha formateada, ordena según la columna 0
-                null,                         // columna 3: días
-                null,                         // columna 4: número doc
-                null,                         // columna 5: descripción
-                null,                         // columna 6: exento
-                null,                         // columna 7: gravable
-                null,                         // columna 8: impuesto
-                null,                         // columna 9: factor
-                null,                         // columna 10: total
-                null,                         // columna 11: total / factor
-                null,                         // columna 12: vendedor
-                null,                         // columna 13: estatus
-                null
-            ],
-            order: [[0, 'desc']],
-            "bDeferRender": true,
-            "bProcessing": true,
-            "sAjaxSource": "{{ route('proyectos.data') }}",
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-				$.getJSON( sSource, aoData, function (json) { 
-					fnCallback(json)
+        var presupuestosTable;
 
-                    $("#loadingSpinner").css("display", "none"); 
-
-                    if (!id) {
-                        $('.count1').html(json.pendientes);
-                        $('.count2').html(json.aprobados);
-                        $('.count3').html(json.proyectos);
-                        $('.count4').html(json.completados);
-                        $('.count5').html(json.rechazados);
-                        $('.count6').html(json.descartados);
-                        $('.count7').html(json.enproceso);
-                        $('.count8').html(json.ejecutados);
-                        $('.count9').html(json.pausados);
-                        $('.count10').html(json.qa);
-                    }
-
-                    if (updated) {
-                        Swal.fire({
-                            text: "Estatus actualizado con éxito!",
-                            icon: "success",
-                        });
-                    }
-				} );
-			},
-            "bPaginate": true,
-            "sPaginationType":"full_numbers",
-            "iDisplayLength": 20,
-            "fnServerParams": function ( aoData ) {
-				aoData.push( { "name": "codclie", "value": codclie } );
-				aoData.push( { "name": "codvend", "value": codvend } );
-				aoData.push( { "name": "codestatus", "value": codestatus } );
-                aoData.push( { "name": "registra", "value": registra } );
-            },
-            dom: 'Bfrtip',
-			buttons: [
-				{
-					extend: 'copy',
-					text: 'Copiar',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
-				},
-				{
-					extend: 'csv',
-					text: 'Exportar CSV',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
-				},
-				{
-					extend: 'excel',
-					text: 'Exportar Excel',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
-				},
-				{
-					extend: 'pdf',
-					text: 'Exportar PDF',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
-				},
-				{
-					extend: 'print',
-					text: 'Imprimir',
-					action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
-				}
-			],	            
-            "responsive": true, 
-            "lengthChange": false, 
-            "autoWidth": false,
-            pageLength: 20,
-            language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
-                "sInfoFiltered": "(filtrado de _MAX_ registros)",
-                "sSearch": "Buscar:",
-                "oPaginate": {
-                    "sFirst": "Primero",
-                    "sLast": "Último",
-                    "sNext": "Siguiente",
-                    "sPrevious": "Anterior"
-                }
-            }
+        $(function() {
+            getProyectosData();
         });
-    }
 
-    // Ver Detalles
-    window.proyectoDetalles = function(proyectoId){
-        $("#loadingSpinner").css("display", "flex");
+        function getProyectosData(updated) {
+            const exp = $('#exp').val();
 
-		$.ajax({
-			url: '{{ url("proyectos/ver-detalles") }}' + '/' + proyectoId, // Asegúrate de que esta ruta sea correcta
-			method: 'POST',
-			data: {
-				_token: '{{ csrf_token() }}'  // CSRF Token para seguridad
-			},
-			success: function(response) {
-                $('.proyectoId').html(proyectoId);
-                $("#ProyectoModalView").modal("show")
-				$('#productosProyecto').html(response.items);  
-                $("#loadingSpinner").css("display", "none");
-  
-			},
-			error: function(response){
-				alert('Error de Conexión')
-				$("#loadingSpinner").css("display", "none");
-			}
-		});
-	}
+            $("#loadingSpinner").css("display", "flex");
 
-    $('.getProyectosByStatus').on('click', function() {
-        getProyectosData.call(this);
-    });
-    
-    $('#consultarProyectos').on('click', function() {
-        getProyectosData();
-    });
-    
-
-    //Actualizar Estatus de Proyecto
-    $('#proyectoUpdateStatusButton').on('click', function(){
-        var $codestatus = $('#estatusProyectoId').val();
-        var $proyectoId = $('#proyectoId').val()
-        var $montoAbonado = $('#montoAbonado').val()
-
-        $.ajax({
-			url: '{{ route("proyectos.update") }}', // Asegúrate de que esta ruta sea correcta
-			method: 'POST',
-			data: {
-				_token: '{{ csrf_token() }}',  // CSRF Token para seguridad
-                codestatus: $codestatus,
-                proyectoId: $proyectoId,
-                montoAbonado: $montoAbonado
-			},
-			success: function(response) {
-                if(response.error){
-                    $("#loadingSpinner").css("display", "none");
-                    $("#ProyectoModalEdit").modal("hide")
-
-                   return Swal.fire({text: response.error, icon: "error"});
-                }
-
-                getProyectosData(response.success);
-                $("#ProyectoModalEdit").modal("hide")
-			},
-			error: function(response){
-				alert('Error de Conexión')
-                console.log(response)
-				$("#loadingSpinner").css("display", "none");
-			}
-		});
-    })
-
-
-    //Actualizar item safactitem de proyecto
-    $(document).on('change', '.update-status', function() {
-        let checkbox = $(this);
-        let itemId = checkbox.data('id');  // Obtener el ID del item
-        let newStatus = checkbox.is(':checked') ? 1 : 0; // Determinar el nuevo valor
-
-        $.ajax({
-            url: "{{ route('actualizar.saitemfac') }}", // Ruta del controlador
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                id: itemId,
-                valor: newStatus
-            },
-            success: function(response) {
-                console.log(response)
-            },
-            error: function(error) {
-                console.log(error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo actualizar el estado.'
-                });
-                checkbox.prop('checked', !newStatus); // Revertir en caso de error
+            if ($.fn.DataTable.isDataTable('#proyectos-table')) {
+                $('#proyectos-table').dataTable().fnClearTable();
+                $('#proyectos-table').dataTable().fnDestroy();
             }
-        });
-    });
 
-</script>
+            let id = $(this).data('id')
+            let codclie = $('#client').val();
+            let codvend = $('#codvend').val();
+            let codestatus = id || $('#estatus').val(); // this ahora está correctamente referenciado
+            let registra = $('#registra').val();
+            $('#proyectos-table').DataTable({
+                columns: [{
+                        visible: false
+                    }, // columna 0: fecha cruda (oculta, para orden)
+                    null, // columna 1: ID
+                    {
+                        orderData: [0]
+                    }, // columna 2: fecha formateada, ordena según la columna 0
+                    null, // columna 3: días
+                    null, // columna 4: número doc
+                    null, // columna 5: descripción
+                    null, // columna 6: exento
+                    null, // columna 7: gravable
+                    null, // columna 8: impuesto
+                    null, // columna 9: factor
+                    null, // columna 10: total
+                    null, // columna 11: total / factor
+                    null, // columna 12: vendedor
+                    null, // columna 13: estatus
+                    null
+                ],
+                order: [
+                    [0, 'desc']
+                ],
+                "bDeferRender": true,
+                "bProcessing": true,
+                "sAjaxSource": "{{ route('proyectos.data') }}",
+                "fnServerData": function(sSource, aoData, fnCallback) {
+                    $.getJSON(sSource, aoData, function(json) {
+                        fnCallback(json)
 
+                        $("#loadingSpinner").css("display", "none");
 
+                        if (!id) {
+                            $('.count1').html(json.pendientes);
+                            $('.count2').html(json.aprobados);
+                            $('.count3').html(json.proyectos);
+                            $('.count4').html(json.completados);
+                            $('.count5').html(json.rechazados);
+                            $('.count6').html(json.descartados);
+                            $('.count7').html(json.enproceso);
+                            $('.count8').html(json.ejecutados);
+                            $('.count9').html(json.pausados);
+                            $('.count10').html(json.qa);
+                        }
 
-{{------ CHAT DE PROYECTO -------}}
-<script>
-    //Chat modal entrada equipos
-	window.openChatProyectoModal = function(codproyecto) {
-        $('#codproyectoChat').val(codproyecto)
-		// Realizar la solicitud AJAX para cargar los chats de la entrada
-        $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+                        if (updated) {
+                            Swal.fire({
+                                text: "Estatus actualizado con éxito!",
+                                icon: "success",
+                            });
+                        }
+                    });
+                },
+                "bPaginate": true,
+                "sPaginationType": "full_numbers",
+                "iDisplayLength": 20,
+                "fnServerParams": function(aoData) {
+                    aoData.push({
+                        "name": "codclie",
+                        "value": codclie
+                    });
+                    aoData.push({
+                        "name": "codvend",
+                        "value": codvend
+                    });
+                    aoData.push({
+                        "name": "codestatus",
+                        "value": codestatus
+                    });
+                    aoData.push({
+                        "name": "registra",
+                        "value": registra
+                    });
+                },
+                dom: 'Bfrtip',
+                buttons: [{
+                        extend: 'copy',
+                        text: 'Copiar',
+                        action: protegerExportacion($.fn.dataTable.ext.buttons.copyHtml5.action)
+                    },
+                    {
+                        extend: 'csv',
+                        text: 'Exportar CSV',
+                        action: protegerExportacion($.fn.dataTable.ext.buttons.csvHtml5.action)
+                    },
+                    {
+                        extend: 'excel',
+                        text: 'Exportar Excel',
+                        action: protegerExportacion($.fn.dataTable.ext.buttons.excelHtml5.action)
+                    },
+                    {
+                        extend: 'pdf',
+                        text: 'Exportar PDF',
+                        action: protegerExportacion($.fn.dataTable.ext.buttons.pdfHtml5.action)
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Imprimir',
+                        action: protegerExportacion($.fn.dataTable.ext.buttons.print.action)
+                    }
+                ],
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                pageLength: 20,
+                language: {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 a 0 de 0 registros",
+                    "sInfoFiltered": "(filtrado de _MAX_ registros)",
+                    "sSearch": "Buscar:",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                }
+            });
+        }
 
-		$.ajax({
-			url: "{{ url('chatproyecto/cargar') }}" + '/' + codproyecto,  // La URL de tu ruta que carga los chats
-			method: 'GET',
-			success: function(response) {
-                $("#loadingSpinner").css("display", "none");
-				// Mostrar el modal
-				$('#chatModal').modal('show');
-				
-				// Cargar el contenido del chat en el contenedor
-				$('#chatContainer').html(response.html);
+        // Ver Detalles
+        window.proyectoDetalles = function(proyectoId) {
+            $("#loadingSpinner").css("display", "flex");
 
-				// Actualizar el título del modal para reflejar la entrada actual
-				$('#chatModalLabel').text('Chat de Proyecto #' + codproyecto);
-			},
-			error: function() {
-                $("#loadingSpinner").css("display", "none");
-				alert('Hubo un error al cargar el chat.');
-			}
-		});
-	}
-
-    //Enviar mensaje
-    function sendMessage() {
-        var message = $('#newMessage').val(); // Obtener el valor del textarea
-        var codproyecto = $('#codproyectoChat').val(); // Obtener el ID de la entrada del equipo
-        $("#loadingSpinner").css("display", "flex");
-
-        if (message.trim() !== '') {
-            // Hacer la petición AJAX para enviar el mensaje
             $.ajax({
-                url: '{{ route("chatproyecto.send") }}', // Asegúrate de que esta ruta sea correcta
+                url: '{{ url('proyectos/ver-detalles') }}' + '/' +
+                    proyectoId, // Asegúrate de que esta ruta sea correcta
                 method: 'POST',
                 data: {
-                    mensaje: message,
-                    codproyecto: codproyecto, // Pasamos el codentrada al backend
-                    _token: '{{ csrf_token() }}'  // CSRF Token para seguridad
+                    _token: '{{ csrf_token() }}' // CSRF Token para seguridad
                 },
                 success: function(response) {
-                    $('#newMessage').val('');
-                    $('#chatContainer').html(response.html);        
+                    $('.proyectoId').html(proyectoId);
+                    $("#ProyectoModalView").modal("show")
+                    $('#productosProyecto').html(response.items);
                     $("#loadingSpinner").css("display", "none");
+
                 },
-                error: function(response){
+                error: function(response) {
                     alert('Error de Conexión')
                     $("#loadingSpinner").css("display", "none");
                 }
             });
-        }   
-    }
-
-    // Enviar el mensaje al hacer clic en el botón
-    $('#sendMessage').click(function() {
-        sendMessage(); // Llamar la función de enviar mensaje
-    });
-
-    // Enviar el mensaje al presionar Enter (sin Shift)
-    $('#newMessage').keypress(function(e) {
-        if (e.which === 13 && !e.shiftKey) { // 13 es el código de Enter, y !e.shiftKey asegura que no sea con Shift
-            e.preventDefault(); // Prevenir el salto de línea
-            sendMessage(); // Llamar la función de enviar mensaje
         }
-    });
-    
-</script>
 
-<script>
-    $(document).ready(function(){
-        $('.owl-carousel').owlCarousel({
-            margin: 10,
-            loop: false,
-            nav: false,
-            dots: true,
-            responsive: {
-                0: {
-                    items: 1,
-                    slideBy: 1
-                },
-                600: {
-                    items: 4,
-                    slideBy: 4
-                },
-                1000: {
-                    items: 6,
-                    slideBy: 6
-                }
-            },
-            autoWidth: true,
-            navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
+        $('.getProyectosByStatus').on('click', function() {
+            getProyectosData.call(this);
+        });
+
+        $('#consultarProyectos').on('click', function() {
+            getProyectosData();
         });
 
 
-    });
-</script>
+        //Actualizar Estatus de Proyecto
+        $('#proyectoUpdateStatusButton').on('click', function() {
+            var $codestatus = $('#estatusProyectoId').val();
+            var $proyectoId = $('#proyectoId').val()
+            var $montoAbonado = $('#montoAbonado').val()
+
+            $.ajax({
+                url: '{{ route('proyectos.update') }}', // Asegúrate de que esta ruta sea correcta
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}', // CSRF Token para seguridad
+                    codestatus: $codestatus,
+                    proyectoId: $proyectoId,
+                    montoAbonado: $montoAbonado
+                },
+                success: function(response) {
+                    if (response.error) {
+                        $("#loadingSpinner").css("display", "none");
+                        $("#ProyectoModalEdit").modal("hide")
+
+                        return Swal.fire({
+                            text: response.error,
+                            icon: "error"
+                        });
+                    }
+
+                    getProyectosData(response.success);
+                    $("#ProyectoModalEdit").modal("hide")
+                },
+                error: function(response) {
+                    alert('Error de Conexión')
+                    console.log(response)
+                    $("#loadingSpinner").css("display", "none");
+                }
+            });
+        })
+
+
+        //Actualizar item safactitem de proyecto
+        $(document).on('change', '.update-status', function() {
+            let checkbox = $(this);
+            let itemId = checkbox.data('id'); // Obtener el ID del item
+            let newStatus = checkbox.is(':checked') ? 1 : 0; // Determinar el nuevo valor
+
+            $.ajax({
+                url: "{{ route('actualizar.saitemfac') }}", // Ruta del controlador
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: itemId,
+                    valor: newStatus
+                },
+                success: function(response) {
+                    console.log(response)
+                },
+                error: function(error) {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo actualizar el estado.'
+                    });
+                    checkbox.prop('checked', !newStatus); // Revertir en caso de error
+                }
+            });
+        });
+    </script>
+
+
+
+    {{-- ---- CHAT DE PROYECTO ----- --}}
+    <script>
+        //Chat modal entrada equipos
+        window.openChatProyectoModal = function(codproyecto) {
+            $('#codproyectoChat').val(codproyecto)
+            // Realizar la solicitud AJAX para cargar los chats de la entrada
+            $("#loadingSpinner").css("display", "flex"); // Mostrar el spinner
+
+            $.ajax({
+                url: "{{ url('chatproyecto/cargar') }}" + '/' +
+                    codproyecto, // La URL de tu ruta que carga los chats
+                method: 'GET',
+                success: function(response) {
+                    $("#loadingSpinner").css("display", "none");
+                    // Mostrar el modal
+                    $('#chatModal').modal('show');
+
+                    // Cargar el contenido del chat en el contenedor
+                    $('#chatContainer').html(response.html);
+
+                    // Actualizar el título del modal para reflejar la entrada actual
+                    $('#chatModalLabel').text('Chat de Proyecto #' + codproyecto);
+                },
+                error: function() {
+                    $("#loadingSpinner").css("display", "none");
+                    alert('Hubo un error al cargar el chat.');
+                }
+            });
+        }
+
+        //Enviar mensaje
+        function sendMessage() {
+            var message = $('#newMessage').val(); // Obtener el valor del textarea
+            var codproyecto = $('#codproyectoChat').val(); // Obtener el ID de la entrada del equipo
+            $("#loadingSpinner").css("display", "flex");
+
+            if (message.trim() !== '') {
+                // Hacer la petición AJAX para enviar el mensaje
+                $.ajax({
+                    url: '{{ route('chatproyecto.send') }}', // Asegúrate de que esta ruta sea correcta
+                    method: 'POST',
+                    data: {
+                        mensaje: message,
+                        codproyecto: codproyecto, // Pasamos el codentrada al backend
+                        _token: '{{ csrf_token() }}' // CSRF Token para seguridad
+                    },
+                    success: function(response) {
+                        $('#newMessage').val('');
+                        $('#chatContainer').html(response.html);
+                        $("#loadingSpinner").css("display", "none");
+                    },
+                    error: function(response) {
+                        alert('Error de Conexión')
+                        $("#loadingSpinner").css("display", "none");
+                    }
+                });
+            }
+        }
+
+        // Enviar el mensaje al hacer clic en el botón
+        $('#sendMessage').click(function() {
+            sendMessage(); // Llamar la función de enviar mensaje
+        });
+
+        // Enviar el mensaje al presionar Enter (sin Shift)
+        $('#newMessage').keypress(function(e) {
+            if (e.which === 13 && !e
+                .shiftKey) { // 13 es el código de Enter, y !e.shiftKey asegura que no sea con Shift
+                e.preventDefault(); // Prevenir el salto de línea
+                sendMessage(); // Llamar la función de enviar mensaje
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.owl-carousel').owlCarousel({
+                margin: 10,
+                loop: false,
+                nav: false,
+                dots: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        slideBy: 1
+                    },
+                    600: {
+                        items: 4,
+                        slideBy: 4
+                    },
+                    1000: {
+                        items: 6,
+                        slideBy: 6
+                    }
+                },
+                autoWidth: true,
+                navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>']
+            });
+
+
+        });
+    </script>
+
+    <script>
+        $(document).on('change', '.aplica_comision_soporte, .aplica_comision_proyecto', function() {
+            let id = $(this).data('id');
+            let checkSoporte = $(this).hasClass('aplica_comision_soporte');
+            let checked = $(this).is(':checked') ? 1 : 0;
+
+            let data = {
+                _token: '{{ csrf_token() }}',
+            };
+
+            if (checkSoporte) {
+                data.aplica_comision_soporte = checked;
+            } else {
+                data.aplica_comision_proyecto = checked;
+            }
+
+            $.post(`/comisiones/safact/${id}/check`, data, function(res) {
+                console.log(res)
+                if (res.success) {
+                    console.log('Guardado con éxito');
+                }
+            });
+        });
+    </script>
 @endsection
