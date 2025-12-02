@@ -34,7 +34,7 @@ class ComisionesProyectosController extends Controller
                 ]);
             })
             ->where('aplica_comision_proyecto', true)
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15])
             ->get()
             ->filter(function ($s) use ($mes, $year) {
                 return $s->pendienteServiciosMes($mes, $year) > 0;
@@ -54,8 +54,8 @@ class ComisionesProyectosController extends Controller
             $pendiente = $safact->pendienteServiciosMes($mes, $year) ?: 0;
             $abonado = $safact->abonadoServiciosMes($mes, $year) ?: 0;
 
-            $comisionProyecto = $safact->codestatus != 14 ? $abonado * ($projectM->proyecto_comision / 100) : 0;
-            $comisionServicio = $safact->codestatus == 14 ? $abonado * ($projectM->servicio_comision / 100) : 0;
+            $comisionProyecto = $safact->codestatus != 15 ? $abonado * ($projectM->proyecto_comision / 100) : 0;
+            $comisionServicio = $safact->codestatus == 15 ? $abonado * ($projectM->servicio_comision / 100) : 0;
 
             $comision = $comisionProyecto + $comisionServicio;
 
@@ -73,14 +73,14 @@ class ComisionesProyectosController extends Controller
             $row[] = $safact->descrip;
             $row[] = '$' . number_format($safact->base_imponible(), 2, '.', ',');
 
-            $row[] = $safact->codestatus != 14 ? '$' . number_format($pendiente, 2, '.', ',') : '$0.00';
-            $row[] = $safact->codestatus == 14 ? '$' . number_format($pendiente, 2, '.', ',') : '$0.00';
+            $row[] = $safact->codestatus != 15 ? '$' . number_format($pendiente, 2, '.', ',') : '$0.00';
+            $row[] = $safact->codestatus == 15 ? '$' . number_format($pendiente, 2, '.', ',') : '$0.00';
 
             $row[] = '$' . number_format($safact->abonadoServiciosMes($mes, $year), 2, '.', ',');
             $row[] =  number_format($safact->porcentajeCobradoSoporte($mes, $year), 2, '.', ',') . '%';
 
-            $row[] = $safact->codestatus != 14 ? '$' . number_format($comisionProyecto, 2, '.', ',') : '$0.00';
-            $row[] = $safact->codestatus == 14 ? '$' . number_format($comisionServicio, 2, '.', ',') : '$0.00';
+            $row[] = $safact->codestatus != 15 ? '$' . number_format($comisionProyecto, 2, '.', ',') : '$0.00';
+            $row[] = $safact->codestatus == 15 ? '$' . number_format($comisionServicio, 2, '.', ',') : '$0.00';
             $row[] = '$' . number_format($comision, 2, '.', ',');
 
             $row[] = number_format($safact->porcentajePorCobrarSoporte($mes, $year), 2, '.', ',') . '%';

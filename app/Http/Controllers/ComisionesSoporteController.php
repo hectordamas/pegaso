@@ -35,7 +35,7 @@ class ComisionesSoporteController extends Controller
                 ]);
             })
             ->where('aplica_comision_proyecto', true)
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
             ->get()
             ->filter(function ($s) use ($mes, $year) {
                 return $s->pendienteServiciosMes($mes, $year) > 0;

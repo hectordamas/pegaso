@@ -40,7 +40,7 @@ class ProyectosController extends Controller
         $registra = $request->registra;
 
         $query = Safact::select('id', 'fechae', 'descrip', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend', 'aplica_comision_soporte', 'aplica_comision_proyecto')
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 15])
             ->where('tipofac', 'F')
             ->bySaclie($request->input('codclie'))
             ->bySavend($request->input('codvend'))
