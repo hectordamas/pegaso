@@ -133,10 +133,10 @@
     </div>
 
     <div class="row">
-        <div class="col-xl-4">
+        <div class="col-xl-5">
             <div id="tablaDeComisiones"></div>
         </div>
-        <div class="col-xl-8">
+        <div class="col-xl-7">
             <div id="servicios"></div>
         </div>
     </div>
