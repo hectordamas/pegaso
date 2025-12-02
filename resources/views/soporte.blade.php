@@ -251,9 +251,9 @@
                     _token: '{{ csrf_token() }}' // CSRF Token para seguridad
                 },
                 success: function(response) {
-                    $('.proyectoId').html(proyectoId);
-                    $("#ProyectoModalView").modal("show")
-                    $('#productosProyecto').html(response.items);
+                    $('.proyectoId').html(soporteId);
+                    $("#SoporteModalView").modal("show")
+                    $('#productosSoporte').html(response.items);
                     $("#loadingSpinner").css("display", "none");
 
                 },
@@ -319,7 +319,7 @@
             }
 
             $.post(`/comisiones/safact/${id}/check`, data, function(res) {
-                                console.log(res)
+                console.log(res)
 
                 if (res.success) {
                     console.log('Guardado con éxito');

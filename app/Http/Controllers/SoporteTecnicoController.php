@@ -31,7 +31,7 @@ class SoporteTecnicoController extends Controller
 
     public function data(Request $request)
     {
-        $query = Safact::select('id', 'descrip', 'fechae', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend')
+        $query = Safact::select('id', 'descrip', 'fechae', 'numerod', 'texento', 'tgravable', 'mtotax', 'factor', 'mtototal', 'codestatus', 'codclie', 'codvend', 'aplica_comision_soporte', 'aplica_comision_proyecto')
             ->whereIn('codestatus', [14])
             ->where('tipofac', 'F')
             ->bySaclie($request->input('codclie'))
@@ -70,7 +70,7 @@ class SoporteTecnicoController extends Controller
             $row[] = '<p>' . number_format($porcentaje, 2, ',', '.') . '%</p>';
 
             $row[] = '<span class="badge" style="background:' . ($p->estatusPre->color ?? "#e9e9e9") . ';">' . ($p->estatusPre->nombre ?? "N/A") . '</span>';
-            $row[] = view('entregas.actions', compact('p'))->render();
+            $row[] = view('soportes.partials.actions', compact('p'))->render();
             $data[] = $row;
         }
 
@@ -139,14 +139,14 @@ class SoporteTecnicoController extends Controller
 
     public function verDetalles($id)
     {
-        $entrega = Safact::find($id);
-        $items = $entrega->saitemfac;
+        $proyecto = Safact::find($id);
+        $items = $proyecto->saitemfac;
 
-        $html = view('entregas.detalles', compact('items', 'entrega'))->render(); // Cargar la vista que contiene los mensajes del chat
+        $html = view('proyectos.detalles', compact('items', 'proyecto'))->render(); // Cargar la vista que contiene los mensajes del chat
 
         return response()->json([
             'items' => $html,
-            'entrega' => $entrega
+            'proyecto' => $proyecto
         ]);
     }
 
