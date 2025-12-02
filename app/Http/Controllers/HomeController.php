@@ -78,7 +78,7 @@ class HomeController extends Controller
         $cxcColors = ["#3498db", "#e74c3c", "#2ecc71", "#f39c12", "#9b59b6"];
 
         // Proyectos
-        $proyectos = Safact::whereIn('codestatus', [3, 4, 7, 8, 10])
+        $proyectos = Safact::whereIn('codestatus', [3, 4, 7, 8, 10, 15])
             ->whereBetween('fechae', [$desde, $hasta])
             ->selectRaw('codestatus, COUNT(*) as cantidad')
             ->groupBy('codestatus')

@@ -26,7 +26,7 @@ class ComisionesController extends Controller
                     $endOfMonth->toDateString()
                 ]);
             })
-                ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+                ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15])
                 ->with('cxc.detallecxc'); // precarga los pagos
         }])
             ->where('activo', true)
@@ -136,7 +136,7 @@ class ComisionesController extends Controller
             ->whereHas('savend', function ($q) {
                 $q->where('activo', true);
             })
-            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+            ->whereIn('codestatus', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15])
             ->where('codvend', $savend->codvend)
             ->get();
 
