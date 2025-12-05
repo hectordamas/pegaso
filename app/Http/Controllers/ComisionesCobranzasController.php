@@ -291,10 +291,10 @@ class ComisionesCobranzasController extends Controller
         $pago = DetalleCxC::findOrFail($id);
 
         if ($request->has('check_admin')) {
-            $pago->check_admin = $request->check_admin;
+            $pago->check_cobranza_admin = $request->check_admin;
         }
         if ($request->has('check_manager')) {
-            $pago->check_manager = $request->check_manager;
+            $pago->check_cobranza_manager = $request->check_manager;
         }
 
         $pago->save();
