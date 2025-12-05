@@ -149,8 +149,8 @@ class ComisionesCobranzasController extends Controller
             $row[] = round($porcentajePagado) . '%';
             $row[] = number_format($saldoPendiente, 2, '.', ',');
             $row[] = round($porcentajePendiente) . '%';
-            $row[] = '<input type="checkbox" class="check-admin" data-id="' . $pago->id . '" ' . ($pago->check_admin ? 'checked' : '') . ' ' . ($pago->check_manager ? 'disabled' : '') . '>';
-            $row[] = '<input type="checkbox" class="check-manager" data-id="' . $pago->id . '" ' . ($pago->check_manager ? 'checked' : '') . ' ' . ($pago->check_manager ? 'disabled' : '') . '>';
+            $row[] = '<input type="checkbox" class="check-admin" data-id="' . $pago->id . '" ' . ($pago->check_cobranza_admin ? 'checked' : '') . ' ' . ($pago->check_cobranza_admin ? 'disabled' : '') . '>';
+            $row[] = '<input type="checkbox" class="check-manager" data-id="' . $pago->id . '" ' . ($pago->check_cobranza_manager ? 'checked' : '') . ' ' . ($pago->check_cobranza_manager ? 'disabled' : '') . '>';
             $row[] = $pago->descripcion;
             $row[] = view('comisionesCobranzas.partials.buttons', compact('safact', 'pago'))->render();
 
