@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\{AtencionCliente, Safact, CxC, Calendario, EntradaEquipos, Visita};
+use App\Models\{AtencionCliente, Safact, CxC, Calendario, EntradaEquipos, Visita, VpsField, VpsPayment};
 
 class Saclie extends Model
 {
@@ -12,28 +12,43 @@ class Saclie extends Model
 
     protected $table = 'saclie';
 
-    public function atencionclientes(){
+    public function atencionclientes()
+    {
         return $this->hasMany(AtencionCliente::class, 'codclie', 'codclie');
     }
 
-    public function safact(){
+    public function safact()
+    {
         return $this->hasMany(Safact::class, 'codclie', 'codclie');
     }
 
-    public function cxc(){
+    public function cxc()
+    {
         return $this->hasMany(CxC::class, 'codclie', 'codclie');
     }
 
-    public function calendario(){
+    public function calendario()
+    {
         return $this->hasMany(Calendario::class, 'codclie', 'codclie');
     }
 
-    public function entradaEquipos(){
+    public function entradaEquipos()
+    {
         return $this->hasMany(EntradaEquipos::class, 'codclie', 'codclie');
     }
 
-    public function visitas(){
+    public function visitas()
+    {
         return $this->hasMany(Visita::class, 'codclie', 'codclie');
     }
 
+    public function vpsFields()
+    {
+        return $this->hasMany(VpsField::class, 'codclie', 'codclie');
+    }
+
+    public function vpsPayments()
+    {
+        return $this->hasMany(VpsPayment::class, 'codclie', 'codclie');
+    }
 }

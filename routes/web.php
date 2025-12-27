@@ -41,7 +41,8 @@ use App\Http\Controllers\{
     ActualizacionDeLicenciasController,
     TicketsController,
 
-    SoporteTecnicoController
+    SoporteTecnicoController,
+    VpsController
 };
 
 Route::get('/', function () {
@@ -312,6 +313,17 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::post('tickets/store', 'store')->name('tickets.store')->middleware('menu.permission:142');
         Route::get('tickets/{id}/edit', 'edit')->name('tickets.edit')->middleware('menu.permission:142');
         Route::post('tickets/{id}/update', 'update')->name('tickets.update')->middleware('menu.permission:142');
+    });
+
+    Route::controller(VpsController::class)->group(function () {
+        Route::get('/vps',  'index')->name('vps.index')->middleware('menu.permission:148');
+        Route::get('/vps/client/{codclie}', 'client')->name('vps.client')->middleware('menu.permission:148');
+        Route::post('/vps/client/{codclie}/fields/add', 'addFields')->name('vps.fields.add');
+        Route::delete('/vps/field/{id}', 'deleteField')->name('vps.field.delete');
+
+        Route::post('/vps/client/{codclie}/payment/add', 'addPayment')->name('vps.payment.add');
+        Route::delete('/vps/payment/{id}', 'deletePayment')->name('vps.payment.delete');
+        Route::put('/vps/payment/{id}/update', 'updatePayment')->name('vps.payment.update');
     });
 });
 

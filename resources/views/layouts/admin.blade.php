@@ -400,7 +400,7 @@
     <script>
         // Desactiva botón submit en formularios
         $('form').on('submit', function() {
-            const $btn = $(this).find('button[type=submit]');
+            const $btn = $(this).find('button[type=submit]').not('.btn-delete');
             $btn.prop('disabled', true).data('original-text', $btn.text()).text('Procesando...');
         });
 

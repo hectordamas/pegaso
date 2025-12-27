@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\{Saclie, VpsField, VpsPayment};
+
+class VpsController extends Controller
+{
+    public function index(Request $request)
+    {
+        // Búsqueda opcional de cliente
+        $clients = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
+
+
+        return view('vps.index', compact('clients'));
+    }
+
+    public function client($codclie)
+    {
+        $client = Saclie::where('codclie', $codclie)->firstOrFail();
+
+        $fields = $client->vpsFields()->orderBy('group')->get();
+
+        $payments = $client->vpsPayments()->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
+
+        return view('vps.client', compact('client', 'fields', 'payments'));
+    }
+
+    public function addFields(Request $request, $codclie)
+    {
+        $count = count($request->value);
+        for ($i = 0; $i < $count; $i++) {
+            VpsField::create([
+                'codclie' => $codclie,
+                'group' => $request->group[$i],
+                'label' => $request->label[$i],
+                'value' => $request->value[$i],
+            ]);
+        }
+
+        return back()->with('success', 'Credenciales agregadas');
+    }
+
+    public function deleteField($id)
+    {
+        VpsField::findOrFail($id)->delete();
+
+        return back()->with('success', 'Credencial eliminada');
+    }
+
+    public function addPayment(Request $request, $codclie)
+    {
+        $data = $request->validate([
+            'month' => 'required|integer|min:1|max:12',
+            'amount' => 'required|numeric|min:0',
+            'status' => 'required|string|in:pending,paid',
+            'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+        ]);
+
+        $data['year'] = date('Y'); // Año actual
+        $data['codclie'] = $codclie;
+
+        if ($request->hasFile('receipt')) {
+            $file = $request->file('receipt');
+            $data['receipt'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        }
+
+        VpsPayment::create($data);
+
+        return back()->with('success', 'Pago agregado correctamente.');
+    }
+
+    public function deletePayment($id)
+    {
+        $payment = VpsPayment::findOrFail($id);
+
+        $payment->delete();
+
+        return back()->with('success', 'Pago eliminado correctamente.');
+    }
+
+    public function updatePayment(Request $request, $id)
+    {
+        $payment = VpsPayment::findOrFail($id);
+
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0',
+            'status' => 'required|string|in:pending,paid',
+            'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+        ]);
+
+        if ($request->hasFile('receipt')) {
+            $file = $request->file('receipt');
+            $data['receipt'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+        }
+
+        $payment->update($data);
+
+        return back()->with('success', 'Pago actualizado correctamente.');
+    }
+}
