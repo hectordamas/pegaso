@@ -179,7 +179,7 @@
 
                             <!-- Modal para ver y editar pago -->
                             <div class="modal fade" id="editPaymentModal{{ $payment->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-dialog modal-lg">
                                     <form method="POST" action="{{ route('vps.payment.update', $payment->id) }}"
                                         enctype="multipart/form-data">
                                         @csrf
@@ -232,22 +232,9 @@
 
                                                     {{-- MES --}}
                                                     <div class="col-md-6">
-                                                        <label class="fw-bold">Mes</label>
-                                                        <select name="month" class="form-control" required>
-                                                            @foreach ($meses as $num => $nombre)
-                                                                <option value="{{ $num }}"
-                                                                    {{ $payment->month == $num ? 'selected' : '' }}>
-                                                                    {{ $nombre }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-
-                                                    {{-- AÑO (SOLO INFO) --}}
-                                                    <div class="col-md-6">
-                                                        <label class="fw-bold">Año</label>
-                                                        <input type="text" class="form-control"
-                                                            value="{{ date('Y') }}" disabled>
+                                                        <label class="fw-bold">Fecha del Servicio</label>
+                                                        <input type="date" name="fecha" class="form-control" required
+                                                            value="{{ $payment->fecha }}">
                                                     </div>
 
                                                     {{-- MONTO --}}
@@ -492,9 +479,6 @@
     </div>
 
 
-
-
-
     <div class="modal fade" id="addPayment" tabindex="-1">
         <div class="modal-dialog">
             <form method="POST" action="{{ route('vps.payment.add', $client->codclie) }}"
@@ -507,35 +491,10 @@
                     </div>
                     <div class="modal-body">
 
-                        <!--<div class="mb-3">
-                                                                                                    <label>Año</label>
-                                                                                                    <input type="number" name="year" class="form-control" value="{{ date('Y') }}" required>
-                                                                                                </div>-->
-
                         <div class="mb-3">
-                            <label>Mes</label>
-                            @php
-                                $meses = [
-                                    1 => 'Enero',
-                                    2 => 'Febrero',
-                                    3 => 'Marzo',
-                                    4 => 'Abril',
-                                    5 => 'Mayo',
-                                    6 => 'Junio',
-                                    7 => 'Julio',
-                                    8 => 'Agosto',
-                                    9 => 'Septiembre',
-                                    10 => 'Octubre',
-                                    11 => 'Noviembre',
-                                    12 => 'Diciembre',
-                                ];
-                            @endphp
-
-                            <select name="month" class="form-control" required>
-                                @foreach ($meses as $num => $nombre)
-                                    <option value="{{ $num }}">{{ $nombre }}</option>
-                                @endforeach
-                            </select>
+                            <label>Fecha del Servicio</label>
+                            <input type="date" name="fecha" class="form-control" required
+                                value="{{ old('fecha', date('Y-m-d')) }}">
                         </div>
 
                         <div class="mb-3">
@@ -623,28 +582,28 @@
     </script>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const editButtons = document.querySelectorAll('.btn-edit-credential');
-    const correctKey = '$bKe02KI@FL1j&GxAJW-'; // tu clave
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const editButtons = document.querySelectorAll('.btn-edit-credential');
+            const correctKey = '$bKe02KI@FL1j&GxAJW-'; // tu clave
 
-    editButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // evitamos cualquier acción automática
-            const userKey = prompt("Ingresa la clave para editar esta credencial:");
-            if (userKey === null || userKey !== correctKey) {
-                alert("Clave incorrecta. No puedes editar.");
-                return;
-            }
+            editButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault(); // evitamos cualquier acción automática
+                    const userKey = prompt("Ingresa la clave para editar esta credencial:");
+                    if (userKey === null || userKey !== correctKey) {
+                        alert("Clave incorrecta. No puedes editar.");
+                        return;
+                    }
 
-            // Clave correcta → abrimos el modal manualmente
-            const target = button.getAttribute('data-target');
-            const modalEl = document.querySelector(target);
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
+                    // Clave correcta → abrimos el modal manualmente
+                    const target = button.getAttribute('data-target');
+                    const modalEl = document.querySelector(target);
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
 
 @endsection

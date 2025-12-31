@@ -79,7 +79,7 @@ class VpsController extends Controller
     public function addPayment(Request $request, $codclie)
     {
         $data = $request->validate([
-            'month' => 'required|integer|min:1|max:12',
+            'fecha' => 'required|date',
             'amount' => 'required|numeric|min:0',
             'status' => 'required|string|in:pending,paid',
             'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
@@ -87,7 +87,9 @@ class VpsController extends Controller
 
         $data['year'] = date('Y'); // Año actual
         $data['codclie'] = $codclie;
+        $data['month'] = date('n', strtotime($request->fecha));
 
+        // Procesar archivo si existe
         if ($request->hasFile('receipt')) {
             $file = $request->file('receipt');
             $data['receipt'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
@@ -97,6 +99,7 @@ class VpsController extends Controller
 
         return back()->with('success', 'Pago agregado correctamente.');
     }
+
 
     public function deletePayment($id)
     {
@@ -115,7 +118,10 @@ class VpsController extends Controller
             'amount' => 'required|numeric|min:0',
             'status' => 'required|string|in:pending,paid',
             'receipt' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'fecha' => 'required|date',
         ]);
+
+        $data['month'] = date('n', strtotime($request->fecha));
 
         if ($request->hasFile('receipt')) {
             $file = $request->file('receipt');
