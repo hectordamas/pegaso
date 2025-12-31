@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\{Saclie, VpsField, VpsPayment};
+use Illuminate\Support\Facades\DB;
 
 class VpsController extends Controller
 {
@@ -12,8 +13,14 @@ class VpsController extends Controller
         // Búsqueda opcional de cliente
         $clients = Saclie::orderby('descrip', 'asc')->where('activo', true)->get();
 
+        $vpsClients = Saclie::whereIn('codclie', function ($q) {
+            $q->select('codclie')->from('vps_fields')
+                ->union(
+                    DB::table('vps_payments')->select('codclie')
+                );
+        })->get();
 
-        return view('vps.index', compact('clients'));
+        return view('vps.index', compact('clients', 'vpsClients'));
     }
 
     public function client($codclie)
@@ -41,6 +48,26 @@ class VpsController extends Controller
 
         return back()->with('success', 'Credenciales agregadas');
     }
+
+    public function updateFields(Request $request, $id)
+    {
+        $request->validate([
+            'group' => 'nullable|string|max:100',
+            'label' => 'required|string|max:255',
+            'value' => 'required|string',
+        ]);
+
+        $field = VpsField::findOrFail($id);
+
+        $field->update([
+            'group' => $request->group,
+            'label' => $request->label,
+            'value' => $request->value,
+        ]);
+
+        return back()->with('success', 'Credencial actualizada correctamente');
+    }
+
 
     public function deleteField($id)
     {

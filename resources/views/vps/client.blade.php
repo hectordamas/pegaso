@@ -300,62 +300,145 @@
             </div>
         </div>
 
-        <div class="col-md-12">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header d-flex justify-content-between">
-                    <h5>Credenciales</h5>
+        @if (Auth::user()->role == 'Directiva')
+            <div class="col-md-12">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                        <h5>Credenciales</h5>
 
-                    <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCredentials">
-                        <i class="fas fa-key"></i> Agregar Credenciales
-                    </button>
-                </div>
-                <div class="card-block">
-                    <div class="row">
-                        @php
-                            $fieldsByGroup = $fields->groupBy('group');
-                        @endphp
-
-                        @forelse ($fieldsByGroup as $group => $groupFields)
-                            <div class="col-md-6">
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr class="bg-dark">
-                                            <th colspan="3">{{ $group ?? 'Sin grupo' }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($groupFields as $field)
-                                            <tr>
-                                                <td class="fw-bold">{{ $field->label }}</td>
-                                                <td>
-                                                    {{ $field->value }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <form method="POST"
-                                                        action="{{ route('vps.field.delete', $field->id) }}"
-                                                        class="delete-form" data-type="credential">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-danger btn-delete"
-                                                            title="Eliminar">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @empty
-                            <h5 class="text-center mb-3">No has agregado credenciales de VPS a este cliente.</h5>
-                        @endforelse
+                        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addCredentials">
+                            <i class="fas fa-key"></i> Agregar Credenciales
+                        </button>
                     </div>
+                    <div class="card-block">
+                        <div class="row">
+                            @php
+                                $fieldsByGroup = $fields->groupBy('group');
+                            @endphp
 
+                            @forelse ($fieldsByGroup as $group => $groupFields)
+                                <div class="col-md-6">
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr class="bg-dark">
+                                                <th colspan="3">{{ $group ?? 'Sin grupo' }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($groupFields as $field)
+                                                <tr>
+                                                    <td class="fw-bold">{{ $field->label }}</td>
+                                                    <td>
+                                                        {{ $field->value }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="d-flex justify-content-center gap-1">
+                                                            <button class="btn btn-sm btn-warning btn-edit-credential"
+                                                                data-target="#editCredential{{ $field->id }}">
+                                                                <i class="fas fa-edit"></i>
+                                                            </button>
+
+                                                            <form method="POST"
+                                                                action="{{ route('vps.field.delete', $field->id) }}"
+                                                                class="delete-form" data-type="credential">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-danger btn-delete"
+                                                                    title="Eliminar">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+
+                                                <div class="modal fade" id="editCredential{{ $field->id }}"
+                                                    tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <form method="POST"
+                                                            action="{{ route('vps.field.update', $field->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <div class="modal-content">
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">
+                                                                        Editar credencial
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+
+                                                                    {{-- GRUPO --}}
+                                                                    <div class="mb-3">
+                                                                        <label class="fw-bold">Grupo</label>
+                                                                        <input list="groupsList{{ $field->id }}"
+                                                                            name="group" class="form-control"
+                                                                            value="{{ $field->group }}">
+                                                                        <datalist id="groupsList{{ $field->id }}">
+                                                                            <option value="Windows">
+                                                                            <option value="AnyDesk">
+                                                                            <option value="SQL">
+                                                                            <option value="Saint">
+                                                                            <option value="RAdmin">
+
+                                                                            <option value="IP Servidor">
+
+                                                                        </datalist>
+                                                                    </div>
+
+                                                                    {{-- ETIQUETA --}}
+                                                                    <div class="mb-3">
+                                                                        <label class="fw-bold">Etiqueta</label>
+                                                                        <input type="text" name="label"
+                                                                            class="form-control"
+                                                                            value="{{ $field->label }}" required>
+                                                                    </div>
+
+                                                                    {{-- VALOR --}}
+                                                                    <div class="mb-3">
+                                                                        <label class="fw-bold">Valor</label>
+                                                                        <input type="text" name="value"
+                                                                            class="form-control"
+                                                                            value="{{ $field->value }}" required>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-dark btn-sm">
+                                                                        Guardar cambios
+                                                                    </button>
+                                                                    <button type="button"
+                                                                        class="btn btn-secondary btn-sm"
+                                                                        data-bs-dismiss="modal">
+                                                                        Cancelar
+                                                                    </button>
+                                                                </div>
+
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @empty
+                                <h5 class="text-center mb-3">No has agregado credenciales de VPS a este cliente.</h5>
+                            @endforelse
+                        </div>
+
+                    </div>
                 </div>
-            </div>
 
-        </div>
+            </div>
+        @endif
 
     </div>
 
@@ -408,6 +491,10 @@
         </div>
     </div>
 
+
+
+
+
     <div class="modal fade" id="addPayment" tabindex="-1">
         <div class="modal-dialog">
             <form method="POST" action="{{ route('vps.payment.add', $client->codclie) }}"
@@ -421,9 +508,9 @@
                     <div class="modal-body">
 
                         <!--<div class="mb-3">
-                                                                    <label>Año</label>
-                                                                    <input type="number" name="year" class="form-control" value="{{ date('Y') }}" required>
-                                                                </div>-->
+                                                                                                    <label>Año</label>
+                                                                                                    <input type="number" name="year" class="form-control" value="{{ date('Y') }}" required>
+                                                                                                </div>-->
 
                         <div class="mb-3">
                             <label>Mes</label>
@@ -480,6 +567,8 @@
     </div>
 
 
+
+
     <script>
         document.getElementById('addRow').addEventListener('click', function() {
             let container = document.getElementById('credentialsContainer');
@@ -492,34 +581,70 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
             const deleteForms = document.querySelectorAll('.delete-form');
+
+            // Aquí defines la clave correcta (idealmente esto debería validarse en el servidor también)
+            const correctKey = '$bKe02KI@FL1j&GxAJW-'; // reemplaza con la clave real o usa variable de servidor
 
             deleteForms.forEach(form => {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
 
+                    let type = form.dataset.type;
                     let message = '¿Estás seguro que deseas eliminar este elemento?';
-
-                    const type = form.dataset.type;
 
                     if (type === 'vps') {
                         message =
                             '¿Deseas eliminar este servicio VPS?\n\nEsta acción no se puede deshacer.';
                     }
-
                     if (type === 'credential') {
                         message =
                             '¿Deseas eliminar esta credencial?\n\nEsta acción no se puede deshacer.';
                     }
 
+                    // Primero pedimos la clave
+                    let userKey = prompt("Ingresa la clave para continuar:");
+
+                    if (userKey === null) return; // si cancela
+                    if (userKey !== correctKey) {
+                        alert("Clave incorrecta. No se puede continuar.");
+                        return;
+                    }
+
+                    // Si la clave es correcta, preguntamos la confirmación normal
                     if (confirm(message)) {
                         form.submit();
                     }
                 });
             });
 
+
         });
     </script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editButtons = document.querySelectorAll('.btn-edit-credential');
+    const correctKey = '$bKe02KI@FL1j&GxAJW-'; // tu clave
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // evitamos cualquier acción automática
+            const userKey = prompt("Ingresa la clave para editar esta credencial:");
+            if (userKey === null || userKey !== correctKey) {
+                alert("Clave incorrecta. No puedes editar.");
+                return;
+            }
+
+            // Clave correcta → abrimos el modal manualmente
+            const target = button.getAttribute('data-target');
+            const modalEl = document.querySelector(target);
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+        });
+    });
+});
+</script>
 
 @endsection

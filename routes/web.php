@@ -320,7 +320,8 @@ Route::group(['middleware' => ['auth'/*, 'prevent.duplicate'*/]], function () {
         Route::get('/vps/client/{codclie}', 'client')->name('vps.client')->middleware('menu.permission:148');
         Route::post('/vps/client/{codclie}/fields/add', 'addFields')->name('vps.fields.add');
         Route::delete('/vps/field/{id}', 'deleteField')->name('vps.field.delete');
-
+        Route::put('/vps/field/{id}', 'update')->name('vps.field.update');
+        
         Route::post('/vps/client/{codclie}/payment/add', 'addPayment')->name('vps.payment.add');
         Route::delete('/vps/payment/{id}', 'deletePayment')->name('vps.payment.delete');
         Route::put('/vps/payment/{id}/update', 'updatePayment')->name('vps.payment.update');
