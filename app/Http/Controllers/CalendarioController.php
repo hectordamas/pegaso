@@ -25,6 +25,7 @@ class CalendarioController extends Controller
 
         $desde = $hoy->copy()->startOfYear();
         $hasta = $hoy->copy()->endOfYear();
+
         $eventosQuery = Calendario::query()->whereBetween('fecha', [$desde, $hasta]);
 
         if (!$puedeVerTodo) {
@@ -88,6 +89,7 @@ class CalendarioController extends Controller
         }
         $event->codconsultor = $request->codconsultor;
         $event->codusuario = Auth::user()->codusuario;
+        $event->fecha = $fechaDesde;
         $event->entry_date = $fechaDesde;
         $event->departure_date = $departure_date;
         $event->title = $request->title;
