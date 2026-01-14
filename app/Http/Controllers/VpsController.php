@@ -29,7 +29,7 @@ class VpsController extends Controller
 
         $fields = $client->vpsFields()->orderBy('group')->get();
 
-        $payments = $client->vpsPayments()->orderBy('year', 'desc')->orderBy('month', 'desc')->get();
+        $payments = $client->vpsPayments()->orderBy('fecha', 'desc')->get();
 
         return view('vps.client', compact('client', 'fields', 'payments'));
     }
