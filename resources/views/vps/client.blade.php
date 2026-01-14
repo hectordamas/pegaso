@@ -190,7 +190,7 @@
                                             <div class="modal-header">
                                                 <h5 class="modal-title">
                                                     Pago – {{ $meses[$payment->month] ?? $payment->month }}
-                                                    {{ date('Y') }}
+                                                    {{ date($payment->year) }}
                                                 </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
